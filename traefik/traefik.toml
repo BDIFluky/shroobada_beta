@@ -1,0 +1,69 @@
+################################################################
+# Global configuration
+################################################################
+[global]
+  checkNewVersion = true
+  sendAnonymousUsage = false
+
+
+################################################################
+# Entrypoints configuration
+################################################################
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+      [entryPoints.web.http]
+        [entryPoints.web.http.redirections]
+          [entryPoints.web.http.redirections.entryPoint]
+            to = "websecure"
+            scheme = "https"
+
+  [entryPoints.websecure]
+    address = ":443"
+    asDefault = true
+      [entryPoints.websecure.http]
+        [entryPoints.websecure.http.tls]
+          certResolver = "letsencrypt"
+
+
+################################################################
+# Traefik logs configuration
+################################################################
+[log]
+  level = "DEBUG"
+
+
+################################################################
+# API and dashboard configuration
+################################################################
+[api]
+  insecure = false
+  dashboard = true
+
+################################################################
+# Ping configuration
+################################################################
+[ping]
+
+
+################################################################
+# Docker configuration backend
+################################################################
+[providers]  
+  [providers.docker]
+    exposedByDefault = false
+    defaultRule = "Host(`{{ .ContainerName }}.{{env \"DOMAIN_NAME\"}}`)"
+
+  [providers.file]
+    directory = "/dynamic"
+    watch = true
+
+################################################################
+# Let's Encrypt
+################################################################
+[certificatesresolvers.letsencrypt.acme]
+  email = "fluky@bdi.brr"
+  storage = "/letsencrypt/acme.json"
+  preferredchain="ISRG Root X1"
+  keytype="RSA4096"
+  [certificatesResolvers.letsencrypt.acme.tlsChallenge]
