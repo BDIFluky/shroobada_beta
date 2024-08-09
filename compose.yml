@@ -1,0 +1,37 @@
+name: shroobada
+
+services:
+
+  traefik:
+    image: "docker.io/traefik:v3.1"
+    container_name: "traefik"
+    ports:
+      - "8080:80"
+      - "8443:443"
+    env_file:
+      - /%h/shroobada/traefik/.traefik.env
+    networks:
+      - traefik_net
+    volumes:
+      - "/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro"
+      - "/%h/shroobada/letsencrypt:/letsencrypt"
+      - "/%h/shroobada/traefik/traefik.toml:/etc/traefik/traefik.toml"
+      - "/%h/shroobada/traefik/dynamic:/dynamic"
+    #labels:
+       #- "traefik.enable=true"
+       #- "traefik.http.routers.dashboard.rule=Host(`traefik.bdi.brr`) && PathPrefix(`/`)"
+       #- "traefik.http.routers.dashboard.service=api@internal"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  whoami:
+    image: "docker.io/traefik/whoami"
+    container_name: "whoami"
+    networks:
+      - traefik_net
+    labels:
+      - "traefik.enable=true"
