@@ -1,17 +1,17 @@
 [http]
   [http.routers]
-    [http.routers.api]
-      #entryPoints = ["web","websecure"]
-      service = "api@internal"
-      rule = "Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/api`)"
-      priority = 9223372036854776000
-
     [http.routers.dashboard]
       #entryPoints = ["web","websecure"]
       middlewares = ["dashboard_redirect", "dashboard_stripprefix"]
       service = "dashboard@internal"
       rule = "Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/`)"
-      priority = 9223372036854776000
+      priority = 1000
+      
+    [http.routers.api]
+      #entryPoints = ["web","websecure"]
+      service = "api@internal"
+      rule = "Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/api`)"
+      priority = 1001
 
    [http.middlewares]
     [http.middlewares.dashboard_redirect.redirectRegex]
