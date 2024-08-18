@@ -29,7 +29,7 @@
 ################################################################
 # Traefik logs configuration
 ################################################################
-[aceessLog]
+[accessLog]
   addInternals = true
   filePath = "/var/log/traefik/access.log"
   #bufferingSize = 100
