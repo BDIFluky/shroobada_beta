@@ -29,8 +29,15 @@
 ################################################################
 # Traefik logs configuration
 ################################################################
+[aceessLog]
+  addInternals = true
+  filePath = "/var/log/traefik/access.log"
+  #bufferingSize = 100
+
 [log]
   level = "DEBUG"
+  filePath = "/var/log/traefik/traefik.log"
+  format = "json"
 
 
 ################################################################
