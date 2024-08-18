@@ -17,6 +17,8 @@ services:
       - "/%h/shroobada/letsencrypt:/letsencrypt"
       - "/%h/shroobada/traefik/traefik.toml:/etc/traefik/traefik.toml"
       - "/%h/shroobada/traefik/dynamic:/dynamic"
+      - "/var/log/traefik/traefik.log:/var/log/traefik/traefik.log"
+      - "/var/log/traefik/access.log:/var/log/traefik/access.log'
     #labels:
        #- "traefik.enable=true"
        #- "traefik.http.routers.dashboard.rule=Host(`traefik.bdi.brr`) && PathPrefix(`/`)"
