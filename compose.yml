@@ -19,10 +19,6 @@ services:
       - "/%h/shroobada/traefik/dynamic:/dynamic"
       - "/var/log/traefik/traefik.log:/var/log/traefik/traefik.log"
       - "/var/log/traefik/access.log:/var/log/traefik/access.log'
-    #labels:
-       #- "traefik.enable=true"
-       #- "traefik.http.routers.dashboard.rule=Host(`traefik.bdi.brr`) && PathPrefix(`/`)"
-       #- "traefik.http.routers.dashboard.service=api@internal"
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
       interval: 10s
