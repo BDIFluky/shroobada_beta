@@ -51,7 +51,7 @@
 # Ping configuration
 ################################################################
 [ping]
-  entrypoint = "websecure"
+  entrypoint = "web"
 
 ################################################################
 # Docker configuration backend
