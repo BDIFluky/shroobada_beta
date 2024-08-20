@@ -14,7 +14,7 @@ http:
   middlewares:
     dashboard_redirect:
       redirectRegex:
-        regex: "^(http:\/\/(\[[\w:.]+\]|[\w\._-]+)(:\d+)?)\/$"
+        regex: "^(http:\/\/([[\w:.]+\]|[\w._-]+)(:\d+)?)\/$"
         replacement: "${1}/dashboard/"
         permanent: true
     dashboard_stripprefix:
