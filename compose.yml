@@ -35,4 +35,4 @@ services:
 
 volumes:
   traefik_logs:
-    external: true
+
