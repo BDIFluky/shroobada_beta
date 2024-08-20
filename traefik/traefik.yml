@@ -64,7 +64,7 @@ certificatesresolvers:
       storage: "/letsencrypt/acme.json"
       preferredchain: "ISRG Root X1"
       keytype: "RSA4096"
-certificatesResolvers:
-  letsencrypt:
-    acme:
+#certificatesResolvers:
+  #letsencrypt:
+    #acme:
       tlsChallenge: {}
