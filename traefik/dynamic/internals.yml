@@ -11,6 +11,7 @@ http:
       service: "api@internal"
       rule: 'Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/api`)'
       priority: 1001
+      
   middlewares:
     dashboard_redirect:
       redirectRegex:
