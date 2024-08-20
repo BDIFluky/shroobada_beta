@@ -15,7 +15,7 @@ services:
     volumes:
       - "/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro"
       - "/%h/shroobada/letsencrypt:/letsencrypt"
-      - "/%h/shroobada/traefik/traefik.toml:/etc/traefik/traefik.toml"
+      - "/%h/shroobada/traefik/traefik.yml:/etc/traefik/traefik.yml"
       - "/%h/shroobada/traefik/dynamic:/dynamic"
       - "traefik_logs:/var/log/traefik/"
     healthcheck:
