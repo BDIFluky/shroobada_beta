@@ -49,7 +49,7 @@ ping:
 providers:
   docker:
     exposedByDefault: false
-    defaultRule: "Host(`{{ .ContainerName }}.{{env "DOMAIN_NAME"}}`)"
+    defaultRule: "Host(`{{ .ContainerName }}.{{env \"DOMAIN_NAME\"}}`)"
   file:
     directory: "/dynamic"
     watch: true
