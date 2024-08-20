@@ -1,0 +1,70 @@
+################################################################
+# Global configuration
+################################################################
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+################################################################
+# Entrypoints configuration
+################################################################
+entryPoints:
+  web:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: "websecure"
+          scheme: "https"
+  websecure:
+    address: :443
+    asDefault: true
+    http:
+      tls:
+        certResolver: "letsencrypt"
+
+################################################################
+# Traefik logs configuration
+################################################################        
+accessLog:
+  addInternals: true
+  filePath: "/var/log/traefik/access.log"
+log:
+  level: "DEBUG"
+  filePath: "/var/log/traefik/traefik.log"
+  format: "json"
+
+################################################################
+# API, dashboard and ping configuration
+################################################################
+api:
+  insecure: false
+  dashboard: true
+ping:
+  entrypoint: "web"
+
+################################################################
+# Docker configuration backend
+################################################################
+providers:
+  docker:
+    exposedByDefault: false
+    defaultRule: "Host(`{{ .ContainerName }}.{{env "DOMAIN_NAME"}}`)"
+  file:
+    directory: "/dynamic"
+    watch: true
+
+################################################################
+# Let's Encrypt
+################################################################
+certificatesresolvers:
+  letsencrypt:
+    acme:
+      email: "fluky@bdi.brr"
+      storage: "/letsencrypt/acme.json"
+      preferredchain: "ISRG Root X1"
+      keytype: "RSA4096"
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      tlsChallenge: {}
