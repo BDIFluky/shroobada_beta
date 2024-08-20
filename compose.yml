@@ -1,0 +1,44 @@
+name: shroobada
+
+services:
+
+  traefik:
+    image: "docker.io/traefik:v3.1"
+    container_name: "traefik"
+    ports:
+      - "8080:80"
+      - "8443:443"
+    env_file:
+      - '/%h/shroobada/traefik/.traefik.env"
+    networks:
+      - traefik_net
+    volumes:
+      - "/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro"
+      - "/etc/traefik/letsencrypt:/letsencrypt"
+      - "/etc/traefik/traefik.yml:/etc/traefik/traefik.yml"
+      - "/etc/traefik/dynamic:/dynamic"
+      - "traefik_logs:/var/log/traefik/"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  whoami:
+    image: "docker.io/traefik/whoami"
+    container_name: "whoami"
+    networks:
+      - traefik_net
+    labels:
+      - "traefik.enable=true"
+
+networks:
+  traefik_net:
+    driver: bridge
+
+volumes:
+  traefik_logs:
+    driver: local
+    device: /var/log/traefik
+
