@@ -5,16 +5,16 @@ http:
         - "dashboard_redirect"
         - "dashboard_stripprefix"
       service: "dashboard@internal"
-      rule: "Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/`)"
+      rule: 'Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/`)'
       priority: 1000
     api:
       service: "api@internal"
-      rule: "Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/api`)"
+      rule: 'Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/api`)'
       priority: 1001
   middlewares:
     dashboard_redirect:
       redirectRegex:
-        regex: "^(http:\/\/([[\w:.]+]|[\w._-]+)(:\d+)?)\/$"
+        regex: ^(http:\/\/([[\w:.]+]|[\w._-]+)(:\d+)?)\/$
         replacement: "${1}/dashboard/"
         permanent: true
     dashboard_stripprefix:
