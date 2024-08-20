@@ -9,7 +9,7 @@ services:
       - "8080:80"
       - "8443:443"
     env_file:
-      - '/%h/shroobada/traefik/.traefik.env"
+      - "/%h/shroobada/traefik/.traefik.env"
     networks:
       - traefik_net
     volumes:
