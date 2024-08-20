@@ -9,7 +9,7 @@ services:
       - "8080:80"
       - "8443:443"
     env_file:
-      - "/%h/shroobada/traefik/.traefik.env"
+      - "/etc/traefik/.traefik.env"
     networks:
       - traefik_net
     volumes:
@@ -40,5 +40,8 @@ networks:
 volumes:
   traefik_logs:
     driver: local
-    device: /var/log/traefik
+    driver_opts:
+      type: none
+      device: /var/log/traefik
+      o: bind
 
