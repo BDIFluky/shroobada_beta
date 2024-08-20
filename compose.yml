@@ -17,7 +17,7 @@ services:
       - "/%h/shroobada/letsencrypt:/letsencrypt"
       - "/%h/shroobada/traefik/traefik.toml:/etc/traefik/traefik.toml"
       - "/%h/shroobada/traefik/dynamic:/dynamic"
-      - "/var/log/traefik/:/var/log/traefik/"
+      - "traefik_logs:/var/log/traefik/"
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
       interval: 10s
@@ -32,3 +32,7 @@ services:
       - traefik_net
     labels:
       - "traefik.enable=true"
+
+volumes:
+  traefik_logs:
+    external: true
