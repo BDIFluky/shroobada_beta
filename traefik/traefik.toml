@@ -5,7 +5,6 @@
   checkNewVersion = true
   sendAnonymousUsage = false
 
-
 ################################################################
 # Entrypoints configuration
 ################################################################
@@ -25,7 +24,6 @@
         [entryPoints.websecure.http.tls]
           certResolver = "letsencrypt"
 
-
 ################################################################
 # Traefik logs configuration
 ################################################################
@@ -38,7 +36,6 @@
   level = "DEBUG"
   filePath = "/var/log/traefik/traefik.log"
   format = "json"
-
 
 ################################################################
 # API and dashboard configuration
