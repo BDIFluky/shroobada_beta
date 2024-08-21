@@ -11,6 +11,7 @@ services:
     env_file:
       - "/etc/traefik/.traefik.env"
     networks:
+      - shroo_net
       - traefik_net
     volumes:
       - "/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro"
@@ -34,6 +35,8 @@ services:
       - "traefik.enable=true"
 
 networks:
+  shroo_net:
+    driver: bridge
   traefik_net:
     driver: bridge
 
