@@ -61,7 +61,7 @@ if [[ "$RESPONSE" == "n" ]]; then
           } else {
               split($11, arr, "\\");
           }
-          print "\033[34m" arr[1] "\033[0m > \033[33m" ip "\033[0m";
+          print "\033[34m" arr[1] "\033[0m > " ip;
       }')
 
     PS3="Select the interface for domain/host association: "
