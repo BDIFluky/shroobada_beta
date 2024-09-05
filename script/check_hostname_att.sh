@@ -47,7 +47,7 @@ echo -e "The current domain name is: \e[33m$CURRENT_DOMAIN_NAME\e[0m"
 read -p "Do you want to keep this domain name? (Y/n): " RESPONSE
 
 if [[ "$RESPONSE" == "n" ]]; then
-    read -p "Enter the new hostname: " NEW
+    read -p "Enter the new domain name: " NEW
     CURRENT_DOMAIN_NAME=$NEW
     
     mapfile -t int_array < <(ip -4 -o a | grep -v -e '127.0.0.1' -e '::1/128' | awk '
