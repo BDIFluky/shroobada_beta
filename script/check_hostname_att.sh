@@ -7,7 +7,7 @@ function apply_changes {
 
   echo -e "Setting domain name to \e[33m$DOMAIN_NAME\e[0m..."
   
-  sudo sed -i "s/127.0.1.1.*/$IP\t$HOSTNAME\t$HOSTNAME.$DOMAIN_NAME/" /etc/hosts
+  sudo sed -i "s/127.0.1.1.*/$IP\t$HOSTNAME.$DOMAIN_NAME\t$HOSTNAME/" /etc/hosts
   
   echo -e "\e[32mDomain name updated to \e[33m$DOMAIN_NAME\e[0m"
   
