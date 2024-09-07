@@ -60,7 +60,7 @@ providers:
 certificatesresolvers:
   letsencrypt:
     acme:
-      email: "boredom.did.it@gmail.com"
+      email: "fluky@bdi.brr"
       storage: "/letsencrypt/acme.json"
       preferredchain: "ISRG Root X1"
       keytype: "RSA4096"
