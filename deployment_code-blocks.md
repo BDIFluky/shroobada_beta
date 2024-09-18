@@ -78,7 +78,8 @@ chmod +x $PROJECT_DIR/script/*.sh
 
 # Check Hostname Attributes
 ```bash
-./$PROJECT_DIR/script/check_hostname_att.sh
+cd $PROJECT_DIR;
+./script/check_hostname_att.sh
 ```
 
 # Setup Interfaces
@@ -88,7 +89,8 @@ chmod +x $PROJECT_DIR/script/*.sh
 
 # Setup Podman & Podlet
 ```bash
-./$PROJECT_DIR/script/setup_podman.sh -d -i -s -t -p
+cd $PROJECT_DIR;
+./script/setup_podman.sh -d -i -s -t -p
 ```
 
 # Setup Project
