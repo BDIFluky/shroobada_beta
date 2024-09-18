@@ -2,7 +2,7 @@
 - [Grant sudo Privileges](#grant-sudo-privileges)
 
 ## Grant sudo Privileges
-This has to be done as a sudoer able to exeute the required commands, or as root.
+This has to be done as a sudoer able to execute the required commands, or as root.
 <table align="center">
   <thead>
   <tr>
