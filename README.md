@@ -1,6 +1,7 @@
 # Shroobada
 Shroobada is BDI's attempt at setting up a homelab, and for once they are documenting their shit (this is unprecedented).
 
+> “Those who know, do. Those that understand, teach.” <sub>― Aristotle </sub>
 
 ## Table of Contents
 
@@ -13,7 +14,7 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
     - [Container Manager](#container-manager)
 
 ## Overview & Scope
-
+> “No great mind has ever existed without a touch of madness.” <sub>― Aristotle </sub>
 
 ## Roadmap
 
