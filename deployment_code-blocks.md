@@ -33,7 +33,7 @@ palias "pvls='podman volume ls'";
 palias "ppls='podman pod ls'";
 palias "sctludr='systemctl --user daemon-reload'";
 
-palias "cdpd='cd $PROJECT_WDIR'";
+palias "cdpd='cd $PROJECT_DIR'";
 
 source ~/.bashrc;
 ``` 
