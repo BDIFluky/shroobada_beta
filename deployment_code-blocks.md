@@ -128,7 +128,7 @@ cdpd
 
 # Steady
 ```bash
-IFS=' ' read -r -a let_files <<< $(echo $(podlet -f $USER_SYSD --overwrite compose $PROJECT_WDIR/compose.yml --pod) | sed "s|Wrote to file: ||g");
+IFS=' ' read -r -a let_files <<< $(echo $(podlet -f $USER_SYSD --overwrite compose $PROJECT_DIR/compose.yml --pod) | sed "s|Wrote to file: ||g");
 for lfile in ${let_files[@]};do
 	echo $lfile
 	if [[ "$lfile" == *".container" ]]; then
