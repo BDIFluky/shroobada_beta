@@ -98,11 +98,11 @@ cd $PROJECT_DIR;
 PROJECT_DIR=$HOME/shroobada;
 TRAEFIK_WDIR=/etc/traefik
 TRAEFIK_LDIR=/var/log/traefik
+USER_SYSD=$HOME/.config/containers/systemd/;
 ```
 
 # Setup Project
 ```bash
-
 [ ! -d $TRAEFIK_LDIR ] && sudo mkdir -p /var/log/traefik;
 mkdir $PROJECT_DIR/traefik/letsencrypt;
 touch $PROJECT_DIR/traefik/letsencrypt/acme.json;
@@ -128,7 +128,6 @@ cdpd
 
 # Steady
 ```bash
-USER_SYSD=$HOME/.config/containers/systemd/;
 IFS=' ' read -r -a let_files <<< $(echo $(podlet -f $USER_SYSD --overwrite compose $PROJECT_WDIR/compose.yml --pod) | sed "s|Wrote to file: ||g");
 for lfile in ${let_files[@]};do
 	echo $lfile
