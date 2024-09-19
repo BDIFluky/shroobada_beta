@@ -93,10 +93,16 @@ cd $PROJECT_DIR;
 ./script/setup_podman.sh -d -i -s -t -p
 ```
 
-# Setup Project
+# Setup Project Vars
 ```bash
+PROJECT_DIR=$HOME/shroobada;
 TRAEFIK_WDIR=/etc/traefik
 TRAEFIK_LDIR=/var/log/traefik
+```
+
+# Setup Project
+```bash
+
 [ ! -d $TRAEFIK_LDIR ] && sudo mkdir -p /var/log/traefik;
 mkdir $PROJECT_WDIR/traefik/letsencrypt;
 touch $PROJECT_WDIR/traefik/letsencrypt/acme.json;
