@@ -104,11 +104,11 @@ TRAEFIK_LDIR=/var/log/traefik
 ```bash
 
 [ ! -d $TRAEFIK_LDIR ] && sudo mkdir -p /var/log/traefik;
-mkdir $PROJECT_WDIR/traefik/letsencrypt;
-touch $PROJECT_WDIR/traefik/letsencrypt/acme.json;
-chmod 0600 $PROJECT_WDIR/traefik/letsencrypt/acme.json;
-echo DOMAIN_NAME=$(hostname -d) >> $PROJECT_WDIR/traefik/.traefik.env;
-sudo cp -r -t /etc/ $PROJECT_WDIR/traefik
+mkdir $PROJECT_DIR/traefik/letsencrypt;
+touch $PROJECT_DIR/traefik/letsencrypt/acme.json;
+chmod 0600 $PROJECT_DIR/traefik/letsencrypt/acme.json;
+echo DOMAIN_NAME=$(hostname -d) >> $PROJECT_DIR/traefik/.traefik.env;
+sudo cp -r -t /etc/ $PROJECT_DIR/traefik
 touch traefik.log;
 touch access.log;
 sudo cp -r -t $TRAEFIK_LDIR access.log traefik.log;
