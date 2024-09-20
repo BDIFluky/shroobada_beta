@@ -7,6 +7,11 @@ http:
       service: "dashboard@internal"
       rule: 'Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/`)'
       priority: 1000
+      tls:
+        domains:
+          - main: '{{env "DOMAIN_NAME"}}'
+            sans:
+              - '*.{{env "DOMAIN_NAME"}}'
     api:
       service: "api@internal"
       rule: 'Host(`traefik.{{env "DOMAIN_NAME"}}`) && PathPrefix(`/api`)'
