@@ -13,7 +13,7 @@ services:
     networks:
       - TraefikNet
     volumes:
-      - "/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro"
+      - "/run/user/{id -u}/podman/podman.sock:/var/run/docker.sock:ro"
       - "/etc/traefik/letsencrypt:/letsencrypt"
       - "/etc/traefik/traefik.yml:/etc/traefik/traefik.yml"
       - "/etc/traefik/dynamic:/dynamic"
