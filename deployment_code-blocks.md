@@ -27,10 +27,10 @@ palias "llt='lst -l'";
 palias "llta='llt -a'";
 palias "llat='lla --tree'";
 palias "vcmp='vim compose.yml'";
-palias "pps='podman ps'";
-palias "pnls='podman network ls'";
-palias "pvls='podman volume ls'";
-palias "ppls='podman pod ls'";
+palias "vpcmp='vim $PROJECT_DIR/compose.yml'";
+palias "dps='docker ps'";
+palias "dnls='docker network ls'";
+palias "dvls='docker volume ls'";
 palias "sctludr='systemctl --user daemon-reload'";
 
 palias "cdpd='cd $PROJECT_DIR'";
@@ -89,8 +89,12 @@ cd $PROJECT_DIR;
 
 # Setup Podman & Podlet
 ```bash
-cd $PROJECT_DIR;
-./script/setup_podman.sh -d -i -s -t -p
+cd
+mkdir docker_downs
+# download stuff from https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/
+sudo dpkg -i docekr_downs/*
+sudo service docker start
+sudo docker run hello-world
 ```
 
 # Setup Project Vars
@@ -126,28 +130,9 @@ sudo iptables-save | sudo tee /etc/iptables/rules.v4 > /dev/null
 cdpd
 ```
 
-# Steady
-```bash
-IFS=' ' read -r -a let_files <<< $(echo $(podlet -f $USER_SYSD --overwrite compose $PROJECT_DIR/compose.yml --pod) | sed "s|Wrote to file: ||g");
-for lfile in ${let_files[@]};do
-	echo $lfile
-	if [[ "$lfile" == *".container" ]]; then
-		sed -i 's/^Network=.*/&.network/' "$lfile"
-	elif [[ "$lfile" == *".network" ]]; then
-		echo "NetworkName=$(echo $lfile | sed 's/.*\/\([a-zA-Z\-_]*\)[.]network/\1/')" >> $lfile
-	elif [[ "$lfile" == *".volume" ]]; then
-		echo "VolumeName=$(echo $lfile | sed 's/.*\/\([a-zA-Z\-_]*\)[.]volume/\1/')" >> $lfile
-	fi;
-done;
-
-sed -i 's/Network/#Network/g' $USER_SYSD/shroobada-traefik.container
-echo "Network=TraefikNet.network" | tee -a $USER_SYSD/shroobada.pod
-
-```
-
 # Fire in the Hole
 ```bash
-systemctl --user daemon-reload ;systemctl --user restart shroobada-pod;
+docker compose -f $PROJECT_DIR/compose.yml up
 ```
 
 # 
