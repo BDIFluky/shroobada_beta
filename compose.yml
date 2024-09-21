@@ -33,7 +33,6 @@ services:
     labels:
       - "traefik.enable=true"
 
-
   postgresql:
     image: docker.io/library/postgres:16-alpine
     container_name: postgres
@@ -99,8 +98,9 @@ services:
       - postgresql
       - auth-redis
       
-  worker:
+  auth-worker:
     image: ghcr.io/goauthentik/server:2024.8.2
+    container_name: auth-worker
     command: worker
     environment:
       AUTHENTIK_REDIS__HOST: auth-redis
@@ -127,12 +127,15 @@ services:
       - .env
     depends_on:
       - postgresql
-      - authredis
+      - auth-redis
 
 networks:
   TraefikNet:
     driver: bridge
     internal: false
+  AuthNet:
+    driver: bridge
+    internal: true
 
 volumes:
   TraefikLogs:
