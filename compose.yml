@@ -36,12 +36,12 @@ services:
   postgresql:
     image: docker.io/library/postgres:16-alpine
     container_name: postgres
-    environment:
-      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
-      POSTGRES_USER: ${PG_USER:-authentik}
-      POSTGRES_DB: ${PG_DB:-authentik}
+    #environment:
+      #POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      #POSTGRES_USER: ${PG_USER:-authentik}
+      #POSTGRES_DB: ${PG_DB:-authentik}
     env_file:
-      - .env
+      - /etc/authentik/.auth.env
     networks:
       - AuthNet
     volumes:
@@ -61,8 +61,8 @@ services:
     networks:
       - AuthNet
     volumes:
-      - redis:/data
-        restart: unless-stopped
+      - auth-redis_vol:/data
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       start_period: 20s
@@ -74,20 +74,20 @@ services:
     image: ghcr.io/goauthentik/server:2024.8.2
     container_name: auth-server
     command: server
-    environment:
-      AUTHENTIK_REDIS__HOST: redis
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+    #environment:
+      #AUTHENTIK_REDIS__HOST: auth-redis
+      #AUTHENTIK_POSTGRESQL__HOST: postgresql
+      #AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      #AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      #AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
     env_file:
-      - .env
+      - /etc/authentik/.auth.env
     networks:
       - TraefikNet
       - AuthNet
     volumes:
-      - ./media:/media
-      - ./custom-templates:/templates
+      - /etc/authentik/media:/media
+      - /etc/authentik/custom-templates:/templates
     ports:
       - "9000:9000"
       #- "9443:9443"
@@ -114,17 +114,17 @@ services:
     # Removing `user: root` also prevents the worker from fixing the permissions
     # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
     # (1000:1000 by default)
-    user: root
+    #user: root
     networks:
       #- TraefikNet
       - AuthNet
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./media:/media
-      - ./certs:/certs
-      - ./custom-templates:/templates
+      #- /var/run/docker.sock:/var/run/docker.sock
+      - /etc/authentik/media:/media
+      - /etc/authentik/certs:/certs
+      - /etc/authentik/custom-templates:/templates
     env_file:
-      - .env
+      - /etc/authentik/.auth.env
     depends_on:
       - postgresql
       - auth-redis
@@ -148,5 +148,5 @@ volumes:
       o: bind
   database:
     driver: local
-  redis:
+  auth-redis_vol:
     driver: local
