@@ -87,7 +87,7 @@ cd $PROJECT_DIR;
 
 ```
 
-# Setup Podman & Podlet
+# Install Docker
 ```bash
 cd
 mkdir docker_downs
@@ -118,7 +118,24 @@ touch access.log;
 sudo cp -r -t $TRAEFIK_LDIR access.log traefik.log;
 ```
 
+# Setup Auth
+```bash
+[ ! -d /etc/authentik ] && sudo mkdir /etc/authentik;
+echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth.env
+echo "POSTGRES_USER=auth_db_u" >> .auth.env
+echo "POSTGRES_DB=auth_db" >> .auth.env
+echo "AUTHENTIK_REDIS__HOST=auth-redis" >> .auth.env
+echo "AUTHENTIK_POSTGRESQL__HOST=postgresql" >> .auth.env
+echo "AUTHENTIK_POSTGRESQL__USER=auth_db_u" >> .auth.env
+echo "AUTHENTIK_POSTGRESQL__NAME=auth_db" >> .auth.env
+sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth.env >> .auth.env
+echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env
+echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
+sudo mv .auth.env /etc/authentik/
+```
+
 # Setup NAT
+#http://<your server's IP or hostname>:9000/if/flow/initial-setup/
 ```bash
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
