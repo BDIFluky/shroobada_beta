@@ -88,8 +88,8 @@ services:
     volumes:
       - ./media:/media
       - ./custom-templates:/templates
-    #ports:
-      #- "9000:9000"
+    ports:
+      - "9000:9000"
       #- "9443:9443"
     labels:
       - "traefik.enable=true"
@@ -131,9 +131,11 @@ services:
 
 networks:
   TraefikNet:
+    name: TraefikNet
     driver: bridge
     internal: false
   AuthNet:
+    name: AuthNet
     driver: bridge
     internal: true
 
