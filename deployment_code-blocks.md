@@ -124,10 +124,10 @@ sudo cp -rp -t $TRAEFIK_LDIR access.log traefik.log;
 # Setup Auth
 ```bash
 [ ! -d /etc/authentik ] && sudo mkdir /etc/authentik;
-mkdir /media
-mkdir /certs
-mkdir /custom-templates
-sudo mv -t /etc/authentik /media /certs /custom-templates
+mkdir media
+mkdir certs
+mkdir custom-templates
+sudo mv -t /etc/authentik media certs custom-templates
 echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth.env
 echo "POSTGRES_USER=auth_db_u" >> .auth.env
 echo "POSTGRES_DB=auth_db" >> .auth.env
