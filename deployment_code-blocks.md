@@ -131,6 +131,7 @@ echo "AUTHENTIK_POSTGRESQL__NAME=auth_db" >> .auth.env
 sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth.env >> .auth.env
 echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env
 echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
+echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env
 sudo mv .auth.env /etc/authentik/
 ```
 
