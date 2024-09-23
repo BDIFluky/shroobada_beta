@@ -74,12 +74,6 @@ services:
     image: ghcr.io/goauthentik/server:2024.8.2
     container_name: auth-server
     command: server
-    #environment:
-      #AUTHENTIK_REDIS__HOST: auth-redis
-      #AUTHENTIK_POSTGRESQL__HOST: postgresql
-      #AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      #AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      #AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
     env_file:
       - /etc/authentik/.auth.env
     networks:
@@ -102,19 +96,8 @@ services:
     image: ghcr.io/goauthentik/server:2024.8.2
     container_name: auth-worker
     command: worker
-    environment:
-      AUTHENTIK_REDIS__HOST: auth-redis
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
-    # `user: root` and the docker socket volume are optional.
-    # See more for the docker socket integration here:
-    # https://goauthentik.io/docs/outposts/integrations/docker
-    # Removing `user: root` also prevents the worker from fixing the permissions
-    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
-    # (1000:1000 by default)
-    #user: root
+    env_file:
+      - /etc/authentik/.auth.env
     networks:
       #- TraefikNet
       - AuthNet
@@ -123,8 +106,6 @@ services:
       - /etc/authentik/media:/media
       - /etc/authentik/certs:/certs
       - /etc/authentik/custom-templates:/templates
-    env_file:
-      - /etc/authentik/.auth.env
     depends_on:
       - postgresql
       - auth-redis
