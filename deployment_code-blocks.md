@@ -112,10 +112,10 @@ mkdir $PROJECT_DIR/traefik/letsencrypt;
 touch $PROJECT_DIR/traefik/letsencrypt/acme.json;
 chmod 0600 $PROJECT_DIR/traefik/letsencrypt/acme.json;
 echo DOMAIN_NAME=$(hostname -d) >> $PROJECT_DIR/traefik/.traefik.env;
-sudo cp -r -t /etc/ $PROJECT_DIR/traefik
+sudo cp -rp -t /etc/ $PROJECT_DIR/traefik
 touch traefik.log;
 touch access.log;
-sudo cp -r -t $TRAEFIK_LDIR access.log traefik.log;
+sudo cp -rp -t $TRAEFIK_LDIR access.log traefik.log;
 ```
 
 # Setup Auth
