@@ -28,9 +28,12 @@ palias "llta='llt -a'";
 palias "llat='lla --tree'";
 palias "vcmp='vim compose.yml'";
 palias "vpcmp='vim $PROJECT_DIR/compose.yml'";
-palias "dps='docker ps'";
+palias "dcup='docker compose up -d'";
+palias "dcdo='docker compose down'";
+palias "dcre='dcdo && dcup'";
 palias "dnls='docker network ls'";
-palias "dvls='docker volume ls'";
+palias "dnins='docker network inspect'";
+palias "dvins='docker volume inspect'";
 palias "sctludr='systemctl --user daemon-reload'";
 
 palias "cdpd='cd $PROJECT_DIR'";
