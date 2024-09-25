@@ -1,49 +1,57 @@
-
-# Setup Essentials
+#curl vim lsd git make sudo
+# Primum
 ```bash
 adminUN=$(id -u -n)
 export adminUN
 echo -n "root "
-su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y curl vim lsd iptables-persistent git make sudo;usermod -aG sudo $adminUN";
+su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y git sudo;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
-echo "export PATH=$PATH:/sbin" >> ~/.bashrc;
+[! -f ~/.bash_aliases] && touch ~/.bash_aliases && echo '[ -f ~/.bash_aliases] && source ~/.bash_aliases' >> ~/.bashrc
+[! -f ~/.bash_exports] && touch ~/.bash_exports && echo '[ -f ~/.bash_exports] && source ~/.bash_exports' >> ~/.bashrc
+[! -f ~/.bash_funcs] && touch ~/.bash_funcs && echo '[ -f ~/.bash_funcs] && source ~/.bash_funcs' >> ~/.bashrc
+[[ ":$PATH:" == *":/sbin:"* ]] && echo 'export PATH=$PATH:/sbin' >> ~/.bash_exports;
+source ~/.bashrc
+```
+
+# Setup Functions
+```bash
+echo -e "function aalias { [ ! -z "$1" ] && echo -e "alias '$1'" >> ~/.bash_aliases; };\nexport -f aalias" >> ~/.bash_funcs;
+echo -e "function aexport { [ ! -z "$1" ] && echo -e "export $1" >> ~/.bash_exports; };\nexport -f aexport" >> ~/.bash_funcs;
+source ~/.bashrc;
 ```
 
 # Setup Aliases
 ```bash
-echo -e "function palias { echo -e "alias '$1'" >> ~/.bashrc; }\nexport palias" >> ~/.bashrc;
-source ~/.bashrc;
+aalias "sbrc='source ~/.bashrc'";
 
-palias "sbrc='source ~/.bashrc'";
-palias "ls='lsd --color=always -h'";
-palias "lsa='ls -a'";
-palias "lsat='lsa --tree'";
-palias "lst='ls --tree'";
-palias "lsta='lst -a'";
-palias "ll='ls -l'";
-palias "lla='lsa -l'";
-palias "llt='lst -l'";
-palias "llta='llt -a'";
-palias "llat='lla --tree'";
-palias "vcmp='vim compose.yml'";
-palias "vpcmp='vim $PROJECT_DIR/compose.yml'";
-palias "dcup='docker compose up -d'";
-palias "dcdo='docker compose down'";
-palias "dcre='dcdo && dcup'";
-palias "dnls='docker network ls'";
-palias "dnins='docker network inspect'";
-palias "dvins='docker volume inspect'";
-palias "sctludr='systemctl --user daemon-reload'";
+aalias "lsd='lsd --color=always -h'";
+aalias "la='lsd -a'";
+aalias "lat='la --tree'";
+aalias "lt='lsd --tree'";
+aalias "lta='lt -a'";
+aalias "ll='lsd -l'";
+aalias "lla='la -l'";
+aalias "llt='lt -l'";
+aalias "llta='llt -a'";
+aalias "llat='lla --tree'";
 
-palias "cdpd='cd $PROJECT_DIR'";
+aalias "vcmp='vim compose.yml'";
+aalias "dps='docker ps'";
+aalias "dl='docker logs'";
+aalias "dcup='docker compose up -d'";
+aalias "dcdo='docker compose down'";
+aalias "dcre='dcdo && dcup'";
+aalias "dnls='docker network ls'";
+aalias "dnins='docker network inspect'";
+aalias "dvins='docker volume inspect'";
 
 source ~/.bashrc;
 ``` 
 
 # Setup apt repos
 ```bash
-echo -e "deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free" | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
+echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
 sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
 # Priority for Bookworm (Stable)
 Package: *
@@ -69,27 +77,6 @@ EOF
 sudo apt update;
 ```
 
-# Clone Project & Enable Scripts
-```bash
-PROJECT_DIR=$HOME/shroobada;
-# -c http.sslVerify=false
-git clone https://github.com/BDIFluky/shroobada $PROJECT_DIR;
-
-chmod +x $PROJECT_DIR/script/*.sh
-```
-
-
-# Check Hostname Attributes
-```bash
-cd $PROJECT_DIR;
-./script/check_hostname_att.sh
-```
-
-# Setup Interfaces
-```bash
-
-```
-
 # Install Docker
 ```bash
 cd
@@ -100,26 +87,53 @@ sudo service docker start
 sudo docker run hello-world
 ```
 
-# Setup Project Vars
+# Clone Project & Enable Scripts
 ```bash
-PROJECT_DIR=$HOME/shroobada;
-TRAEFIK_WDIR=/etc/traefik
-TRAEFIK_LDIR=/var/log/traefik
-USER_SYSD=$HOME/.config/containers/systemd/;
+shrooProjectDir=~/shroobada;
+# -c http.sslVerify=false
+git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
+
+chmod +x $shrooProjectDir/script/*.sh;
+#chmod +x $shrooProjectDir/fire_in_the_hole.sh;
 ```
 
-# Setup Project
+# Set Project Vars
 ```bash
-[ ! -d $TRAEFIK_LDIR ] && sudo mkdir -p /var/log/traefik;
-mkdir $PROJECT_DIR/traefik/letsencrypt;
-touch $PROJECT_DIR/traefik/letsencrypt/acme.json;
-chmod 0600 $PROJECT_DIR/traefik/letsencrypt/acme.json;
-echo DOMAIN_NAME=$(hostname -d) >> $PROJECT_DIR/traefik/.traefik.env;
-sudo cp -rp -t /etc/ $PROJECT_DIR/traefik
-touch traefik.log;
-touch access.log;
-sudo cp -rp -t $TRAEFIK_LDIR access.log traefik.log;
+aexport shrooProjectDir=~/shroobada;
+aexport shrooTreafikDir=/etc/traefik;
+aexport shrooTreafikLogDir=/var/log/traefik;
+
+source ~/.bashrc
 ```
+
+# Setup Traefik
+```bash
+[ ! -d $shrooTreafikLogDir ] && sudo mkdir -p $shrooTreafikLogDir;
+mkdir $shrooProjectDir/traefik/letsencrypt && touch $shrooProjectDir/traefik/letsencrypt/acme.json && chmod 0600 $shrooProjectDir/traefik/letsencrypt/acme.json;
+echo DOMAIN_NAME=$(hostname -d) >> $shrooProjectDir/traefik/.traefik.env;
+sudo cp -rp -t /etc/ $shrooProjectDir/traefik;
+mkdir -p $shrooProjectDir/log/traefik;
+touch $shrooProjectDir/log/traefik/traefik.log;
+touch $shrooProjectDir/log/traefik/access.log;
+sudo cp -rp -t /var/log/  $shrooProjectDir/log/traefik;
+```
+
+# Fire
+```bash
+
+```
+
+# Check Hostname Attributes
+```bash
+cd $shrooProjectDir;
+./script/check_hostname_att.sh
+```
+
+# Setup Interfaces
+```bash
+
+```
+
 
 # Setup Auth
 ```bash
@@ -157,7 +171,7 @@ cdpd
 
 # Fire in the Hole
 ```bash
-docker compose -f $PROJECT_DIR/compose.yml up
+docker compose -f $shrooProjectDir/compose.yml up
 ```
 
 # 
