@@ -50,6 +50,7 @@ providers:
   docker:
     exposedByDefault: false
     defaultRule: "Host(`{{ .ContainerName }}.{{env \"DOMAIN_NAME\"}}`)"
+    network: "TraefikNet"
   file:
     directory: "/dynamic"
     watch: true
