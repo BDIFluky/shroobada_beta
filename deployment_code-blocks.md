@@ -97,6 +97,11 @@ chmod +x $shrooProjectDir/script/*.sh;
 #chmod +x $shrooProjectDir/fire_in_the_hole.sh;
 ```
 
+# Install Essentials
+```bash
+xargs -a $shrooProjectDir/res/essential_packages sudo apt install -y
+```
+
 # Set Project Vars
 ```bash
 aexport shrooProjectDir=~/shroobada;
