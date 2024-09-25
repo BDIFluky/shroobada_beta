@@ -3,3 +3,4 @@
 *compose.yml
 *.md
 script/
+log/
