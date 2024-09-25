@@ -2,4 +2,4 @@
 *.ignore
 *compose.yml
 *.md
-/script
+script/
