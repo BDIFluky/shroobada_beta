@@ -29,6 +29,7 @@ services:
       - TraefikNet
     labels:
       - "traefik.enable=true"
+      - "traefik.routers.whoami.middlewares=authentik@file
 
 networks:
   TraefikNet:
