@@ -7,11 +7,9 @@ include:
 services:
   traefik:
     networks:
-      - ExposedNet
+      - AuthFrontNet
 
   auth-server:
-    networks:
-      - TraefikNet
     labels:
       - "traefik.enable=true"
   
