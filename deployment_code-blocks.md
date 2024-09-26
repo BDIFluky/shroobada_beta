@@ -108,6 +108,8 @@ aexport shrooProjectDir=~/shroobada;
 aexport shrooTreafikDir=/etc/traefik;
 aexport shrooTreafikLogDir=/var/log/traefik;
 
+aexport shrooAuthDir=/etc/authentik;
+
 source ~/.bashrc
 ```
 
