@@ -144,9 +144,9 @@ echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env
 echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
 ```
 
-# Fire
+# Sync
 ```bash
-
+sudo rsync -au --progress --exclude-from=$shrooProjectDir/.rsync.ignore $shrooProjectDir/ /etc/
 ```
 
 # Check Hostname Attributes
