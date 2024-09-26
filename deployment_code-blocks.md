@@ -79,10 +79,15 @@ sudo apt update;
 
 # Install Docker
 ```bash
-cd
-mkdir docker_downs
-# download stuff from https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/
-sudo dpkg -i docekr_downs/*
+cd;
+mkdir docker_downs;
+docker_downs_url="https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/"
+needed_components=("containerd.io" "docker-ce" "docker-ce-cli" "docker-buildx-plugin" "docker-compose-plugin")
+for component in "${needed_components[@]}"
+do
+  echo "${docker_downs_url}$(curl -s $docker_downs_url | grep -oP "${component}.*[.]deb"  | cut -d "\"" -f 1 | sort -V | tail -1)" | wget -O docker_downs/${component}.deb -i -
+done
+sudo dpkg -i docker_downs/*
 sudo service docker start
 sudo docker run hello-world
 ```
