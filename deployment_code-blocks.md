@@ -109,8 +109,8 @@ xargs -a $shrooProjectDir/res/essential_packages sudo apt install -y
 # Set Project Vars
 ```bash
 aexport shrooProjectDir=~/shroobada;
-aexport shrooTreafikDir=/etc/traefik;
-aexport shrooTreafikLogDir=/var/log/traefik;
+aexport shrooTraefikDir=/etc/traefik;
+aexport shrooTraefikLogDir=/var/log/traefik;
 
 aexport shrooAuthDir=/etc/authentik;
 
