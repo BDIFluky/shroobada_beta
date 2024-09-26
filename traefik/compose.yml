@@ -32,8 +32,6 @@ services:
       - "traefik.routers.whoami.middlewares=authentik@file
 
 networks:
-
-networks:
   TraefikNet:
     name: TraefikNet
     driver: bridge
