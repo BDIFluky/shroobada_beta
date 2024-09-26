@@ -11,6 +11,7 @@ services:
     env_file:
       - "/etc/traefik/.traefik.env"
     networks:
+      - ExposedNet
       - TraefikNet
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -36,10 +37,6 @@ services:
   postgresql:
     image: docker.io/library/postgres:16-alpine
     container_name: postgres
-    #environment:
-      #POSTGRES_PASSWORD: ${PG_PASS:?database password required}
-      #POSTGRES_USER: ${PG_USER:-authentik}
-      #POSTGRES_DB: ${PG_DB:-authentik}
     env_file:
       - /etc/authentik/.auth.env
     networks:
@@ -111,10 +108,14 @@ services:
       - auth-redis
 
 networks:
+  ExposedNet:
+    name: ExposedNet
+    driver: bridge
+    internal: false
   TraefikNet:
     name: TraefikNet
     driver: bridge
-    internal: false
+    internal: true
   AuthNet:
     name: AuthNet
     driver: bridge
