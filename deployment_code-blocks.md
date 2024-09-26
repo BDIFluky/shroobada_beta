@@ -154,6 +154,11 @@ echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
 sudo rsync -hau --progress --exclude-from=$shrooProjectDir/.rsync.ignore $shrooProjectDir/ /etc/
 ```
 
+# Fire in the Hole
+```bash
+docker compose -f $shrooProjectDir/compose.yml up
+```
+
 # Check Hostname Attributes
 ```bash
 cd $shrooProjectDir;
@@ -166,7 +171,6 @@ cd $shrooProjectDir;
 ```
 
 # Setup NAT
-#http://<your server's IP or hostname>:9000/if/flow/initial-setup/
 ```bash
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
@@ -176,11 +180,6 @@ sudo iptables-save | sudo tee /etc/iptables/rules.v4 > /dev/null
 # Nav to Proj
 ```bash
 cdpd
-```
-
-# Fire in the Hole
-```bash
-docker compose -f $shrooProjectDir/compose.yml up
 ```
 
 # 
