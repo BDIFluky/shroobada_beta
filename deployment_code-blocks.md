@@ -120,7 +120,7 @@ sudo cp -rp -t /etc/ $shrooProjectDir/traefik;
 mkdir -p $shrooProjectDir/log/traefik;
 touch $shrooProjectDir/log/traefik/traefik.log;
 touch $shrooProjectDir/log/traefik/access.log;
-sudo cp -rp -t /var/log/  $shrooProjectDir/log/traefik;
+sudo cp -rp -t /var/log/ $shrooProjectDir/log/traefik;
 ```
 
 # Fire
