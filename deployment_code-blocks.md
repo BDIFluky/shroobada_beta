@@ -146,7 +146,7 @@ echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
 
 # Sync
 ```bash
-sudo rsync -au --progress --exclude-from=$shrooProjectDir/.rsync.ignore $shrooProjectDir/ /etc/
+sudo rsync -hau --progress --exclude-from=$shrooProjectDir/.rsync.ignore $shrooProjectDir/ /etc/
 ```
 
 # Check Hostname Attributes
