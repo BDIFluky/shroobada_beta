@@ -1,11 +1,46 @@
 services:
+  auth-server:
+    image: ghcr.io/goauthentik/server:2024.8.2
+    container_name: auther
+    command: server
+    env_file:
+      - ${shrooAuthDir}/.auth.env
+    networks:
+      - AuthBackNet
+    volumes:
+      - ${shrooAuthDir}/media:/media
+      - ${shrooAuthDir}/custom-templates:/templates
+    ports:
+      - "9000:9000"
+      #- "9443:9443"
+    restart: unless-stopped
+    depends_on:
+      - auth-pg
+      - auth-redis
+      
+  auth-worker:
+    image: ghcr.io/goauthentik/server:2024.8.2
+    container_name: auth-worker
+    command: worker
+    env_file:
+      - ${shrooAuthDir}/.auth.env
+    networks:
+      - AuthBackNet
+    volumes:
+      - ${shrooAuthDir}/media:/media
+      - ${shrooAuthDir}/certs:/certs
+      - ${shrooAuthDir}/custom-templates:/templates
+    depends_on:
+      - auth-pg
+      - auth-redis
+      
   auth-pg:
     image: docker.io/library/postgres:16-alpine
     container_name: auth-pg
     env_file:
-      - /etc/authentik/.auth-pg.env
+      - ${shrooAuthDir}/.auth-pg.env
     networks:
-      - AuthNet
+      - AuthBackNet
     volumes:
       - AuthDB:/var/lib/postgresql/data
     restart: unless-stopped
@@ -21,7 +56,7 @@ services:
     container_name: auth-redis
     command: --save 60 1 --loglevel warning
     networks:
-      - AuthNet
+      - AuthBackNet
     volumes:
       - AuthRedis:/data
     restart: unless-stopped
@@ -31,45 +66,14 @@ services:
       interval: 30s
       retries: 5
       timeout: 3s
-      
-  auth-server:
-    image: ghcr.io/goauthentik/server:2024.8.2
-    container_name: auther
-    command: server
-    env_file:
-      - /etc/authentik/.auth.env
-    networks:
-      - AuthNet
-    volumes:
-      - /etc/authentik/media:/media
-      - /etc/authentik/custom-templates:/templates
-    ports:
-      - "9000:9000"
-      #- "9443:9443"
-    restart: unless-stopped
-    depends_on:
-      - auth-pg
-      - auth-redis
-      
-  auth-worker:
-    image: ghcr.io/goauthentik/server:2024.8.2
-    container_name: auth-worker
-    command: worker
-    env_file:
-      - /etc/authentik/.auth.env
-    networks:
-      - AuthNet
-    volumes:
-      - /etc/authentik/media:/media
-      - /etc/authentik/certs:/certs
-      - /etc/authentik/custom-templates:/templates
-    depends_on:
-      - auth-pg
-      - auth-redis
 
 networks:
-  AuthNet:
-    name: AuthNet
+  AuthFrontNet:
+    name: AuthFrontNet
+    driver: bridge
+    internal: false
+  AuthBackNet:
+    name: AuthBackNet
     driver: bridge
     internal: true
 
