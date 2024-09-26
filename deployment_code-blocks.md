@@ -1,4 +1,3 @@
-#curl vim lsd git make sudo
 # Primum
 ```bash
 adminUN=$(id -u -n)
