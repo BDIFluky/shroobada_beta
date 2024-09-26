@@ -123,23 +123,6 @@ touch $shrooProjectDir/log/traefik/access.log;
 sudo cp -rp -t /var/log/ $shrooProjectDir/log/traefik;
 ```
 
-# Fire
-```bash
-
-```
-
-# Check Hostname Attributes
-```bash
-cd $shrooProjectDir;
-./script/check_hostname_att.sh
-```
-
-# Setup Interfaces
-```bash
-
-```
-
-
 # Setup Auth
 ```bash
 cd $shrooProjectDir
@@ -157,6 +140,22 @@ sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/
 echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env
 echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env
 echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
+```
+
+# Fire
+```bash
+
+```
+
+# Check Hostname Attributes
+```bash
+cd $shrooProjectDir;
+./script/check_hostname_att.sh
+```
+
+# Setup Interfaces
+```bash
+
 ```
 
 # Setup NAT
