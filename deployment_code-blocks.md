@@ -142,23 +142,21 @@ cd $shrooProjectDir;
 
 # Setup Auth
 ```bash
-[ ! -d /etc/authentik ] && sudo mkdir /etc/authentik;
-mkdir media
-mkdir certs
-mkdir custom-templates
-sudo mv -t /etc/authentik media certs custom-templates
-echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth.env
-echo "POSTGRES_USER=auth_db_u" >> .auth.env
-echo "POSTGRES_DB=auth_db" >> .auth.env
+cd $shrooProjectDir
+mkdir media certs custom-templates
+echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth-pg.env
+echo "POSTGRES_USER=auth_db_u" >> .auth-pg.env
+echo "POSTGRES_DB=auth_db" >> .auth-pg.env
 echo "AUTHENTIK_REDIS__HOST=auth-redis" >> .auth.env
-echo "AUTHENTIK_POSTGRESQL__HOST=postgresql" >> .auth.env
-echo "AUTHENTIK_POSTGRESQL__USER=auth_db_u" >> .auth.env
-echo "AUTHENTIK_POSTGRESQL__NAME=auth_db" >> .auth.env
-sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth.env >> .auth.env
+echo "AUTHENTIK_POSTGRESQL__HOST=auth-pg" >> .auth.env
+sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/AUTHENTIK_POSTGRESQL__USER/p' .auth-pg.env >> .auth.env
+#echo "AUTHENTIK_POSTGRESQL__USER=auth_db_u" >> .auth.env
+sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/AUTHENTIK_POSTGRESQL__NAME/p' .auth-pg.env >> .auth.env
+#echo "AUTHENTIK_POSTGRESQL__NAME=auth_db" >> .auth.env
+sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth-pg.env >> .auth.env
 echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env
-echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
 echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env
-sudo mv .auth.env /etc/authentik/
+echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
 ```
 
 # Setup NAT
