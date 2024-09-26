@@ -1,6 +1,13 @@
 services:
-  postgresql:
+  auth-pg:
     image: docker.io/library/postgres:16-alpine
+    container_name: auth-pg
+    env_file:
+      - /etc/authentik/.auth-pg.env
+    networks:
+      - AuthNet
+    volumes:
+      - AuthDB:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
@@ -8,17 +15,15 @@ services:
       interval: 30s
       retries: 5
       timeout: 5s
-    volumes:
-      - database:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
-      POSTGRES_USER: ${PG_USER:-authentik}
-      POSTGRES_DB: ${PG_DB:-authentik}
-    env_file:
-      - .env
-  redis:
+
+  auth-redis:
     image: docker.io/library/redis:alpine
+    container_name: auth-redis
     command: --save 60 1 --loglevel warning
+    networks:
+      - AuthNet
+    volumes:
+      - AuthRedis:/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
@@ -26,59 +31,50 @@ services:
       interval: 30s
       retries: 5
       timeout: 3s
-    volumes:
-      - redis:/data
-  server:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.8.2}
-    restart: unless-stopped
+      
+  auth-server:
+    image: ghcr.io/goauthentik/server:2024.8.2
+    container_name: auther
     command: server
-    environment:
-      AUTHENTIK_REDIS__HOST: redis
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
-    volumes:
-      - ./media:/media
-      - ./custom-templates:/templates
     env_file:
-      - .env
+      - /etc/authentik/.auth.env
+    networks:
+      - AuthNet
+    volumes:
+      - /etc/authentik/media:/media
+      - /etc/authentik/custom-templates:/templates
     ports:
-      - "${COMPOSE_PORT_HTTP:-9000}:9000"
-      - "${COMPOSE_PORT_HTTPS:-9443}:9443"
-    depends_on:
-      - postgresql
-      - redis
-  worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.8.2}
+      - "9000:9000"
+      #- "9443:9443"
     restart: unless-stopped
-    command: worker
-    environment:
-      AUTHENTIK_REDIS__HOST: redis
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
-    # `user: root` and the docker socket volume are optional.
-    # See more for the docker socket integration here:
-    # https://goauthentik.io/docs/outposts/integrations/docker
-    # Removing `user: root` also prevents the worker from fixing the permissions
-    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
-    # (1000:1000 by default)
-    user: root
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./media:/media
-      - ./certs:/certs
-      - ./custom-templates:/templates
-    env_file:
-      - .env
     depends_on:
-      - postgresql
-      - redis
+      - auth-pg
+      - auth-redis
+      
+  auth-worker:
+    image: ghcr.io/goauthentik/server:2024.8.2
+    container_name: auth-worker
+    command: worker
+    env_file:
+      - /etc/authentik/.auth.env
+    networks:
+      - AuthNet
+    volumes:
+      - /etc/authentik/media:/media
+      - /etc/authentik/certs:/certs
+      - /etc/authentik/custom-templates:/templates
+    depends_on:
+      - auth-pg
+      - auth-redis
+
+networks:
+  AuthNet:
+    name: AuthNet
+    driver: bridge
+    internal: true
 
 volumes:
-  database:
+  AuthDB:
     driver: local
-  redis:
+  AuthRedis:
     driver: local
