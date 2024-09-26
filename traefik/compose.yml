@@ -35,7 +35,7 @@ services:
       start_period: 5s   
     labels:
       - "traefik.enable=true"
-      - "traefik.routers.whoami.middlewares=authentik@file
+      - "traefik.routers.whoami.middlewares=authentik@file"
 
 networks:
   TraefikNet:
