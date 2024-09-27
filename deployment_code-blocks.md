@@ -8,7 +8,7 @@ echo -n "$adminUN ";
 su -p $adminUN;
 [ ! -f ~/.bash_aliases ] && touch ~/.bash_aliases && echo '[ -f ~/.bash_aliases ] && . ~/.bash_aliases' >> ~/.bashrc;
 [ ! -f ~/.bash_exports ] && touch ~/.bash_exports && echo '[ -f ~/.bash_exports ] && . ~/.bash_exports' >> ~/.bashrc;
-[ ! -f ~/.bash_funcs ] && touch ~/.bash_funcs && echo '[ -f ~/.bash_funcs ] && source ~/.bash_funcs' >> ~/.bashrc;
+[ ! -f ~/.bash_funcs ] && touch ~/.bash_funcs && echo '[ -f ~/.bash_funcs ] && . ~/.bash_funcs' >> ~/.bashrc;
 [[ ":$PATH:" == *":/sbin:"* ]] && echo 'export PATH=$PATH:/sbin' >> ~/.bash_exports;
 source ~/.bashrc
 ```
