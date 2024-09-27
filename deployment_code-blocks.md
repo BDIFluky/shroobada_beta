@@ -24,6 +24,12 @@ source ~/.bashrc;
 ```bash
 aalias "sbrc='source ~/.bashrc'";
 
+aalias "del='rm -r'";
+aalias "install='sudo apt install -y'";
+aalias "..='cd ..'";
+aalias "h='history'";
+aalias "hg='history | grep'";
+
 aalias "lsd='lsd --color=always -h'";
 aalias "la='lsd -a'";
 aalias "lat='la --tree'";
