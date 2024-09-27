@@ -6,17 +6,17 @@ echo -n "root "
 su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y git sudo;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
-[ ! -f ~/.bash_aliases ] && touch ~/.bash_aliases && echo '[ -f ~/.bash_aliases ] && . ~/.bash_aliases' >> ~/.bashrc
-[ ! -f ~/.bash_exports ] && touch ~/.bash_exports && echo '[ -f ~/.bash_exports ] && . ~/.bash_exports' >> ~/.bashrc
-[ ! -f ~/.bash_funcs ] && touch ~/.bash_funcs && echo '[ -f ~/.bash_funcs ] && source ~/.bash_funcs' >> ~/.bashrc
+[ ! -f ~/.bash_aliases ] && touch ~/.bash_aliases && echo '[ -f ~/.bash_aliases ] && . ~/.bash_aliases' >> ~/.bashrc;
+[ ! -f ~/.bash_exports ] && touch ~/.bash_exports && echo '[ -f ~/.bash_exports ] && . ~/.bash_exports' >> ~/.bashrc;
+[ ! -f ~/.bash_funcs ] && touch ~/.bash_funcs && echo '[ -f ~/.bash_funcs ] && source ~/.bash_funcs' >> ~/.bashrc;
 [[ ":$PATH:" == *":/sbin:"* ]] && echo 'export PATH=$PATH:/sbin' >> ~/.bash_exports;
 source ~/.bashrc
 ```
 
 # Setup Functions
 ```bash
-echo -e "function aalias { [ ! -z $1 ] && echo -e "alias $1" >> ~/.bash_aliases; };\nexport -f aalias" >> ~/.bash_funcs;
-echo -e "function aexport { [ ! -z $1 ] && echo -e "export $1" >> ~/.bash_exports; };\nexport -f aexport" >> ~/.bash_funcs;
+echo -e "function aalias { [ ! -z \$1 ] && echo -e "alias \$1" >> ~/.bash_aliases; };\nexport -f aalias" >> ~/.bash_funcs;
+echo -e "function aexport { [ ! -z \$1 ] && echo -e "export \$1" >> ~/.bash_exports; };\nexport -f aexport" >> ~/.bash_funcs;
 source ~/.bashrc;
 ```
 
