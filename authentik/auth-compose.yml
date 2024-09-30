@@ -7,6 +7,7 @@ services:
       - ${shrooAuthDir}/.auth.env
     networks:
       - AuthBackNet
+      - AuthFrontNet
     volumes:
       - ${shrooAuthDir}/media:/media
       - ${shrooAuthDir}/custom-templates:/templates
