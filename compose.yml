@@ -4,15 +4,6 @@ include:
   - ${shrooProjectDir}/traefik/compose.yml
   - ${shrooProjectDir}/authentik/compose.yml
 
-services:
-  traefik:
-    networks:
-      - AuthFrontNet
-
-  auth-server:
-    labels:
-      - "traefik.enable=true"
-  
 networks:
   ExposedNet:
     name: ExposedNet
