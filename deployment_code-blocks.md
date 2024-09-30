@@ -137,7 +137,7 @@ sudo cp -rp -t /var/log/ $shrooProjectDir/log/traefik;
 
 # Setup Auth
 ```bash
-cd $shrooProjectDir
+cd $shrooProjectDir/authentik
 mkdir media certs custom-templates
 echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth-pg.env
 echo "POSTGRES_USER=auth_db_u" >> .auth-pg.env
