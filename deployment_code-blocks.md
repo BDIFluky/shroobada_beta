@@ -161,7 +161,7 @@ sudo rsync -hau --progress --exclude-from=$shrooProjectDir/.rsync.ignore $shrooP
 
 # Fire in the Hole
 ```bash
-docker compose -f $shrooProjectDir/compose.yml up
+docker compose -f $shrooProjectDir/compose.yml up -d
 ```
 
 # Check Hostname Attributes
