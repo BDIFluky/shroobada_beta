@@ -1,8 +1,8 @@
 name: shroobada
 
 include:
-  - ${shrooProjectDir}/traefik/compose.yml
-  - ${shrooProjectDir}/authentik/compose.yml
+  - ${shrooProjectDir}/traefik/traefik-compose.yml
+  - ${shrooProjectDir}/authentik/auth-compose.yml
 
 networks:
   ExposedNet:
