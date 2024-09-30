@@ -48,5 +48,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ${shrooTreafikLogDir}
+      device: ${shrooTraefikLogDir}
       o: bind
