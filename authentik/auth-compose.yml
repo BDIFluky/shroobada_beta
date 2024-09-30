@@ -13,6 +13,8 @@ services:
     ports:
       - "9000:9000"
       #- "9443:9443"
+    labels:
+      - "traefik.enable=true"
     restart: unless-stopped
     depends_on:
       - auth-pg
