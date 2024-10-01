@@ -125,6 +125,7 @@ aexport shrooTraefikDir=/etc/traefik;
 aexport shrooTraefikLogDir=/var/log/traefik;
 
 aexport shrooAuthDir=/etc/authentik;
+aexport shrooAuthDB=/var/lib/authdb/
 
 source ~/.bashrc
 ```
@@ -139,25 +140,29 @@ mkdir -p $shrooProjectDir/log/traefik;
 touch $shrooProjectDir/log/traefik/traefik.log;
 touch $shrooProjectDir/log/traefik/access.log;
 sudo cp -rp -t /var/log/ $shrooProjectDir/log/traefik;
+sudo rm -r $shrooProjectDir/log/;
 ```
 
 # Setup Auth
 ```bash
-cd $shrooProjectDir/authentik
-mkdir media certs custom-templates
-echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth-pg.env
-echo "POSTGRES_USER=auth_db_u" >> .auth-pg.env
-echo "POSTGRES_DB=auth_db" >> .auth-pg.env
-echo "AUTHENTIK_REDIS__HOST=auth-redis" >> .auth.env
-echo "AUTHENTIK_POSTGRESQL__HOST=auth-pg" >> .auth.env
-sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/AUTHENTIK_POSTGRESQL__USER/p' .auth-pg.env >> .auth.env
-#echo "AUTHENTIK_POSTGRESQL__USER=auth_db_u" >> .auth.env
-sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/AUTHENTIK_POSTGRESQL__NAME/p' .auth-pg.env >> .auth.env
-#echo "AUTHENTIK_POSTGRESQL__NAME=auth_db" >> .auth.env
-sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth-pg.env >> .auth.env
-echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env
-echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env
-echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env
+mkdir $shrooProjectDir/lib/authdb
+sudo cp -rp -t /var/lib/ $shrooProjectDir/lib/authdb;
+sudo rm -r $shrooProjectDir/lib/authdb;
+cd $shrooProjectDir/authentik;
+mkdir media certs custom-templates;
+echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth-pg.env;
+echo "POSTGRES_USER=auth_db_u" >> .auth-pg.env;
+echo "POSTGRES_DB=auth_db" >> .auth-pg.env;
+echo "AUTHENTIK_REDIS__HOST=auth-redis" >> .auth.env;
+echo "AUTHENTIK_POSTGRESQL__HOST=auth-pg" >> .auth.env;
+sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/AUTHENTIK_POSTGRESQL__USER/p' .auth-pg.env >> .auth.env;
+#echo "AUTHENTIK_POSTGRESQL__USER=auth_db_u" >> .auth.env;
+sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/AUTHENTIK_POSTGRESQL__NAME/p' .auth-pg.env >> .auth.env;
+#echo "AUTHENTIK_POSTGRESQL__NAME=auth_db" >> .auth.env;
+sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth-pg.env >> .auth.env;
+echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env;
+echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env;
+echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env;
 ```
 
 # Sync
