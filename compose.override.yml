@@ -4,6 +4,8 @@ services:
       - AuthFrontNet
       
   whoami:
+    depends_on: 
+      - auth-server
     labels:
       - "traefik.http.routers.whoami.middlewares=authentik@file"
 
