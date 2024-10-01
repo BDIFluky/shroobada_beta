@@ -150,7 +150,7 @@ sudo rm -r $shrooProjectDir/log/;
 
 # Setup Auth
 ```bash
-mkdir $shrooProjectDir/lib/authdb
+mkdir -p $shrooProjectDir/lib/authdb
 sudo cp -rp -t /var/lib/ $shrooProjectDir/lib/authdb;
 sudo rm -r $shrooProjectDir/lib/authdb;
 cd $shrooProjectDir/authentik;
