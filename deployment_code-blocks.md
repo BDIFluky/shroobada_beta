@@ -6,6 +6,38 @@ echo -n "root "
 su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y git sudo;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
+```
+
+# Setup apt repos
+```bash
+echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
+sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
+# Priority for Bookworm (Stable)
+Package: *
+Pin: release a=bookworm
+Pin-Priority: 900
+
+# Priority for Bookworm-backports
+Package: *
+Pin: release a=bookworm-backports
+Pin-Priority: 700
+
+# Priority for Trixie (Testing)
+Package: *
+Pin: release a=trixie
+Pin-Priority: 500
+
+# Priority for Sid (Unstable)
+Package: *
+Pin: release a=sid
+Pin-Priority: 400
+EOF
+
+sudo apt update;
+```
+
+# Setup .bashrc
+```bash
 [ ! -f ~/.bash_aliases ] && touch ~/.bash_aliases && echo '[ -f ~/.bash_aliases ] && . ~/.bash_aliases' >> ~/.bashrc;
 [ ! -f ~/.bash_exports ] && touch ~/.bash_exports && echo '[ -f ~/.bash_exports ] && . ~/.bash_exports' >> ~/.bashrc;
 [ ! -f ~/.bash_funcs ] && touch ~/.bash_funcs && echo '[ -f ~/.bash_funcs ] && . ~/.bash_funcs' >> ~/.bashrc;
@@ -59,34 +91,6 @@ aalias "dvins='docker volume inspect'";
 
 source ~/.bashrc;
 ``` 
-
-# Setup apt repos
-```bash
-echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
-sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
-# Priority for Bookworm (Stable)
-Package: *
-Pin: release a=bookworm
-Pin-Priority: 900
-
-# Priority for Bookworm-backports
-Package: *
-Pin: release a=bookworm-backports
-Pin-Priority: 700
-
-# Priority for Trixie (Testing)
-Package: *
-Pin: release a=trixie
-Pin-Priority: 500
-
-# Priority for Sid (Unstable)
-Package: *
-Pin: release a=sid
-Pin-Priority: 400
-EOF
-
-sudo apt update;
-```
 
 # Install Docker
 ```bash
