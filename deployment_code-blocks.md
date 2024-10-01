@@ -179,6 +179,12 @@ sudo rsync -hau --progress --exclude-from=$shrooProjectDir/.rsync.ignore $shrooP
 docker compose -f $shrooProjectDir/compose.yml up -d
 ```
 
+# Purge
+```bash
+cd;
+sudo rm -r shroobada/ /etc/authentik /etc/traefik /var/log/traefik/
+```
+
 # Check Hostname Attributes
 ```bash
 cd $shrooProjectDir;
