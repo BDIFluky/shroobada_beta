@@ -182,6 +182,8 @@ docker compose -f $shrooProjectDir/compose.yml up -d
 # Purge
 ```bash
 cd;
+sudo rm .bash_aliases .bash_funcs .bash_exports
+sudo cp /home/test/.bashrc .bashrc
 sudo rm -r shroobada/ /etc/authentik /etc/traefik /var/log/traefik/
 ```
 
