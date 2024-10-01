@@ -1,0 +1,12 @@
+services:
+  traefik:
+    networks:
+      - AuthFrontNet
+      
+  whoami:
+    labels:
+      - "traefik.http.routers.whoami.middlewares=authentik@file"
+
+  auth-server:
+    labels:
+      - "traefik.enable=true"
