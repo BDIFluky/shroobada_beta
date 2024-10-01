@@ -9,7 +9,6 @@ services:
       - "${shrooTraefikDir}/.traefik.env"
     networks:
       - TraefikNet
-      - AuthFrontNet
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "${shrooTraefikDir}/letsencrypt:/letsencrypt"
