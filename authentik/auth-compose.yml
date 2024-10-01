@@ -1,10 +1,12 @@
+x-auth-env: &auth-env
+    env_file:
+      - ${shrooAuthDir}/.auth.env
 services:
   auth-server:
     image: ghcr.io/goauthentik/server:2024.8.2
     container_name: auther
     command: server
-    env_file:
-      - ${shrooAuthDir}/.auth.env
+    <<: *auth-env
     networks:
       - AuthBackNet
       - AuthFrontNet
@@ -23,8 +25,7 @@ services:
     image: ghcr.io/goauthentik/server:2024.8.2
     container_name: auth-worker
     command: worker
-    env_file:
-      - ${shrooAuthDir}/.auth.env
+    <<: *auth-env
     networks:
       - AuthBackNet
     volumes:
@@ -81,5 +82,9 @@ networks:
 volumes:
   AuthDB:
     driver: local
+    driver_opts:
+      type: none
+      device: ${shrooAuthDB}
+      o: bind
   AuthRedis:
     driver: local
