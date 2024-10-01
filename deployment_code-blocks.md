@@ -17,6 +17,7 @@ source ~/.bashrc
 ```bash
 echo -e "function aalias { [ ! -z \"\$1\" ] && echo -e "alias \"\$1\"" >> ~/.bash_aliases; };\nexport -f aalias" >> ~/.bash_funcs;
 echo -e "function aexport { [ ! -z \"\$1\" ] && echo -e "export \"\$1\"" >> ~/.bash_exports; };\nexport -f aexport" >> ~/.bash_funcs;
+echo -e "function dcup { docker compose "$@" up -d };\nexport -f dcup" >> ~/.bash_funcs;
 source ~/.bashrc;
 ```
 
@@ -44,11 +45,16 @@ aalias "llat='lla --tree'";
 aalias "vcmp='vim compose.yml'";
 aalias "dps='docker ps'";
 aalias "dl='docker logs'";
-aalias "dcup='docker compose up -d'";
+aalias "drm='docker rm'";
+#aalias "dcup='docker compose up -d'";
+aalias "dcupfo='dcup -f compose.yml -f compose.override.yml'";
+aalias "dcd='docker compose down'";
 aalias "dcdo='docker compose down'";
 aalias "dcre='dcdo && dcup'";
+aalias "dcrefo='dcdo && dcupfo'";
 aalias "dnls='docker network ls'";
 aalias "dnins='docker network inspect'";
+aalias "dvls='docker volume ls'";
 aalias "dvins='docker volume inspect'";
 
 source ~/.bashrc;
