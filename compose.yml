@@ -3,9 +3,3 @@ name: shroobada
 include:
   - ${shrooProjectDir}/traefik/traefik-compose.yml
   - ${shrooProjectDir}/authentik/auth-compose.yml
-
-networks:
-  ExposedNet:
-    name: ExposedNet
-    driver: bridge
-    internal: false
