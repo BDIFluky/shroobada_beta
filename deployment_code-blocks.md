@@ -49,7 +49,7 @@ source ~/.bashrc
 ```bash
 echo -e "function aalias { [ ! -z \"\$1\" ] && echo -e "alias \"\$1\"" >> ~/.bash_aliases; };\nexport -f aalias" >> ~/.bash_funcs;
 echo -e "function aexport { [ ! -z \"\$1\" ] && echo -e "export \"\$1\"" >> ~/.bash_exports; };\nexport -f aexport" >> ~/.bash_funcs;
-echo -e "function dcup { docker compose "$@" up -d };\nexport -f dcup" >> ~/.bash_funcs;
+echo -e "function dcup { docker compose \"\$@\" up -d };\nexport -f dcup" >> ~/.bash_funcs;
 source ~/.bashrc;
 ```
 
