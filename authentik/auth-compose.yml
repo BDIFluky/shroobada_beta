@@ -1,6 +1,7 @@
 x-auth-env: &auth-env
     env_file:
       - ${shrooAuthDir}/.auth.env
+      
 services:
   auth-server:
     image: ghcr.io/goauthentik/server:2024.8.2
