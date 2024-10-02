@@ -1,0 +1,134 @@
+name: shroobada
+
+services:
+
+  traefik:
+    image: "docker.io/traefik:v3.1"
+    container_name: "traefik"
+    ports:
+      - "8080:80"
+      - "8443:443"
+    env_file:
+      - "/etc/traefik/.traefik.env"
+    networks:
+      - ExposedNet
+      - TraefikNet
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/etc/traefik/letsencrypt:/letsencrypt"
+      - "/etc/traefik/traefik.yml:/etc/traefik/traefik.yml"
+      - "/etc/traefik/dynamic:/dynamic"
+      - "TraefikLogs:/var/log/traefik/"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  whoami:
+    image: "docker.io/traefik/whoami"
+    container_name: "whoami"
+    networks:
+      - TraefikNet
+    labels:
+      - "traefik.enable=true"
+
+  postgresql:
+    image: docker.io/library/postgres:16-alpine
+    container_name: postgres
+    env_file:
+      - /etc/authentik/.auth.env
+    networks:
+      - AuthNet
+    volumes:
+      - database:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+
+  auth-redis:
+    image: docker.io/library/redis:alpine
+    container_name: auth-redis
+    command: --save 60 1 --loglevel warning
+    networks:
+      - AuthNet
+    volumes:
+      - auth-redis_vol:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+      
+  auth-server:
+    image: ghcr.io/goauthentik/server:2024.8.2
+    container_name: auth-server
+    command: server
+    env_file:
+      - /etc/authentik/.auth.env
+    networks:
+      - TraefikNet
+      - AuthNet
+    volumes:
+      - /etc/authentik/media:/media
+      - /etc/authentik/custom-templates:/templates
+    ports:
+      - "9000:9000"
+      #- "9443:9443"
+    labels:
+      - "traefik.enable=true"
+    restart: unless-stopped
+    depends_on:
+      - postgresql
+      - auth-redis
+      
+  auth-worker:
+    image: ghcr.io/goauthentik/server:2024.8.2
+    container_name: auth-worker
+    command: worker
+    env_file:
+      - /etc/authentik/.auth.env
+    networks:
+      #- TraefikNet
+      - AuthNet
+    volumes:
+      #- /var/run/docker.sock:/var/run/docker.sock
+      - /etc/authentik/media:/media
+      - /etc/authentik/certs:/certs
+      - /etc/authentik/custom-templates:/templates
+    depends_on:
+      - postgresql
+      - auth-redis
+
+networks:
+  ExposedNet:
+    name: ExposedNet
+    driver: bridge
+    internal: false
+  TraefikNet:
+    name: TraefikNet
+    driver: bridge
+    internal: true
+  AuthNet:
+    name: AuthNet
+    driver: bridge
+    internal: true
+
+volumes:
+  TraefikLogs:
+    driver: local
+    driver_opts:
+      type: none
+      device: /var/log/traefik
+      o: bind
+  database:
+    driver: local
+  auth-redis_vol:
+    driver: local
