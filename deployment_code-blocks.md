@@ -187,9 +187,9 @@ echo "PGDATA=/var/lib/postgresql/data/guacamole" >> .guac-pg.env;
 
 echo "GUACD_HOSTNAME=guacd" >> .guac.env;
 echo "POSTGRES_HOSTNAME=guac-pg" >> .guac.env;
-sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRES_USER/p' .guac-pg.env >> .guac.env;
+sed -n '/^POSTGRES_USER/p' .guac-pg.env >> .guac.env;
 sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRES_DATABASE/p' .guac-pg.env >> .guac.env;
-sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRES_PASSWORD/p' .guac-pg.env >> .guac.env;
+sed -n '/^POSTGRES_PASSWORD/p' .guac-pg.env >> .guac.env;
 ```
 
 # Sync
