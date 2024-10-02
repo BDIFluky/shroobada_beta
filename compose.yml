@@ -3,3 +3,4 @@ name: shroobada
 include:
   - ${shrooProjectDir}/traefik/traefik-compose.yml
   - ${shrooProjectDir}/authentik/auth-compose.yml
+  - ${shrooProjectDir}/guacamole/guacamole-compose.yml
