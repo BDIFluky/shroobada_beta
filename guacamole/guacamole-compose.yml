@@ -16,10 +16,11 @@ services:
       - ${shrooGuacDir}/.guac-pg.env
     networks:
       - GuacBackNet
-    restart: always
     volumes:
-    - ${shrooGuacDB}/init:/docker-entrypoint-initdb.d:z
-    - ${shrooGuacDB}/data:/var/lib/postgresql/data:Z
+      - ${shrooGuacDB}/init:/docker-entrypoint-initdb.d:z
+      - ${shrooGuacDB}/data:/var/lib/postgresql/data:Z
+    restart: always
+
 
   guacamole:
     container_name: guac
