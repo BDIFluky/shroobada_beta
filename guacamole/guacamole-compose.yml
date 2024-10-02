@@ -27,7 +27,7 @@ services:
     env_file:
       - ${shrooGuacDir}/.guac.env
     ports:
-      - 8080:8080/tcp
+      - 8080/tcp
     networks:
       - GuacFrontNet
       - GuacBackNet
