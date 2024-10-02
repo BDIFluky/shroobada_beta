@@ -43,7 +43,7 @@ networks:
   GuacFrontNet:
     name: GuacFrontNet
     driver: bridge
-    internal: true 
+    internal: false 
   GuacBackNet:  
     name: GuacBackNet
     driver: bridge
