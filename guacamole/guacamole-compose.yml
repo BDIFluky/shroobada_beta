@@ -1,0 +1,49 @@
+services:
+  guacd:
+    container_name: guacd
+    image: docker.io/guacamole/guacd
+    networks:
+      - GuacBackNet
+    volumes:
+      - ${shrooGuacDir}/drive:/drive:rw
+      - ${shrooGuacDir}/record:/record:rw
+    restart: always
+
+  guac-pg:
+    container_name: guac-pg
+    image: docker.io/library/postgres:15.2-alpine
+    env_file:
+      - ${shrooGuacDir}/.guac-pg.env
+    networks:
+      - GuacBackNet
+    restart: always
+    volumes:
+    - ${shrooGuacDB}/init:/docker-entrypoint-initdb.d:z
+    - ${shrooGuacDB}/data:/var/lib/postgresql/data:Z
+
+  guacamole:
+    container_name: guac
+    image: docker.io/guacamole/guacamole
+    env_file:
+      - ${shrooGuacDir}/.guac.env
+    ports:
+      - 8080:8080/tcp
+    networks:
+      - GuacFrontNet
+      - GuacBackNet
+    volumes:
+      - ${shrooGuacDir}/record:/record:rw
+    restart: always
+    depends_on:
+      - guacd
+      - guac-pg
+
+networks:
+  GuacFrontNet:
+    name: GuacFrontNet
+    driver: bridge
+    internal: true 
+  GuacBackNet:  
+    name: GuacBackNet
+    driver: bridge
+    internal: true
