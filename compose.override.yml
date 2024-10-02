@@ -10,3 +10,4 @@ services:
   auth-server:
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=AuthFrontNet"
