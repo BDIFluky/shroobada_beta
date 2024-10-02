@@ -130,7 +130,10 @@ aexport shrooTraefikDir=/etc/traefik;
 aexport shrooTraefikLogDir=/var/log/traefik;
 
 aexport shrooAuthDir=/etc/authentik;
-aexport shrooAuthDB=/var/lib/authdb/
+aexport shrooAuthDB=/var/lib/authdb;
+
+aexport shrooGuacDir=/etc/guacamole;
+aexport shrooGuacDB=/var/lib/guacdb;
 
 source ~/.bashrc
 ```
@@ -155,19 +158,38 @@ sudo cp -rp -t /var/lib/ $shrooProjectDir/lib/authdb;
 sudo rm -r $shrooProjectDir/lib/authdb;
 cd $shrooProjectDir/authentik;
 mkdir media certs custom-templates;
+
 echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth-pg.env;
 echo "POSTGRES_USER=auth_db_u" >> .auth-pg.env;
 echo "POSTGRES_DB=auth_db" >> .auth-pg.env;
+
 echo "AUTHENTIK_REDIS__HOST=auth-redis" >> .auth.env;
 echo "AUTHENTIK_POSTGRESQL__HOST=auth-pg" >> .auth.env;
 sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/AUTHENTIK_POSTGRESQL__USER/p' .auth-pg.env >> .auth.env;
-#echo "AUTHENTIK_POSTGRESQL__USER=auth_db_u" >> .auth.env;
 sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/AUTHENTIK_POSTGRESQL__NAME/p' .auth-pg.env >> .auth.env;
-#echo "AUTHENTIK_POSTGRESQL__NAME=auth_db" >> .auth.env;
 sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth-pg.env >> .auth.env;
 echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env;
 echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env;
-echo "AUTHENTIK_ERROR_REPORTING__ENABLED=true" >> .auth.env;
+echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" >> .auth.env;
+```
+
+# Setup Guac
+```bash
+mkdir -p $shrooProjectDir/guacamole/drive $shrooProjectDir/guacamole/record $shrooProjectDir/lib/guacdb/init $shrooProjectDir/lib/guacdb/data
+sudo cp -rp -t /var/lib/ $shrooProjectDir/lib/guacdb;
+sudo rm -r $shrooProjectDir/lib/guacdb;
+cd $shrooProjectDir/guacamole;
+
+echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .guac-pg.env;
+echo "POSTGRES_USER=guac_db_u" >> .guac-pg.env;
+echo "POSTGRES_DB=guac_db" >> .guac-pg.env;
+echo "PGDATA=/var/lib/postgresql/data/guacamole" >> .guac-pg.env;
+
+echo "GUACD_HOSTNAME=guacd" >> .guac.env;
+echo "POSTGRES_HOSTNAME=guac-pg" >> .guac.env;
+sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRES_USER/p' .guac-pg.env >> .guac.env;
+sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRES_DATABASE/p' .guac-pg.env >> .guac.env;
+sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRES_PASSWORD/p' .guac-pg.env >> .guac.env;
 ```
 
 # Sync
