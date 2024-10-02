@@ -21,7 +21,6 @@ services:
       - ${shrooGuacDB}/data:/var/lib/postgresql/data:Z
     restart: always
 
-
   guacamole:
     container_name: guac
     image: docker.io/guacamole/guacamole
