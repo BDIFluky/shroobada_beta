@@ -1,5 +1,7 @@
-lsd
-curl
-vim
 btop
+curl
+git
+lsd
 rsync
+sudo
+vim
