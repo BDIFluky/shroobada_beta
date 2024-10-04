@@ -216,8 +216,9 @@ cd $shrooProjectDir;
 ./script/check_hostname_att.sh
 ```
 
-# Setup Interfaces
+# guac shit
 ```bash
+docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql > initdb.sql
 sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
 
 ```
