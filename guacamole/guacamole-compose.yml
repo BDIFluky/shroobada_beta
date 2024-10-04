@@ -11,7 +11,7 @@ services:
 
   guac-pg:
     container_name: guac-pg
-    image: docker.io/library/postgres:15.2-alpine
+    image: docker.io/library/postgres:16-alpine
     env_file:
       - ${shrooGuacDir}/.guac-pg.env
     networks:
