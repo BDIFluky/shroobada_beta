@@ -218,6 +218,12 @@ cd $shrooProjectDir;
 
 # Setup Interfaces
 ```bash
+sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
+
+```
+
+# Setup Interfaces
+```bash
 
 ```
 
