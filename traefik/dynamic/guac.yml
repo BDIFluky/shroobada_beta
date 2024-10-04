@@ -1,9 +1,17 @@
 http:
   middlewares:
+    guac-mwr:
+        chain:
+          middlewars:
+            - guac-headers
+            - guac-prefix
+            
     guac-headers:
       headers:
-        customRequestHeaders:
-          X-Forwarded-For: "{client.ip}"
         customResponseHeaders:
           Connection: "Upgrade"
-          Upgrade: "{http.connection.upgrade}"
+          Upgrade: "websocker"
+          
+    guac-prefix:
+      addPrefix:
+        prefix: "/guacamole"
