@@ -1,0 +1,9 @@
+http:
+  middlewares:
+    guac-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-For: "{client.ip}"
+        customResponseHeaders:
+          Connection: "Upgrade"
+          Upgrade: "{http.connection.upgrade}"
