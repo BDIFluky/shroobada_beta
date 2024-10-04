@@ -2,7 +2,7 @@ http:
   middlewares:
     guac-mwr:
         chain:
-          middlewars:
+          middlewares:
             - guac-headers
             - guac-prefix
             
