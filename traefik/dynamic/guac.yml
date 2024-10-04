@@ -10,7 +10,7 @@ http:
       headers:
         customResponseHeaders:
           Connection: "Upgrade"
-          Upgrade: "websocker"
+          Upgrade: "websocket"
           
     guac-prefix:
       addPrefix:
