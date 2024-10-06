@@ -13,10 +13,10 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=AuthFrontNet"
 
-  guacamole:
+  guac:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=GuacFrontNet"
-      - "traefik.http.routers.guac-rt.middlewares=guac-headers@file"
+      - "traefik.http.routers.guac-rt.middlewares=guac-mwr@file"
       #- "traefik.http.routers.whoami.middlewares=authentik@file"
 
