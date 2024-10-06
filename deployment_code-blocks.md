@@ -187,9 +187,15 @@ echo "PGDATA=/var/lib/postgresql/data/guacamole" >> .guac-pg.env;
 
 echo "GUACD_HOSTNAME=guacd" >> .guac.env;
 echo "POSTGRES_HOSTNAME=guac-pg" >> .guac.env;
-sed -n '/^POSTGRES_USER/p' .guac-pg.env >> .guac.env;
-sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRES_DATABASE/p' .guac-pg.env >> .guac.env;
+sed -n '/^POSTGRESQL_USER/p' .guac-pg.env >> .guac.env;
+sed -n '/^POSTGRES_DATABASE/p' .guac-pg.env >> .guac.env;
+#sed -n '/^POSTGRESQL_DB/s/^POSTGRES_DB/POSTGRES_DATABASE/p' .guac-pg.env >> .guac.env;
 sed -n '/^POSTGRES_PASSWORD/p' .guac-pg.env >> .guac.env;
+echo "OPENID_AUTHORIZATION_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/authorize/" >> .guac.env;
+echo "OPENID_JWKS_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/guac/jwks/" >> .guac.env;
+echo "OPENID_ISSUER=https://auther.boredomdidit.com:8443/application/o/guac/" >> .guac.env;
+echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" >> .guac.env;
+echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" >> .guac.env;
 ```
 
 # Sync
