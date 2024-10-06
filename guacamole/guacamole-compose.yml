@@ -3,6 +3,7 @@ services:
     container_name: guacd
     image: docker.io/guacamole/guacd
     networks:
+      - GuacOutNet
       - GuacBackNet
     volumes:
       - ${shrooGuacDir}/drive:/drive:rw
@@ -21,7 +22,7 @@ services:
       - ${shrooGuacDB}/data:/var/lib/postgresql/data:Z
     restart: always
 
-  guacamole:
+  guac:
     container_name: guac
     image: docker.io/guacamole/guacamole
     env_file:
@@ -39,6 +40,10 @@ services:
       - guac-pg
 
 networks:
+  GuacOutNet:
+    name: GuacOutNet
+    driver: bridge
+    internal: false 
   GuacFrontNet:
     name: GuacFrontNet
     driver: bridge
