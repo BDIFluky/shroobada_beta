@@ -1,17 +1,5 @@
 http:
   middlewares:
     guac-mwr:
-        chain:
-          middlewares:
-            - guac-headers
-            - guac-prefix
-            
-    guac-headers:
-      headers:
-        customResponseHeaders:
-          Connection: "Upgrade"
-          Upgrade: "websocket"
-          
-    guac-prefix:
       addPrefix:
         prefix: "/guacamole"
