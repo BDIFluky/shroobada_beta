@@ -48,8 +48,9 @@ source ~/.bashrc
 
 # Setup Functions
 ```bash
-echo -e "function aalias { [ ! -z \"\$1\" ] && echo -e "alias \"\$1\"" >> ~/.bash_aliases; };\nexport -f aalias" >> ~/.bash_funcs;
-echo -e "function aexport { [ ! -z \"\$1\" ] && echo -e "export \"\$1\"" >> ~/.bash_exports; };\nexport -f aexport" >> ~/.bash_funcs;
+echo -e "function aalias { [ ! -z \"\$1\" ] && ! grep -q \"alias \\\"\$1\\\"\" ~/.bash_aliases && echo \"alias \\\"\$1\\\"\" >> ~/.bash_aliases || echo -e \"\e[33mAlias '\$1' already exists.\e[0m\"; };\nexport -f aalias" >> ~/.bash_funcs
+echo -e "function aexport { [ ! -z \"\$1\" ] && ! grep -q \"export \\\"\$1\\\"\" ~/.bash_exports && echo \"export \\\"\$1\\\"\" >> ~/.bash_exports || echo -e \"\e[33mExport '\$1' already exists.\e[0m\"; };\nexport -f aexport" >> ~/.bash_funcs
+#echo -e "function aexport { [ ! -z \"\$1\" ] && echo -e "export \"\$1\"" >> ~/.bash_exports; };\nexport -f aexport" >> ~/.bash_funcs;
 #echo -e "function dcup { docker compose \"\$@\" up -d; };\nexport -f dcup" >> ~/.bash_funcs;
 source ~/.bashrc;
 ```
