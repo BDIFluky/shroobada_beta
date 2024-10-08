@@ -6,7 +6,7 @@ echo -n "root "
 su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y curl git sudo;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
-[[ ":$PATH:" == *":/sbin:"* ]] && echo 'export PATH=$PATH:/sbin' >> ~/.bash_exports;
+[[ ":$PATH:" == *":/sbin:"* ]] && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
 ```
 
 # Setup apt repos
