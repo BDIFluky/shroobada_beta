@@ -8,6 +8,7 @@ echo -n "$adminUN ";
 su -p $adminUN;
 read -p "Enter new SSH port: " sshPort && sudo sed -i 's/^#Port 22/Port $sshPort/' /etc/ssh/sshd_config && sudo systemctl restart ssh;
 [[ ":$PATH:" == *":/sbin:"* ]] && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
+source ~/.bashrc;
 ```
 
 # Setup apt repos
