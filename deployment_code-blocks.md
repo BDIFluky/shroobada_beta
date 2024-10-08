@@ -77,8 +77,8 @@ aalias "llat='lla --tree'";
 
 aalias "vcmp='vim compose.yml'";
 aalias "dps='docker ps'";
-alias "wdps='watch docker ps'";
-alias "dex='docker exec -it'";
+aalias "wdps='watch docker ps'";
+aalias "dex='docker exec -it'";
 aalias "dl='docker logs'";
 aalias "drm='docker rm'";
 aalias "dcup='docker compose up -d'";
