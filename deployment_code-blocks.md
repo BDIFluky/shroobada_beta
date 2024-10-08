@@ -40,9 +40,8 @@ sudo apt update;
 
 # Setup .bashrc
 ```bash
-[ ! -f ~/.bash_aliases ] && touch ~/.bash_aliases && echo '[ -f ~/.bash_aliases ] && . ~/.bash_aliases' >> ~/.bashrc;
-[ ! -f ~/.bash_exports ] && touch ~/.bash_exports && echo '[ -f ~/.bash_exports ] && . ~/.bash_exports' >> ~/.bashrc;
-[ ! -f ~/.bash_funcs ] && touch ~/.bash_funcs && echo '[ -f ~/.bash_funcs ] && . ~/.bash_funcs' >> ~/.bashrc;
+bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
+for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f "$file" ] && touch "$file" && echo "$source_line" >> ~/.bashrc || ! grep -q "$source_line" ~/.bashrc && echo "$source_line" >> ~/.bashrc; done;
 
 source ~/.bashrc
 ```
