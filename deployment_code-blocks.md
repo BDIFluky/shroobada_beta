@@ -1,4 +1,4 @@
-# Primum
+..# Primum
 ```bash
 adminUN=$(id -u -n)
 export adminUN;
@@ -71,44 +71,44 @@ source ~/.bashrc;
 
 # Setup Aliases
 ```bash
-aalias "sbrc='source ~/.bashrc'";
-aalias "vbrc='vim ~/.bashrc'";
+aalias sbrc='source ~/.bashrc';
+aalias vbrc='vim ~/.bashrc';
 
-aalias "del='rm -r'";
-aalias "install='sudo apt install -y'";
-aalias "..='cd ..'";
-aalias "h='history'";
-aalias "hg='history | grep'";
+aalias del='rm -r';
+aalias install='sudo apt install -y';
+aalias ..='cd ..';
+aalias h='history';
+aalias hg='history | grep';
 
-aalias "lsd='lsd --color=always -h'";
-aalias "la='lsd -a'";
-aalias "lat='la --tree'";
-aalias "lt='lsd --tree'";
-aalias "lta='lt -a'";
-aalias "ll='lsd -l'";
-aalias "lla='la -l'";
-aalias "llt='lt -l'";
-aalias "llta='llt -a'";
-aalias "llat='lla --tree'";
+aalias lsd='lsd --color=always -h';
+aalias la='lsd -a';
+aalias lat='la --tree';
+aalias lt='lsd --tree';
+aalias lta='lt -a';
+aalias ll='lsd -l';
+aalias lla='la -l';
+aalias llt='lt -l';
+aalias llta='llt -a';
+aalias llat='lla --tree';
 
-aalias "vcmp='vim compose.yml'";
-aalias "dps='docker ps'";
-aalias "wdps='watch docker ps'";
-aalias "dex='docker exec -it'";
-aalias "dl='docker logs'";
-aalias "drm='docker rm'";
-aalias "dcup='docker compose up -d'";
-#aalias "dcupfo='dcup -f compose.yml -f compose.override.yml'";
-aalias "dcd='docker compose down'";
-aalias "dcdo='docker compose down'";
-aalias "dcre='dcdo && dcup'";
-#aalias "dcrefo='dcdo && dcupfo'";
-aalias "dnls='docker network ls'";
-aalias "dnrm='docker network rm'";
-aalias "dnins='docker network inspect'";
-aalias "dvls='docker volume ls'";
-aalias "dvrm='docker volume rm'";
-aalias "dvins='docker volume inspect'";
+aalias vcmp='vim compose.yml';
+aalias dps='docker ps';
+aalias wdps='watch docker ps';
+aalias dex='docker exec -it';
+aalias dl='docker logs';
+aalias drm='docker rm';
+aalias dcup='docker compose up -d';
+#aalias dcupfo='dcup -f compose.yml -f compose.override.yml';
+aalias dcd='docker compose down';
+aalias dcdo='docker compose down';
+aalias dcre='dcdo && dcup';
+#aalias dcrefo='dcdo && dcupfo';
+aalias dnls='docker network ls';
+aalias dnrm='docker network rm';
+aalias dnins='docker network inspect';
+aalias dvls='docker volume ls';
+aalias dvrm='docker volume rm';
+aalias dvins='docker volume inspect';
 
 source ~/.bashrc;
 ``` 
