@@ -39,6 +39,8 @@ fetch_and_install_go() {
   go env -w GOPATH="$SGOPATH"
   [ ! -d $SGOPATH ] && mkdir -p $SGOPATH
   rm go_latest_version
+
+  go version && echo -e "\e[34mGo installed successfully.\e[0m"
 }
 
 keep_or_change_env SGOPATH
