@@ -22,7 +22,6 @@ shrooProjectDir=~/shroobada;
 git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
 
 chmod +x $shrooProjectDir/script/*.sh;
-#chmod +x $shrooProjectDir/fire_in_the_hole.sh;
 ```
 
 # Go Install
