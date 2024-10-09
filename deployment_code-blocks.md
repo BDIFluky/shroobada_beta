@@ -30,34 +30,6 @@ shrooProjectDir=~/shroobada;
 ./$shrooProjectDir/script/install_go.sh
 ```
 
-# Setup apt repos
-```bash
-echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
-sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
-# Priority for Bookworm (Stable)
-Package: *
-Pin: release a=bookworm
-Pin-Priority: 900
-
-# Priority for Bookworm-backports
-Package: *
-Pin: release a=bookworm-backports
-Pin-Priority: 700
-
-# Priority for Trixie (Testing)
-Package: *
-Pin: release a=trixie
-Pin-Priority: 500
-
-# Priority for Sid (Unstable)
-Package: *
-Pin: release a=sid
-Pin-Priority: 400
-EOF
-
-sudo apt update;
-```
-
 # Setup .bashrc
 ```bash
 bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
@@ -245,6 +217,34 @@ cd $shrooProjectDir;
 docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql > initdb.sql
 sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
 
+```
+
+# Setup apt repos
+```bash
+echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
+sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
+# Priority for Bookworm (Stable)
+Package: *
+Pin: release a=bookworm
+Pin-Priority: 900
+
+# Priority for Bookworm-backports
+Package: *
+Pin: release a=bookworm-backports
+Pin-Priority: 700
+
+# Priority for Trixie (Testing)
+Package: *
+Pin: release a=trixie
+Pin-Priority: 500
+
+# Priority for Sid (Unstable)
+Package: *
+Pin: release a=sid
+Pin-Priority: 400
+EOF
+
+sudo apt update;
 ```
 
 # Go Install Raw
