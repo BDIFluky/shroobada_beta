@@ -72,6 +72,7 @@ source ~/.bashrc;
 # Setup Aliases
 ```bash
 aalias "sbrc='source ~/.bashrc'";
+aalias "vbrc='vim ~/.bashrc'";
 
 aalias "del='rm -r'";
 aalias "install='sudo apt install -y'";
