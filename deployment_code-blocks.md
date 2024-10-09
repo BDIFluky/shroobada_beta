@@ -15,6 +15,15 @@ read -p "Enter new SSH port: " sshPort && sudo sed -i 's/^#Port 22/Port $sshPort
 source ~/.bashrc;
 ```
 
+# Go install
+```bash
+go_latest_version=$(curl -s https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+(\.[0-9]+)?\.linux-amd64\.tar\.gz' | head -n 1)
+wget https://go.dev/dl/$go_latest_version
+sudo tar -C /opt/ -xzf $go_latest_version
+[[ ":$PATH:" == *":/opt/go/bin:"* ]] && echo 'export PATH=$PATH:/opt/go/bin' >> ~/.bashrc;
+source ~/.bashrc;
+```
+
 # Setup apt repos
 ```bash
 echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
