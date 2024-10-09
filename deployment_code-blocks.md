@@ -27,7 +27,7 @@ chmod +x $shrooProjectDir/script/*.sh;
 # Go Install
 ```bash
 shrooProjectDir=~/shroobada;
-./$shrooProjectDir/script/install_go.sh
+.$shrooProjectDir/script/install_go.sh
 ```
 
 # Setup .bashrc
