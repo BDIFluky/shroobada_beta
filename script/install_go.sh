@@ -3,7 +3,7 @@
 # setting script vars
 SGOPATH="${GOPATH:-$HOME/go}"
 SGOROOT="${GOROOT:-/opt/}"
-read_timeout=3
+READ_TIMEOUT=3
 
 # Function to ask if the user wants to change the variable
 keep_or_change_env() {
@@ -13,7 +13,7 @@ keep_or_change_env() {
     
     # Loop until the user provides a valid response
     while true; do
-        read -t "$read_timeout" -p "Do you want to keep this value? (y/n) [Timeout in $read_timeout seconds]: " response
+        read -t "$READ_TIMEOUT" -p "Do you want to keep this value? (y/n) [Timeout in $READ_TIMEOUT seconds]: " response
         response="${response:-y}"  # Default to 'y' if no input within timeout
 
         # Check for valid response
