@@ -1,4 +1,4 @@
-..# Primum
+# Primum
 ```bash
 adminUN=$(id -u -n)
 export adminUN;
@@ -13,6 +13,16 @@ su -p $adminUN;
 read -p "Enter new SSH port: " sshPort && sudo sed -i 's/^#Port 22/Port $sshPort/' /etc/ssh/sshd_config && sudo systemctl restart ssh;
 [[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
 source ~/.bashrc;
+```
+
+# Clone Project & Enable Scripts
+```bash
+shrooProjectDir=~/shroobada;
+# -c http.sslVerify=false
+git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
+
+chmod +x $shrooProjectDir/script/*.sh;
+#chmod +x $shrooProjectDir/fire_in_the_hole.sh;
 ```
 
 # Go install
@@ -126,16 +136,6 @@ done
 sudo dpkg -i docker_downs/*
 sudo service docker start
 sudo docker run hello-world
-```
-
-# Clone Project & Enable Scripts
-```bash
-shrooProjectDir=~/shroobada;
-# -c http.sslVerify=false
-git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
-
-chmod +x $shrooProjectDir/script/*.sh;
-#chmod +x $shrooProjectDir/fire_in_the_hole.sh;
 ```
 
 # Install Essentials
