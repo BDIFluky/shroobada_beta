@@ -32,12 +32,13 @@ keep_or_change_env() {
 fetch_and_install_go() {
   local go_latest_version
   go_latest_version=$(curl -s https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+(\.[0-9]+)?\.linux-amd64\.tar\.gz' | head -n 1)
-  wget https://go.dev/dl/$go_latest_version
+  wget -q https://go.dev/dl/$go_latest_version
   sudo tar -C $SGOROOT -xzf $go_latest_version
   [[ ":$PATH:" == *":$SGOROOT/go/bin:"* ]] && echo "export PATH=\$PATH:$SGOROOT/go/bin" >> ~/.bashrc;
   source ~/.bashrc;
   go env -w GOPATH="$SGOPATH"
   [ ! -d $SGOPATH ] && mkdir -p $SGOPATH
+  rm go_latest_version
 }
 
 keep_or_change_env SGOPATH
