@@ -38,7 +38,7 @@ fetch_and_install_go() {
   source ~/.bashrc;
   go env -w GOPATH="$SGOPATH"
   [ ! -d $SGOPATH ] && mkdir -p $SGOPATH
-  rm go_latest_version
+  rm $go_latest_version
 
   go version && echo -e "\e[34mGo installed successfully.\e[0m"
 }
