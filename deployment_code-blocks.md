@@ -6,28 +6,28 @@ echo -n "root ";
 su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y curl git jq sudo;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
+[[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
+source ~/.bashrc;
 ```
 
 # Well well well
 ```bash
 read -p "Enter new SSH port: " sshPort && sudo sed -i 's/^#Port 22/Port $sshPort/' /etc/ssh/sshd_config && sudo systemctl restart ssh;
-[[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
-source ~/.bashrc;
 ```
 
 # Clone Project & Enable Scripts
 ```bash
-shrooProjectDir=~/shroobada;
+shrooPDir=~/shroobada;
 # -c http.sslVerify=false
-git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
+git clone https://github.com/BDIFluky/shroobada $shrooPDir;
 
-chmod +x $shrooProjectDir/script/*.sh;
+chmod +x $shrooPDir/script/*.sh;
 ```
 
 # Go Install
 ```bash
-shrooProjectDir=~/shroobada;
-$shrooProjectDir/script/install_go.sh
+shrooPDir=~/shroobada;
+$shrooPDir/script/install_go.sh
 ```
 
 # Setup .bashrc
@@ -108,12 +108,12 @@ sudo docker run hello-world
 
 # Install Essentials
 ```bash
-xargs -a $shrooProjectDir/res/essential_packages sudo apt install -y
+xargs -a $shrooPDir/res/essential_packages sudo apt install -y
 ```
 
 # Set Project Vars
 ```bash
-aexport shrooProjectDir=~/shroobada;
+aexport shrooPDir=~/shroobada;
 aexport shrooTraefikDir=/etc/traefik;
 aexport shrooTraefikLogDir=/var/log/traefik;
 
@@ -129,22 +129,22 @@ source ~/.bashrc
 # Setup Traefik
 ```bash
 [ ! -d $shrooTreafikLogDir ] && sudo mkdir -p $shrooTreafikLogDir;
-mkdir $shrooProjectDir/traefik/letsencrypt && touch $shrooProjectDir/traefik/letsencrypt/acme.json && chmod 0600 $shrooProjectDir/traefik/letsencrypt/acme.json;
-echo DOMAIN_NAME=$(hostname -d) >> $shrooProjectDir/traefik/.traefik.env;
-sudo cp -rp -t /etc/ $shrooProjectDir/traefik;
-mkdir -p $shrooProjectDir/log/traefik;
-touch $shrooProjectDir/log/traefik/traefik.log;
-touch $shrooProjectDir/log/traefik/access.log;
-sudo cp -rp -t /var/log/ $shrooProjectDir/log/traefik;
-sudo rm -r $shrooProjectDir/log/;
+mkdir $shrooPDir/traefik/letsencrypt && touch $shrooPDir/traefik/letsencrypt/acme.json && chmod 0600 $shrooPDir/traefik/letsencrypt/acme.json;
+echo DOMAIN_NAME=$(hostname -d) >> $shrooPDir/traefik/.traefik.env;
+sudo cp -rp -t /etc/ $shrooPDir/traefik;
+mkdir -p $shrooPDir/log/traefik;
+touch $shrooPDir/log/traefik/traefik.log;
+touch $shrooPDir/log/traefik/access.log;
+sudo cp -rp -t /var/log/ $shrooPDir/log/traefik;
+sudo rm -r $shrooPDir/log/;
 ```
 
 # Setup Auth
 ```bash
-mkdir -p $shrooProjectDir/lib/authdb
-sudo cp -rp -t /var/lib/ $shrooProjectDir/lib/authdb;
-sudo rm -r $shrooProjectDir/lib/authdb;
-cd $shrooProjectDir/authentik;
+mkdir -p $shrooPDir/lib/authdb
+sudo cp -rp -t /var/lib/ $shrooPDir/lib/authdb;
+sudo rm -r $shrooPDir/lib/authdb;
+cd $shrooPDir/authentik;
 mkdir media certs custom-templates;
 
 echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth-pg.env;
@@ -163,10 +163,10 @@ echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" >> .auth.env;
 
 # Setup Guac
 ```bash
-mkdir -p $shrooProjectDir/guacamole/drive $shrooProjectDir/guacamole/record $shrooProjectDir/lib/guacdb/init $shrooProjectDir/lib/guacdb/data
-sudo cp -rp -t /var/lib/ $shrooProjectDir/lib/guacdb;
-sudo rm -r $shrooProjectDir/lib/guacdb;
-cd $shrooProjectDir/guacamole;
+mkdir -p $shrooPDir/guacamole/drive $shrooPDir/guacamole/record $shrooPDir/lib/guacdb/init $shrooPDir/lib/guacdb/data
+sudo cp -rp -t /var/lib/ $shrooPDir/lib/guacdb;
+sudo rm -r $shrooPDir/lib/guacdb;
+cd $shrooPDir/guacamole;
 
 echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .guac-pg.env;
 echo "POSTGRES_USER=guac_db_u" >> .guac-pg.env;
@@ -190,12 +190,12 @@ echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" >> .guac.env;
 
 # Sync
 ```bash
-sudo rsync -hau --progress --exclude-from=$shrooProjectDir/.rsync.ignore $shrooProjectDir/ /etc/
+sudo rsync -hau --progress --exclude-from=$shrooPDir/.rsync.ignore $shrooPDir/ /etc/
 ```
 
 # Fire in the Hole
 ```bash
-docker compose -f $shrooProjectDir/compose.yml up -d
+docker compose -f $shrooPDir/compose.yml up -d
 ```
 
 # Purge
@@ -208,7 +208,7 @@ sudo rm -r shroobada/ /etc/authentik /etc/traefik /var/log/traefik/
 
 # Check Hostname Attributes
 ```bash
-cd $shrooProjectDir;
+cd $shrooPDir;
 ./script/check_hostname_att.sh
 ```
 
