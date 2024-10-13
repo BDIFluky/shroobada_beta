@@ -8,7 +8,7 @@ echo -n "$adminUN ";
 su -p $adminUN;
 [[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
 source ~/.bashrc;
-sudo useradd -M -N chimken
+sudo useradd -r -s /usr/sbin/nologin chimken
 ```
 
 # Well well well
