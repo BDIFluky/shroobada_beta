@@ -130,29 +130,27 @@ sudo chown -R $shroober $shrooAuthDir $shrooAuthDB
 
 # Setup Guac
 ```bash
-mkdir -p $shrooPDir/guacamole/drive $shrooPDir/guacamole/record $shrooPDir/lib/guacdb/init $shrooPDir/lib/guacdb/data
-sudo cp -rp -t /var/lib/ $shrooPDir/lib/guacdb;
-sudo rm -r $shrooPDir/lib/guacdb;
-cd $shrooPDir/guacamole;
+sudo mkdir -p $shrooGuacDir/drive $shrooGuacDir/record $shrooGuacDB/init $shrooGuacDB/data
 
-echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .guac-pg.env;
-echo "POSTGRES_USER=guac_db_u" >> .guac-pg.env;
-echo "POSTGRES_DB=guac_db" >> .guac-pg.env;
-echo "PGDATA=/var/lib/postgresql/data/guacamole" >> .guac-pg.env;
+cd $shrooGuacDir;
 
-echo "GUACD_HOSTNAME=guacd" >> .guac.env;
-echo "POSTGRES_HOSTNAME=guac-pg" >> .guac.env;
-#sed -n '/^POSTGRES_USER/p' .guac-pg.env >> .guac.env;
-sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRESQL_USER/p' .guac-pg.env >> .guac.env;
-#sed -n '/^POSTGRES_DATABASE/p' .guac-pg.env >> .guac.env;
-sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRESQL_DATABASE/p' .guac-pg.env >> .guac.env;
-#sed -n '/^POSTGRES_PASSWORD/p' .guac-pg.env >> .guac.env;
-sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' .guac-pg.env >> .guac.env;
-echo "OPENID_AUTHORIZATION_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/authorize/" >> .guac.env;
-echo "OPENID_JWKS_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/guac/jwks/" >> .guac.env;
-echo "OPENID_ISSUER=https://auther.boredomdidit.com:8443/application/o/guac/" >> .guac.env;
-echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" >> .guac.env;
-echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" >> .guac.env;
+echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" | sudo tee -a .guac-pg.env;
+echo "POSTGRES_USER=guac_db_u" | sudo tee -a .guac-pg.env;
+echo "POSTGRES_DB=guac_db" | sudo tee -a .guac-pg.env;
+echo "PGDATA=/var/lib/postgresql/data/guacamole" | sudo tee -a .guac-pg.env;
+
+echo "GUACD_HOSTNAME=guacd" | sudo tee -a .guac.env;
+echo "POSTGRES_HOSTNAME=guac-pg" | sudo tee -a .guac.env;
+sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRESQL_USER/p' .guac-pg.env | sudo tee -a .guac.env;
+sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRESQL_DATABASE/p' .guac-pg.env | sudo tee -a .guac.env;
+sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' .guac-pg.env | sudo tee -a .guac.env;
+echo "OPENID_AUTHORIZATION_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/authorize/" | sudo tee -a .guac.env;
+echo "OPENID_JWKS_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/guac/jwks/" | sudo tee -a .guac.env;
+echo "OPENID_ISSUER=https://auther.boredomdidit.com:8443/application/o/guac/" | sudo tee -a .guac.env;
+echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" | sudo tee -a .guac.env;
+echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" | sudo tee -a .guac.env;
+
+sudo chown -R $shroober $shrooGuacDir $shrooGuacDB
 ```
 
 # Sync
