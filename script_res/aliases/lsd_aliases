@@ -1,10 +1,10 @@
-lsd='lsd --color=always -h'
-la='lsd -a'
-lat='la --tree'
-lt='lsd --tree'
-lta='lt -a'
-ll='lsd -l'
-lla='la -l'
-llt='lt -l'
-llta='llt -a'
-llat='lla --tree'
+lsd=lsd --color=always -h
+la=lsd -a
+lat=la --tree
+lt=lsd --tree
+lta=lt -a
+ll=lsd -l
+lla=la -l
+llt=lt -l
+llta=llt -a
+llat=lla --tree
