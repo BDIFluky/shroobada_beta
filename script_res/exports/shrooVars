@@ -1,0 +1,10 @@
+shrooPDir=~/shroobada
+
+shrooTraefikDir=/etc/traefik
+shrooTraefikLogDir=/var/log/traefik
+
+shrooAuthDir=/etc/authentik
+shrooAuthDB=/var/lib/authdb
+
+shrooGuacDir=/etc/guacamole
+shrooGuacDB=/var/lib/guacdb
