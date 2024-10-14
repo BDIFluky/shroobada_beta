@@ -50,7 +50,7 @@ source ~/.bashrc;
 # Setup Aliases
 ```bash
 shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias $line; done < "$file"; done;
+for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
