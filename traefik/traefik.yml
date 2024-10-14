@@ -61,7 +61,7 @@ providers:
 certificatesresolvers:
   letsencrypt:
     acme:
-      email: "fluky@bdi.brr"
+      email: "{{env \"PROVIDER_EMAIL\"}}"
       storage: "/letsencrypt/acme.json"
       preferredchain: "ISRG Root X1"
       keytype: "RSA4096"
