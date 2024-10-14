@@ -1,4 +1,4 @@
-shrooPDir=~/shroobada
+shrooPDir=$HOME/shroobada
 shroober=chimken
 
 shrooTraefikDir=/etc/traefik
