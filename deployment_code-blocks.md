@@ -47,6 +47,12 @@ echo -e "function aexport { [ ! -z \"\$1\" ] && ! grep -q \"export \\\"\$1\\\"\"
 source ~/.bashrc;
 ```
 
+# Setup Functions from file
+```bash
+shrooPDir=~/shroobada;
+for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo -e "$line\nexport $file" >> ~/.bash_funcs; done < "$file"; done
+```
+
 # Setup Aliases
 ```bash
 aalias sbrc='source ~/.bashrc';
@@ -89,7 +95,13 @@ aalias dvrm='docker volume rm';
 aalias dvins='docker volume inspect';
 
 source ~/.bashrc;
-``` 
+```
+
+# Setup Aliases from file
+```bash
+shrooPDir=~/shroobada;
+for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do aalias "$line"; done < "$file"; done
+```
 
 # Install Docker
 ```bash
