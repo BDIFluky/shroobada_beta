@@ -34,7 +34,7 @@ $shrooPDir/script/install_go.sh
 # Setup .bashrc
 ```bash
 bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
-for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f "$file" ] && touch "$file" && echo "$source_line" >> ~/.bashrc || ! grep -q "$source_line" ~/.bashrc && echo "$source_line" >> ~/.bashrc; done;
+for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && (. $file"; [ ! -f "$file" ] && touch "$file" && echo "$source_line" >> ~/.bashrc) || ! grep -q "$source_line" ~/.bashrc && echo "$source_line" >> ~/.bashrc; done;
 
 source ~/.bashrc
 ```
