@@ -98,7 +98,7 @@ source ~/.bashrc;
 # Setup Aliases from file
 ```bash
 shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do aalias "$line"; done < "$file"; done
+for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done
 ```
 
 # Install Docker
