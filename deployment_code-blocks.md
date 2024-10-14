@@ -50,7 +50,7 @@ source ~/.bashrc;
 # Setup Functions from file
 ```bash
 shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "$basename $file)" >> ~/.bash_funcs ; done
+for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done
 ```
 
 # Setup Aliases
