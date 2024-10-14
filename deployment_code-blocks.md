@@ -28,7 +28,7 @@ chmod +x $shrooPDir/script/*.sh;
 # Install Desired Packages
 ```bash
 shrooPDir=~/shroobada;
-xargs -a $shrooPDir/script_res/dessired_packages sudo apt install -y
+xargs -a $shrooPDir/script_res/desired_packages sudo apt install -y
 ```
 
 # Setup .bashrc
@@ -50,7 +50,7 @@ source ~/.bashrc;
 # Setup Aliases
 ```bash
 shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
+for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias $line; done < "$file"; done;
 
 source ~/.bashrc;
 ```
