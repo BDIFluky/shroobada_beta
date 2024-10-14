@@ -1,8 +1,8 @@
-sbrc='source ~/.bashrc';
-vbrc='vim ~/.bashrc';
+sbrc='source ~/.bashrc'
+vbrc='vim ~/.bashrc'
 
-del='rm -r';
-install='sudo apt install -y';
-..='cd ..';
-h='history';
-hg='history | grep';
+del='rm -r'
+install='sudo apt install -y'
+..='cd ..'
+h='history'
+hg='history | grep'
