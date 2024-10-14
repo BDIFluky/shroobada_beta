@@ -94,14 +94,16 @@ docker run hello-world
 # Setup Traefik
 ```bash
 [ ! -d $shrooTreafikLogDir ] && sudo mkdir -p $shrooTreafikLogDir;
-mkdir $shrooPDir/traefik/letsencrypt && touch $shrooPDir/traefik/letsencrypt/acme.json && chmod 0600 $shrooPDir/traefik/letsencrypt/acme.json;
-echo DOMAIN_NAME=$(hostname -d) >> $shrooPDir/traefik/.traefik.env;
-sudo cp -rp -t /etc/ $shrooPDir/traefik;
-mkdir -p $shrooPDir/log/traefik;
-touch $shrooPDir/log/traefik/traefik.log;
-touch $shrooPDir/log/traefik/access.log;
-sudo cp -rp -t /var/log/ $shrooPDir/log/traefik;
-sudo rm -r $shrooPDir/log/;
+sudo touch $shrooTreafikLogDir/traefik.log;
+sudo touch $shrooTreafikLogDir/access.log;
+
+sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
+echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
+read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
+read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
+
+sudo chown -R $shroober $shrooTreafikLogDir;
+sudo chown -R $shroober $shrooTraefikDir;
 ```
 
 # Setup Auth
