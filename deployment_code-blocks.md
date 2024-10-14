@@ -63,6 +63,11 @@ for file in $shrooPDir/script_res/exports/*; do while IFS= read -r line; do [[ -
 source ~/.bashrc;
 ```
 
+# Docker Pre-req
+```bash
+sudo apt install -y newuidmap newgidmap;
+```
+
 # Install Docker
 ```bash
 cd;
