@@ -91,21 +91,6 @@ sudo loginctl enable-linger $(whoami)
 docker run hello-world
 ```
 
-# Set Project Vars
-```bash
-aexport shrooPDir=~/shroobada;
-aexport shrooTraefikDir=/etc/traefik;
-aexport shrooTraefikLogDir=/var/log/traefik;
-
-aexport shrooAuthDir=/etc/authentik;
-aexport shrooAuthDB=/var/lib/authdb;
-
-aexport shrooGuacDir=/etc/guacamole;
-aexport shrooGuacDB=/var/lib/guacdb;
-
-source ~/.bashrc
-```
-
 # Setup Traefik
 ```bash
 [ ! -d $shrooTreafikLogDir ] && sudo mkdir -p $shrooTreafikLogDir;
@@ -284,6 +269,21 @@ aalias dvrm='docker volume rm';
 aalias dvins='docker volume inspect';
 
 source ~/.bashrc;
+```
+
+# Set Project Vars raw
+```bash
+aexport shrooPDir=~/shroobada;
+aexport shrooTraefikDir=/etc/traefik;
+aexport shrooTraefikLogDir=/var/log/traefik;
+
+aexport shrooAuthDir=/etc/authentik;
+aexport shrooAuthDB=/var/lib/authdb;
+
+aexport shrooGuacDir=/etc/guacamole;
+aexport shrooGuacDB=/var/lib/guacdb;
+
+source ~/.bashrc
 ```
 
 # Setup NAT
