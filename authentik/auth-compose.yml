@@ -8,6 +8,7 @@ services:
     container_name: auther
     command: server
     <<: *auth-env
+    user: "$shroober"
     networks:
       - AuthBackNet
       - AuthFrontNet
@@ -27,6 +28,7 @@ services:
     container_name: auth-worker
     command: worker
     <<: *auth-env
+    user: "$shroober"
     networks:
       - AuthBackNet
     volumes:
@@ -42,6 +44,7 @@ services:
     container_name: auth-pg
     env_file:
       - ${shrooAuthDir}/.auth-pg.env
+    user: "$shroober"
     networks:
       - AuthBackNet
     volumes:
@@ -58,6 +61,7 @@ services:
     image: docker.io/library/redis:alpine
     container_name: auth-redis
     command: --save 60 1 --loglevel warning
+    user: "$shroober"
     networks:
       - AuthBackNet
     volumes:
