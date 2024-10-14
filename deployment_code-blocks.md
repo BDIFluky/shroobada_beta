@@ -108,24 +108,22 @@ sudo chown -R $shroober $shrooTraefikDir;
 
 # Setup Auth
 ```bash
-mkdir -p $shrooPDir/lib/authdb
-sudo cp -rp -t /var/lib/ $shrooPDir/lib/authdb;
-sudo rm -r $shrooPDir/lib/authdb;
-cd $shrooPDir/authentik;
-mkdir media certs custom-templates;
+sudo mkdir -p $shrooAuthDB
+sudo mkdir -p $shrooAuthDir/media $shrooAuthDir/certs $shrooAuthDir/custom-templates;
 
-echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" >> .auth-pg.env;
-echo "POSTGRES_USER=auth_db_u" >> .auth-pg.env;
-echo "POSTGRES_DB=auth_db" >> .auth-pg.env;
+sudo mkdir -p $shrooAuthDir
+echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" | sudo tee -a $shrooAuthDir/.auth-pg.env;
+echo "POSTGRES_USER=auth_db_u" | sudo tee -a $shrooAuthDir/.auth-pg.env;
+echo "POSTGRES_DB=auth_db" | sudo tee -a $shrooAuthDir/.auth-pg.env;
 
-echo "AUTHENTIK_REDIS__HOST=auth-redis" >> .auth.env;
-echo "AUTHENTIK_POSTGRESQL__HOST=auth-pg" >> .auth.env;
-sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/AUTHENTIK_POSTGRESQL__USER/p' .auth-pg.env >> .auth.env;
-sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/AUTHENTIK_POSTGRESQL__NAME/p' .auth-pg.env >> .auth.env;
-sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .auth-pg.env >> .auth.env;
-echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" >> .auth.env;
-echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" >> .auth.env;
-echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" >> .auth.env;
+echo "AUTHENTIK_REDIS__HOST=auth-redis" | sudo tee -a $shrooAuthDir/.auth.env;
+echo "AUTHENTIK_POSTGRESQL__HOST=auth-pg" | sudo tee -a $shrooAuthDir/.auth.env;
+sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/AUTHENTIK_POSTGRESQL__USER/p' $shrooAuthDir/.auth-pg.env | sudo tee -a $shrooAuthDir/.auth.env;
+sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/AUTHENTIK_POSTGRESQL__NAME/p' $shrooAuthDir/.auth-pg.env | sudo tee -a $shrooAuthDir/.auth.env;
+sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/AUTHENTIK_POSTGRESQL__PASSWORD/p' .$shrooAuthDir/.auth-pg.env | sudo tee -a $shrooAuthDir/.auth.env;
+echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" | sudo tee -a $shrooAuthDir/.auth.env;
+echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" | sudo tee -a $shrooAuthDir/.auth.env;
+echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" | sudo tee -a $shrooAuthDir/.auth.env;
 ```
 
 # Setup Guac
