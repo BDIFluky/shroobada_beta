@@ -39,22 +39,6 @@ for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f 
 source ~/.bashrc
 ```
 
-# Setup Functions
-```bash
-shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
-
-source ~/.bashrc;
-```
-
-# Setup Aliases
-```bash
-shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
-
-source ~/.bashrc;
-```
-
 # Setup exports
 ```bash
 shrooPDir=~/shroobada;
@@ -63,9 +47,29 @@ for file in $shrooPDir/script_res/exports/*; do while IFS= read -r line; do [[ -
 source ~/.bashrc;
 ```
 
+# Setup Functions
+```bash
+for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
+
+source ~/.bashrc;
+```
+
+# Setup Aliases
+```bash
+for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
+
+source ~/.bashrc;
+```
+
 # Docker Pre-req
 ```bash
-sudo apt install -y newuidmap newgidmap;
+sudo apt install -y slirp4netns iptables uidmap
+
+nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
+sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
+
+nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1)
+sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
 ```
 
 # Install Docker
@@ -73,14 +77,18 @@ sudo apt install -y newuidmap newgidmap;
 cd;
 mkdir docker_downs;
 docker_downs_url="https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/"
-needed_components=("containerd.io" "docker-ce" "docker-ce-cli" "docker-buildx-plugin" "docker-compose-plugin")
+needed_components=("containerd.io" "docker-ce" "docker-ce-cli" "docker-buildx-plugin" "docker-compose-plugin" "docker-ce-rootless-extras")
+# --no-check-certificate
 for component in "${needed_components[@]}"
 do
-  echo "${docker_downs_url}$(curl -s $docker_downs_url | grep -oP "${component}.*[.]deb"  | cut -d "\"" -f 1 | sort -V | tail -1)" | wget -O docker_downs/${component}.deb -i -
+  echo "${docker_downs_url}$(curl -s $docker_downs_url | grep -oP "${component}.*[.]deb"  | cut -d "\"" -f 1 | sort -V | tail -1)" | wget --no-check-certificate -O docker_downs/${component}.deb -i -
 done
 sudo dpkg -i docker_downs/*
-sudo service docker start
-sudo docker run hello-world
+/usr/bin/dockerd-rootless-setuptool.sh install
+systemctl --user start docker
+systemctl --user enable docker
+sudo loginctl enable-linger $(whoami)
+docker run hello-world
 ```
 
 # Set Project Vars
