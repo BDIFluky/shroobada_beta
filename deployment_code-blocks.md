@@ -55,6 +55,14 @@ for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -
 source ~/.bashrc;
 ```
 
+# Setup exports
+```bash
+shrooPDir=~/shroobada;
+for file in $shrooPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
+
+source ~/.bashrc;
+```
+
 # Install Docker
 ```bash
 cd;
