@@ -25,10 +25,10 @@ git clone https://github.com/BDIFluky/shroobada $shrooPDir;
 chmod +x $shrooPDir/script/*.sh;
 ```
 
-# Go Install
+# Install Desired Packages
 ```bash
 shrooPDir=~/shroobada;
-$shrooPDir/script/install_go.sh
+xargs -a $shrooPDir/script_res/dessired_packages sudo apt install -y
 ```
 
 # Setup .bashrc
@@ -41,64 +41,18 @@ source ~/.bashrc
 
 # Setup Functions
 ```bash
-echo -e "function aalias { [ ! -z \"\$1\" ] && ! grep -q \"alias \\\"\$1\\\"\" ~/.bash_aliases && echo \"alias \\\"\$1\\\"\" >> ~/.bash_aliases || echo -e \"\e[33mAlias '\$1' already exists.\e[0m\"; };\nexport -f aalias" >> ~/.bash_funcs
-echo -e "function aexport { [ ! -z \"\$1\" ] && ! grep -q \"export \\\"\$1\\\"\" ~/.bash_exports && echo \"export \\\"\$1\\\"\" >> ~/.bash_exports || echo -e \"\e[33mExport '\$1' already exists.\e[0m\"; };\nexport -f aexport" >> ~/.bash_funcs
+shrooPDir=~/shroobada;
+for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
 
 source ~/.bashrc;
-```
-
-# Setup Functions from file
-```bash
-shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done
 ```
 
 # Setup Aliases
 ```bash
-aalias sbrc='source ~/.bashrc';
-aalias vbrc='vim ~/.bashrc';
-
-aalias del='rm -r';
-aalias install='sudo apt install -y';
-aalias ..='cd ..';
-aalias h='history';
-aalias hg='history | grep';
-
-aalias lsd='lsd --color=always -h';
-aalias la='lsd -a';
-aalias lat='la --tree';
-aalias lt='lsd --tree';
-aalias lta='lt -a';
-aalias ll='lsd -l';
-aalias lla='la -l';
-aalias llt='lt -l';
-aalias llta='llt -a';
-aalias llat='lla --tree';
-
-aalias vcmp='vim compose.yml';
-aalias dps='docker ps';
-aalias wdps='watch docker ps';
-aalias dex='docker exec -it';
-aalias dl='docker logs';
-aalias drm='docker rm';
-aalias dcup='docker compose up -d';
-aalias dcd='docker compose down';
-aalias dcdo='docker compose down';
-aalias dcre='dcdo && dcup';
-aalias dnls='docker network ls';
-aalias dnrm='docker network rm';
-aalias dnins='docker network inspect';
-aalias dvls='docker volume ls';
-aalias dvrm='docker volume rm';
-aalias dvins='docker volume inspect';
+shrooPDir=~/shroobada;
+for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
 source ~/.bashrc;
-```
-
-# Setup Aliases from file
-```bash
-shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done
 ```
 
 # Install Docker
@@ -114,11 +68,6 @@ done
 sudo dpkg -i docker_downs/*
 sudo service docker start
 sudo docker run hello-world
-```
-
-# Install Essentials
-```bash
-xargs -a $shrooPDir/res/essential_packages sudo apt install -y
 ```
 
 # Set Project Vars
@@ -263,6 +212,56 @@ go_latest_version=$(curl -s https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+(\.[0
 wget https://go.dev/dl/$go_latest_version
 sudo tar -C /opt/ -xzf $go_latest_version
 [[ ":$PATH:" == *":/opt/go/bin:"* ]] && echo 'export PATH=$PATH:/opt/go/bin' >> ~/.bashrc;
+source ~/.bashrc;
+```
+
+# Setup Functions Raw
+```bash
+echo -e "function aalias { [ ! -z \"\$1\" ] && ! grep -q \"alias \\\"\$1\\\"\" ~/.bash_aliases && echo \"alias \\\"\$1\\\"\" >> ~/.bash_aliases || echo -e \"\e[33mAlias '\$1' already exists.\e[0m\"; };\nexport -f aalias" >> ~/.bash_funcs
+echo -e "function aexport { [ ! -z \"\$1\" ] && ! grep -q \"export \\\"\$1\\\"\" ~/.bash_exports && echo \"export \\\"\$1\\\"\" >> ~/.bash_exports || echo -e \"\e[33mExport '\$1' already exists.\e[0m\"; };\nexport -f aexport" >> ~/.bash_funcs
+
+source ~/.bashrc;
+```
+
+# Setup Aliases Raw
+```bash
+aalias sbrc='source ~/.bashrc';
+aalias vbrc='vim ~/.bashrc';
+
+aalias del='rm -r';
+aalias install='sudo apt install -y';
+aalias ..='cd ..';
+aalias h='history';
+aalias hg='history | grep';
+
+aalias lsd='lsd --color=always -h';
+aalias la='lsd -a';
+aalias lat='la --tree';
+aalias lt='lsd --tree';
+aalias lta='lt -a';
+aalias ll='lsd -l';
+aalias lla='la -l';
+aalias llt='lt -l';
+aalias llta='llt -a';
+aalias llat='lla --tree';
+
+aalias vcmp='vim compose.yml';
+aalias dps='docker ps';
+aalias wdps='watch docker ps';
+aalias dex='docker exec -it';
+aalias dl='docker logs';
+aalias drm='docker rm';
+aalias dcup='docker compose up -d';
+aalias dcd='docker compose down';
+aalias dcdo='docker compose down';
+aalias dcre='dcdo && dcup';
+aalias dnls='docker network ls';
+aalias dnrm='docker network rm';
+aalias dnins='docker network inspect';
+aalias dvls='docker volume ls';
+aalias dvrm='docker volume rm';
+aalias dvins='docker volume inspect';
+
 source ~/.bashrc;
 ```
 
