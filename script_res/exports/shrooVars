@@ -1,4 +1,5 @@
 shrooPDir=~/shroobada
+shroober=chimken
 
 shrooTraefikDir=/etc/traefik
 shrooTraefikLogDir=/var/log/traefik
