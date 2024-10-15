@@ -81,7 +81,7 @@ needed_components=("containerd.io" "docker-ce" "docker-ce-cli" "docker-buildx-pl
 # --no-check-certificate
 for component in "${needed_components[@]}"
 do
-  echo "${docker_downs_url}$(curl -s $docker_downs_url | grep -oP "${component}.*[.]deb"  | cut -d "\"" -f 1 | sort -V | tail -1)" | wget --no-check-certificate -O docker_downs/${component}.deb -i -
+  echo "${docker_downs_url}$(curl -s $docker_downs_url | grep -oP "${component}.*[.]deb"  | cut -d "\"" -f 1 | sort -V | tail -1)" | wget -O docker_downs/${component}.deb -i -
 done
 sudo dpkg -i docker_downs/*
 /usr/bin/dockerd-rootless-setuptool.sh install
