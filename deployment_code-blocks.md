@@ -3,7 +3,7 @@
 adminUN=$(id -u -n)
 export adminUN;
 echo -n "root ";
-su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y curl git jq sudo;usermod -aG sudo $adminUN";
+su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y git sudo;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
 [[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
@@ -21,14 +21,6 @@ read -p "Enter new SSH port: " sshPort && sudo sed -i 's/^#Port 22/Port $sshPort
 shrooPDir=~/shroobada;
 # -c http.sslVerify=false
 git clone https://github.com/BDIFluky/shroobada $shrooPDir;
-
-chmod +x $shrooPDir/script/*.sh;
-```
-
-# Install Desired Packages
-```bash
-shrooPDir=~/shroobada;
-xargs -a $shrooPDir/script_res/desired_packages sudo apt install -y
 ```
 
 # Setup .bashrc
@@ -39,7 +31,7 @@ for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f 
 source ~/.bashrc
 ```
 
-# Setup exports
+# Setup Exports
 ```bash
 shrooPDir=~/shroobada;
 for file in $shrooPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
@@ -61,10 +53,14 @@ for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -
 source ~/.bashrc;
 ```
 
+# Install Required Packages
+```bash
+for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo apt install -y ; done;
+#xargs -a $shrooPDir/script_res/required_packages sudo apt install -y
+```
+
 # Docker Pre-req
 ```bash
-sudo apt install -y slirp4netns iptables uidmap
-
 nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
 sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
 
