@@ -1,10 +1,15 @@
+x-user: &user
+  user: "$shroober"
+
 services:
   traefik:
+    <<: *user
     networks:
       - AuthFrontNet
       - GuacFrontNet
       
   whoami:
+    <<: *user
     labels:
       - "traefik.http.routers.whoami.middlewares=authentik@file"
 
@@ -13,6 +18,15 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=AuthFrontNet"
 
+  auth-worker:
+    <<: *user
+
+  auth-pg:
+    <<: *user
+    
+  auth-redis:
+    <<: *user
+    
   guac:
     labels:
       - "traefik.enable=true"
