@@ -2,7 +2,6 @@ services:
   traefik:
     image: "docker.io/traefik:v3.1"
     container_name: "traefik"
-    user: "$shroober"
     ports:
       - "8080:80"
       - "8443:443"
