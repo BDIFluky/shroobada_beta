@@ -1,0 +1,17 @@
+pcup=podman compose up -d
+pcd=podman compose down
+pcdo=podman compose down
+pcre=dcdo && dcup
+pex=podman exec -it
+pl=podman logs
+pnls=podman network ls
+pnrm=podman network rm
+pnins=podman network inspect
+pps=podman ps
+prm=podman rm
+pvls=podman volume ls
+pvrm=podman volume rm
+pvins=podman volume inspect
+
+vcmp=vim compose.yml
+wpps=watch podman ps
