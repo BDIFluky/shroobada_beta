@@ -2,7 +2,7 @@ shrooPDir=$HOME/shroobada
 shroober=chimken
 shrooberUID=$(id -u $shroober)
 shrooberGID=$(id -g $shroober)
-shrooHPDir=$(eval echo ~$shroober)/
+shrooHPDir=$(eval echo ~$shroober)
 shrooCPDir=$shrooHPDir/shroobada
 
 shrooTraefikDir=/etc/traefik
