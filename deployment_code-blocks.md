@@ -8,7 +8,6 @@ echo -n "$adminUN ";
 su -p $adminUN;
 [[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
 source ~/.bashrc;
-sudo useradd -r -s /usr/sbin/nologin chimken
 ```
 
 # Well well well
@@ -23,12 +22,6 @@ shrooPDir=~/shroobada;
 git clone https://github.com/BDIFluky/shroobada $shrooPDir;
 ```
 
-# Brrr
-```bash
-linger?
-sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $HOME/shroobada/traefik; podman compose -f traefik-compose.yml up -d whoami"
-```
-
 # Setup .bashrc
 ```bash
 bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
@@ -37,17 +30,34 @@ for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f 
 source ~/.bashrc
 ```
 
-# Setup Exports
+# Setup Functions
 ```bash
 shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
+for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
 
 source ~/.bashrc;
 ```
 
-# Setup Functions
+# Setup Service Account
 ```bash
-for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
+sudo useradd -r -s /usr/sbin/nologin -d /var/lib/$shroober -m $shroober
+
+nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
+sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
+
+nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1)
+sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
+
+sudo loginctl enable-linger $shroober
+
+find $shrooPDir -type f -regex ".*\*compose*.yml" -exec cp --parents {} $shrooCPDir \;
+#sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $HOME/shroobada/traefik; podman compose -f traefik-compose.yml up -d whoami"
+```
+
+# Setup Exports
+```bash
+shrooPDir=~/shroobada;
+for file in $shrooPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
@@ -62,17 +72,92 @@ source ~/.bashrc;
 # Install Required Packages
 ```bash
 for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo apt install -y ; done;
-#xargs -a $shrooPDir/script_res/required_packages sudo apt install -y
 ```
 
-# Docker Pre-req
+# Setup apt repos
 ```bash
-nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
-sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
+echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
+sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
+# Priority for Bookworm (Stable)
+Package: *
+Pin: release a=bookworm
+Pin-Priority: 900
 
-nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1)
-sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
+# Priority for Bookworm-backports
+Package: *
+Pin: release a=bookworm-backports
+Pin-Priority: 700
+
+# Priority for Trixie (Testing)
+Package: *
+Pin: release a=trixie
+Pin-Priority: 500
+
+# Priority for Sid (Unstable)
+Package: *
+Pin: release a=sid
+Pin-Priority: 400
+EOF
+
+sudo apt update;
 ```
+
+# Install Podman
+```bash
+sudo apt install -y \
+  btrfs-progs \
+  crun/sid \
+  passt/sid \
+  git \
+  golang-go/bookworm-backports \
+  golang-src/bookworm-backports \
+  go-md2man \
+  iptables \
+  libassuan-dev \
+  libbtrfs-dev \
+  libc6-dev \
+  libdevmapper-dev \
+  libglib2.0-dev \
+  libgpgme-dev \
+  libgpg-error-dev \
+  libprotobuf-dev \
+  libprotobuf-c-dev \
+  libseccomp-dev \
+  libselinux1-dev \
+  libsystemd-dev \
+  netavark \
+  pkg-config \
+  uidmap \
+  conmon \
+  make
+
+podman_latest_version=$(curl -ks https://api.github.com/repos/containers/podman/releases/latest | awk '/tag_name/ {print $2}' | sed -r 's/"|,//g');
+# -c http.sslVerify=false
+git clone -b $podman_latest_version https://github.com/containers/podman/ $shrooPDir/podman;
+cd $shrooPDir/podman/;
+make BUILDTAGS="systemd selinux seccomp" PREFIX=/usr;
+sudo make install PREFIX=/usr;
+podman version;
+
+sudo rm -r podman;
+[ ! -d /etc/containers/ ] && sudo mkdir /etc/containers 
+[ ! -f /etc/containers/policy.json ] && echo -e '{
+    "default": [
+        {
+            "type": "insecureAcceptAnything"
+        }
+    ]
+}
+' | sudo tee -a /etc/containers/policy.json;
+
+sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user enable podman.socket && systemctl --user status podman.socket && podman run quay.io/podman/hello"
+#systemctl --user start podman.socket;
+#systemctl --user enable podman.socket;
+#systemctl --user status podman.socket;
+
+#podman run quay.io/podman/hello
+```
+
 
 # Install Docker
 ```bash
@@ -184,34 +269,6 @@ cd $shrooPDir;
 docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql > initdb.sql
 sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
 
-```
-
-# Setup apt repos
-```bash
-echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
-sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
-# Priority for Bookworm (Stable)
-Package: *
-Pin: release a=bookworm
-Pin-Priority: 900
-
-# Priority for Bookworm-backports
-Package: *
-Pin: release a=bookworm-backports
-Pin-Priority: 700
-
-# Priority for Trixie (Testing)
-Package: *
-Pin: release a=trixie
-Pin-Priority: 500
-
-# Priority for Sid (Unstable)
-Package: *
-Pin: release a=sid
-Pin-Priority: 400
-EOF
-
-sudo apt update;
 ```
 
 # Go Install Raw
