@@ -50,8 +50,7 @@ sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober 
 
 sudo loginctl enable-linger $shroober
 
-find $shrooPDir -type f -regex ".*\*compose*.yml" -exec cp --parents {} $shrooCPDir \;
-#sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $HOME/shroobada/traefik; podman compose -f traefik-compose.yml up -d whoami"
+cd $shrooPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;#sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $HOME/shroobada/traefik; podman compose -f traefik-compose.yml up -d whoami"
 ```
 
 # Setup Exports
