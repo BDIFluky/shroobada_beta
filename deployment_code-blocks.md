@@ -89,16 +89,16 @@ docker run hello-world
 
 # Setup Traefik
 ```bash
-[ ! -d $shrooTreafikLogDir ] && sudo mkdir -p $shrooTreafikLogDir;
-sudo touch $shrooTreafikLogDir/traefik.log;
-sudo touch $shrooTreafikLogDir/access.log;
+[ ! -d $shrooTraefikLogDir ] && sudo mkdir -p $shrooTraefikLogDir;
+sudo touch $shrooTraefikLogDir/traefik.log;
+sudo touch $shrooTraefikLogDir/access.log;
 
 sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
 echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
 
-sudo chown -R $shroober $shrooTreafikLogDir;
+sudo chown -R $shroober $shrooTraefikLogDir;
 sudo chown -R $shroober $shrooTraefikDir;
 ```
 
