@@ -25,6 +25,7 @@ git clone https://github.com/BDIFluky/shroobada $shrooPDir;
 
 # Brrr
 ```bash
+linger?
 sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $HOME/shroobada/traefik; podman compose -f traefik-compose.yml up -d whoami"
 ```
 
