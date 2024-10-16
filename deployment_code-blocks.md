@@ -23,6 +23,11 @@ shrooPDir=~/shroobada;
 git clone https://github.com/BDIFluky/shroobada $shrooPDir;
 ```
 
+# Brrr
+```bash
+sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $HOME/shroobada/traefik; podman compose -f traefik-compose.yml up -d whoami"
+```
+
 # Setup .bashrc
 ```bash
 bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
