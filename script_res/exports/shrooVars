@@ -1,5 +1,6 @@
 shrooPDir=$HOME/shroobada
 shroober=chimken
+shrooberUID=$(id -u $shroober)
 
 shrooTraefikDir=/etc/traefik
 shrooTraefikLogDir=/var/log/traefik
