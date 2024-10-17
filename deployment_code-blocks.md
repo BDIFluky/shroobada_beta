@@ -141,7 +141,8 @@ make BUILDTAGS="systemd selinux seccomp" PREFIX=/usr;
 sudo make install PREFIX=/usr;
 podman version;
 
-sudo rm -r podman;
+cd;
+sudo rm -r $shrooPDir/podman;
 [ ! -d /etc/containers/ ] && sudo mkdir /etc/containers 
 [ ! -f /etc/containers/policy.json ] && echo -e '{
     "default": [
