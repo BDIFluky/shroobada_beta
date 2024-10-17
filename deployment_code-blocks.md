@@ -52,8 +52,6 @@ sudo loginctl enable-linger $shroober
 
 cd $shrooPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
 sudo chown -R $shroober $shrooCPDir
-
-#sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $HOME/shroobada/traefik; podman compose -f traefik-compose.yml up -d whoami"
 ```
 
 # Setup Exports
@@ -153,7 +151,7 @@ sudo rm -r $shrooPDir/podman;
 }
 ' | sudo tee -a /etc/containers/policy.json;
 
-sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user enable podman.socket && systemctl --user status podman.socket && podman run quay.io/podman/hello"
+sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd \$HOME && podman run quay.io/podman/hello"
 #systemctl --user start podman.socket;
 #systemctl --user enable podman.socket;
 #systemctl --user status podman.socket;
