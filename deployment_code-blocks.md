@@ -106,7 +106,7 @@ sudo apt update;
 
 # Install Podman
 ```bash
-sudo apt install -y \
+DEBIAN_FRONTEND=noninteractive sudo apt install -y \
   btrfs-progs \
   crun/sid \
   passt/sid \
