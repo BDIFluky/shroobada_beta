@@ -74,7 +74,7 @@ for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo DE
 # Compy to Service Account
 ```bash
 cd $shrooPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
-sudo chown -R $shroober $shrooCPDir
+sudo chown -R $shroober:$adminUN $shrooCPDir
 ```
 
 # Setup apt repos
