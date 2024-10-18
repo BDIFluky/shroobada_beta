@@ -40,6 +40,7 @@ source ~/.bashrc;
 
 # Setup Service Account
 ```bash
+shroober=chimken
 sudo useradd -r -s /usr/sbin/nologin -d /var/lib/$shroober -m $shroober
 
 nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
@@ -64,17 +65,6 @@ source ~/.bashrc;
 for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
 source ~/.bashrc;
-```
-
-# Install Required Packages
-```bash
-for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
-```
-
-# Compy to Service Account
-```bash
-cd $shrooPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
-sudo chown -R $shroober:$shrooA $shrooCPDir
 ```
 
 # Setup apt repos
@@ -103,6 +93,17 @@ Pin-Priority: 400
 EOF
 
 sudo apt update;
+```
+
+# Install Required Packages
+```bash
+for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
+```
+
+# Compy to Service Account
+```bash
+cd $shrooPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
+sudo chown -R $shroober:$shrooA $shrooCPDir
 ```
 
 # Install Podman
