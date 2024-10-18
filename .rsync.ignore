@@ -1,9 +1,0 @@
-# rsync -av --exclude-from='exclude-file.txt' /path/to/source/ /path/to/destination/
-*.ignore
-*compose.yml
-*.md
-script/
-log/
-lib/
-res/
-misc/
