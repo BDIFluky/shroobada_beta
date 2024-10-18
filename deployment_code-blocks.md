@@ -17,7 +17,7 @@ read -p "Enter new SSH port: " sshPort && sudo sed -i "s/^#Port 22/Port $sshPort
 
 # Clone Project & Enable Scripts
 ```bash
-shrooPDir=~/shroobada;
+shrooAPDir=~/shroobada;
 # -c http.sslVerify=false
 git clone https://github.com/BDIFluky/shroobada $shrooPDir;
 ```
@@ -32,8 +32,8 @@ source ~/.bashrc
 
 # Setup Functions
 ```bash
-shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
+shrooAPDir=~/shroobada;
+for file in $shrooAPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
 
 source ~/.bashrc;
 ```
@@ -54,15 +54,15 @@ sudo loginctl enable-linger $shroober
 
 # Setup Exports
 ```bash
-shrooPDir=~/shroobada;
-for file in $shrooPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
+shrooAPDir=~/shroobada;
+for file in $shrooAPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
 
 # Setup Aliases
 ```bash
-for file in $shrooPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
+for file in $shrooAPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
@@ -97,13 +97,13 @@ sudo apt update;
 
 # Install Required Packages
 ```bash
-for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
+for file in $shrooAPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
 ```
 
 # Compy to Service Account
 ```bash
-cd $shrooPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
-sudo chown -R $shroober:$shrooA $shrooCPDir
+cd $shrooAPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
+sudo chown -R $shroober:$shrooA $shrooHPDir
 ```
 
 # Install Podman
@@ -128,12 +128,22 @@ sudo rm -r $shrooPDir/podman;
 }
 ' | sudo tee -a /etc/containers/policy.json;
 
-sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd \$HOME && podman run quay.io/podman/hello"
+sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd $shrooHPDir && podman run quay.io/podman/hello"
 #systemctl --user start podman.socket;
 #systemctl --user enable podman.socket;
 #systemctl --user status podman.socket;
 
 #podman run quay.io/podman/hello
+```
+
+# Install Compose Plugin
+```bash
+cd;
+docker_downs_url="https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/"
+needed_component="docker-compose-plugin"
+# --no-check-certificate
+echo "${docker_downs_url}$(curl -s $docker_downs_url | grep -oP "${needed_component}.*[.]deb"  | cut -d "\"" -f 1 | sort -V | tail -1)" | wget -O ${needed_component}.deb -i -
+sudo dpkg -i needed_component.deb
 ```
 
 # Setup Traefik
@@ -147,8 +157,8 @@ echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
 
-sudo chown -R $shroober $shrooTraefikLogDir;
-sudo chown -R $shroober $shrooTraefikDir;
+sudo chown -R $shroober:$shrooA $shrooTraefikLogDir;
+sudo chown -R $shroober:$shrooA $shrooTraefikDir;
 ```
 
 # Setup Auth
@@ -170,7 +180,7 @@ echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" | sudo tee -
 echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" | sudo tee -a $shrooAuthDir/.auth.env;
 echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" | sudo tee -a $shrooAuthDir/.auth.env;
 
-sudo chown -R $shroober $shrooAuthDir $shrooAuthDB
+sudo chown -R $shroober:$shrooA $shrooAuthDir $shrooAuthDB
 ```
 
 # Setup Guac
@@ -195,12 +205,12 @@ echo "OPENID_ISSUER=https://auther.boredomdidit.com:8443/application/o/guac/" | 
 echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" | sudo tee -a .guac.env;
 echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" | sudo tee -a .guac.env;
 
-sudo chown -R $shroober $shrooGuacDir $shrooGuacDB
+sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB
 ```
 
 # Fire in the Hole
 ```bash
-sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd \$HOME && podman run quay.io/podman/hello"
+sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $shrooCPDir && podman compose up -d"
 docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 ```
 
