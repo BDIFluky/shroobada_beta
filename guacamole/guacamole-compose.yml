@@ -2,7 +2,6 @@ services:
   guacd:
     container_name: guacd
     image: docker.io/guacamole/guacd
-    user: "$shroober"
     networks:
       - GuacOutNet
       - GuacBackNet
@@ -29,7 +28,6 @@ services:
     image: docker.io/guacamole/guacamole
     env_file:
       - ${shrooGuacDir}/.guac.env
-    user: "$shroober"
     ports:
       - 8080/tcp
     networks:
