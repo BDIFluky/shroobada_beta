@@ -100,7 +100,7 @@ sudo apt update;
 for file in $shrooAPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
 ```
 
-# Compy to Service Account
+# Copy to Service Account
 ```bash
 cd $shrooAPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
 sudo chown -R $shroober:$shrooA $shrooHPDir && sudo chmod 0770 $shrooHPDir
@@ -210,7 +210,7 @@ sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $s
 
 # Fire in the Hole
 ```bash
-sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=/var/lib/chimken bash -c "cd $shrooCPDir && podman compose up -d"
+ sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=$(eval "echo ~$shroober") bash -c "cd $shrooCPDir && podman compose up -d"
 docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 ```
 
