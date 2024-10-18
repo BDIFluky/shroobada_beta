@@ -1,3 +1,4 @@
+shrooA=$(whoami)
 shrooPDir=$HOME/shroobada
 shroober=chimken
 shrooberUID=$(id -u $shroober)
