@@ -68,7 +68,7 @@ source ~/.bashrc;
 
 # Install Required Packages
 ```bash
-for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo apt install -y ; done;
+for file in $shrooPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
 ```
 
 # Compy to Service Account
@@ -107,33 +107,6 @@ sudo apt update;
 
 # Install Podman
 ```bash
-DEBIAN_FRONTEND=noninteractive sudo apt install -y \
-  btrfs-progs \
-  crun/sid \
-  passt/sid \
-  git \
-  golang-go/bookworm-backports \
-  golang-src/bookworm-backports \
-  go-md2man \
-  iptables \
-  libassuan-dev \
-  libbtrfs-dev \
-  libc6-dev \
-  libdevmapper-dev \
-  libglib2.0-dev \
-  libgpgme-dev \
-  libgpg-error-dev \
-  libprotobuf-dev \
-  libprotobuf-c-dev \
-  libseccomp-dev \
-  libselinux1-dev \
-  libsystemd-dev \
-  netavark \
-  pkg-config \
-  uidmap \
-  conmon \
-  make
-
 podman_latest_version=$(curl -ks https://api.github.com/repos/containers/podman/releases/latest | awk '/tag_name/ {print $2}' | sed -r 's/"|,//g');
 # -c http.sslVerify=false
 git clone -b $podman_latest_version https://github.com/containers/podman/ $shrooPDir/podman;
