@@ -200,6 +200,7 @@ sudo chown -R $shroober $shrooGuacDir $shrooGuacDB
 # Fire in the Hole
 ```bash
 sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd \$HOME && podman run quay.io/podman/hello"
+docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 ```
 
 # Purge
