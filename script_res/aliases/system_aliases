@@ -1,7 +1,8 @@
 sbrc=source ~/.bashrc
 vbrc=vim ~/.bashrc
 
-del=rm -r
+svim=sudo vim
+del=sudo rm -r
 install=sudo apt install -y
 ..=cd ..
 h=history
