@@ -12,7 +12,7 @@ source ~/.bashrc;
 
 # Well well well
 ```bash
-read -p "Enter new SSH port: " sshPort && sudo sed -i 's/^#Port 22/Port $sshPort/' /etc/ssh/sshd_config && sudo systemctl restart ssh;
+read -p "Enter new SSH port: " sshPort && sudo sed -i "s/^#Port 22/Port $sshPort/" /etc/ssh/sshd_config && sudo systemctl restart ssh;
 ```
 
 # Clone Project & Enable Scripts
