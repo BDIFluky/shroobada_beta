@@ -1,6 +1,7 @@
 shrooA=$(whoami)
-shrooPDir=$HOME/shroobada
+shrooAPDir=$HOME/shroobada
 shroober=chimken
+shrooPDir=~$shroober/shroobada
 shrooberUID=$(id -u $shroober)
 shrooberGID=$(id -g $shroober)
 shrooHPDir=$(eval echo ~$shroober)
