@@ -103,7 +103,7 @@ for file in $shrooAPDir/script_res/required_packages/*; do xargs -a $file sudo D
 # Compy to Service Account
 ```bash
 cd $shrooAPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
-sudo chown -R $shroober:$shrooA $shrooHPDir
+sudo chown -R $shroober:$shrooA $shrooHPDir && sudo chmod 0770 $shrooHPDir
 ```
 
 # Install Podman
@@ -157,8 +157,8 @@ echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
 
-sudo chown -R $shroober:$shrooA $shrooTraefikLogDir;
-sudo chown -R $shroober:$shrooA $shrooTraefikDir;
+sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0770 $shrooTraefikLogDir $shrooTraefikDir
+#sudo chown -R  $shroober:$shrooA $shrooTraefikDir;
 ```
 
 # Setup Auth
@@ -180,7 +180,7 @@ echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" | sudo tee -
 echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" | sudo tee -a $shrooAuthDir/.auth.env;
 echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" | sudo tee -a $shrooAuthDir/.auth.env;
 
-sudo chown -R $shroober:$shrooA $shrooAuthDir $shrooAuthDB
+sudo chown -R $shroober:$shrooA $shrooAuthDir $shrooAuthDB && sudo chmod 0770 $shrooAuthDir $shrooAuthDB
 ```
 
 # Setup Guac
@@ -205,7 +205,7 @@ echo "OPENID_ISSUER=https://auther.boredomdidit.com:8443/application/o/guac/" | 
 echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" | sudo tee -a .guac.env;
 echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" | sudo tee -a .guac.env;
 
-sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB
+sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $shrooGuacDir $shrooGuacDB
 ```
 
 # Fire in the Hole
