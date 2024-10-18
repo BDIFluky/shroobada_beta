@@ -1,11 +1,11 @@
 shrooA=$(whoami)
 shrooAPDir=$HOME/shroobada
 shroober=chimken
-shrooPDir=~$shroober/shroobada
 shrooberUID=$(id -u $shroober)
 shrooberGID=$(id -g $shroober)
 shrooHPDir=$(eval echo ~$shroober)
 shrooCPDir=$shrooHPDir/shroobada
+shrooPDir=$shrooHPDir/shroobada
 
 shrooTraefikDir=/etc/traefik
 shrooTraefikLogDir=/var/log/traefik
