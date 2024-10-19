@@ -156,8 +156,10 @@ sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsen
 echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
+sudo cp $shrooAPDir/traefik/traefik.yml $shrooTraefikDir
 
 sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0770 $shrooTraefikLogDir $shrooTraefikDir
+sudo chmod 0770 $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0770 $shrooTraefikLogDir $shrooTraefikDir
 #sudo chown -R  $shroober:$shrooA $shrooTraefikDir;
 ```
 
