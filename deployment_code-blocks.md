@@ -103,6 +103,8 @@ for file in $shrooAPDir/script_res/required_packages/*; do xargs -a $file sudo D
 # Copy to Service Account
 ```bash
 cd $shrooAPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
+cp $shrooAPDir/script_res/shrooVars $shrooHPDir
+
 sudo chown -R $shroober:$shrooA $shrooHPDir && sudo chmod 0770 $shrooHPDir
 ```
 
