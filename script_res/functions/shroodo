@@ -1,0 +1,3 @@
+function shroodo {
+    [ ! -z "$1" ] && sudo -u $shroober env $(cat $shrooHPDir/shrooVars | xargs) bash -c "$1"
+}
