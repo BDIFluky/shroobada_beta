@@ -212,14 +212,14 @@ sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $s
 
 # Fire in the Hole
 ```bash
- sudo -Eu $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) HOME=$(eval "echo ~$shroober") bash -c "cd $shrooCPDir && podman compose up -d"
+sudo -u $shroober env  bash -c "cd $shrooCPDir && podman compose up -d"
 docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 ```
 
 # Purge
 ```bash
-cd;
-sudo rm .bash_aliases .bash_funcs .bash_exports
+sudo rm -r $HOME/.bash_aliases $HOME/.bash_funcs $HOME/.bash_exports $HOME/shroobada $shrooTraefikDir $shrooTraefikLogDir $shrooAuthDir $shrooAuthDB $shrooGuacDir $shrooGuacDB
+sudo userdel -f -r $shroober
 ```
 
 
