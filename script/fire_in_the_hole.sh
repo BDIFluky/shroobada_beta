@@ -98,6 +98,6 @@ shrooGuacDB="/var/lib/guacdb"
 check_privileges()
 
 setup_shroober()
-
+add_repos()
 
 
