@@ -23,19 +23,6 @@ for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f 
 source ~/.bashrc
 ```
 
-# Setup Service Account
-```bash
-shroober=chimken
-sudo useradd -r -s /usr/sbin/nologin -d /var/lib/$shroober -m $shroober
-
-nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
-sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
-
-nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1)
-sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
-
-sudo loginctl enable-linger $shroober
-```
 
 # Clone Project & Enable Scripts
 ```bash
@@ -52,17 +39,31 @@ for file in $shrooAPDir/script_res/functions/*; do while IFS= read -r line; do e
 source ~/.bashrc;
 ```
 
-# Setup Exports
+# Setup Aliases
 ```bash
-shrooAPDir=~/shroobada;
-for file in $shrooAPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
+for file in $shrooAPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
 
-# Setup Aliases
+# Setup Service Account
 ```bash
-for file in $shrooAPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
+shroober=chimken
+sudo useradd -r -s /usr/sbin/nologin -d /var/lib/$shroober -m $shroober
+
+nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
+sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
+
+nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1)
+sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
+
+sudo loginctl enable-linger $shroober
+```
+
+# Setup Exports
+```bash
+shrooAPDir=~/shroobada;
+for file in $shrooAPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
