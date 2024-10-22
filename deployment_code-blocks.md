@@ -15,6 +15,14 @@ source ~/.bashrc;
 read -p "Enter new SSH port: " sshPort && sudo sed -i "s/^#Port 22/Port $sshPort/" /etc/ssh/sshd_config && sudo systemctl restart ssh;
 ```
 
+# Setup .bashrc
+```bash
+bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
+for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f "$file" ] && touch "$file"; grep -q "$source_line" ~/.bashrc || echo "$source_line" >> ~/.bashrc; done
+
+source ~/.bashrc
+```
+
 # Setup Service Account
 ```bash
 shroober=chimken
@@ -34,14 +42,6 @@ sudo loginctl enable-linger $shroober
 shrooAPDir=~/shroobada;
 # -c http.sslVerify=false
 git clone https://github.com/BDIFluky/shroobada $shrooPDir;
-```
-
-# Setup .bashrc
-```bash
-bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
-for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f "$file" ] && touch "$file"; grep -q "$source_line" ~/.bashrc || echo "$source_line" >> ~/.bashrc; done
-
-source ~/.bashrc
 ```
 
 # Setup Functions
