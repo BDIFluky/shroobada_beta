@@ -26,13 +26,13 @@ source ~/.bashrc
 # Setup Service Account
 ```bash
 shroober=chimken
-id $shroober &>/dev/null && sudo useradd -r -s /usr/sbin/nologin -d /var/lib/$shroober -m $shroober
+id $shroober &>/dev/null || sudo useradd -r -s /usr/sbin/nologin -d /var/lib/$shroober -m $shroober
 
 nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
-! grep "^$shroober:" /etc/subuid &&sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
+grep "^$shroober:" /etc/subuid || sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
 
 nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1)
-! grep "^$(sudo -u $shroober bash -c "id -g -n"):" /etc/subgid &&sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
+grep "^$(sudo -u $shroober bash -c "id -g -n"):" /etc/subgid || sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
 
 sudo loginctl enable-linger $shroober
 ```
