@@ -26,7 +26,10 @@ source ~/.bashrc
 # Setup Service Account
 ```bash
 shroober=chimken
-id $shroober &>/dev/null || sudo useradd -r -s /usr/sbin/nologin -d /var/lib/$shroober -m $shroober
+shrooberHome=/var/lib/$shroober
+id $shroober &>/dev/null || sudo useradd -r -s /usr/sbin/nologin -d $shrooberHome -m $shroober
+sudo chown -R $shroober:$(id -g -n) $shrooberHome
+sudo chmod -R 0770 $shrooberHome
 
 nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
 grep "^$shroober:" /etc/subuid || sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
@@ -39,9 +42,12 @@ sudo loginctl enable-linger $shroober
 
 # Clone Project & Enable Scripts
 ```bash
-shrooAPDir=~/shroobada;
+shrooPDir=$(eval echo ~$shroober)/shroobada
 # -c http.sslVerify=false
 git clone https://github.com/BDIFluky/shroobada $shrooPDir;
+sudo chown -R $shroober:$(id -g -n) $shrooberHome
+sudo chmod -R 0770 $shrooberHome
+ln -s $shrooberHome/shroobada ~/shroobada
 ```
 
 # Setup Functions
@@ -58,8 +64,6 @@ for file in $shrooAPDir/script_res/aliases/*; do while IFS= read -r line; do [[ 
 
 source ~/.bashrc;
 ```
-
-
 
 # Setup Exports
 ```bash
@@ -100,14 +104,6 @@ sudo apt update;
 # Install Required Packages
 ```bash
 for file in $shrooAPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
-```
-
-# Copy to Service Account
-```bash
-cd $shrooAPDir/.. && sudo find . -type f -regex ".*compose.*yml" -exec cp --preserve --parents {} $shrooHPDir \;
-cp $shrooAPDir/script_res/shrooVars $shrooHPDir;
-
-sudo chown -R $shroober:$shrooA $shrooHPDir && sudo chmod 0770 $shrooHPDir;
 ```
 
 # Install Podman
