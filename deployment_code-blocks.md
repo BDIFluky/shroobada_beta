@@ -103,7 +103,7 @@ for repo in "${!repos[@]}"; do
     grep -q "Pin: release a=$repo" "$pref_file" || sudo bash -c "echo -e '# Priority for $repo\nPackage: *\nPin: release a=$repo\nPin-Priority: $priority\n' >> '$pref_file'"
 done
 
-sudo apt-update
+sudo apt update
 ```
 
 # Install Required Packages
