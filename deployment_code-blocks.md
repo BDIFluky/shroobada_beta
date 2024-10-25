@@ -40,7 +40,7 @@ grep "^$(sudo -u $shroober bash -c "id -g -n"):" /etc/subgid || sudo usermod --a
 sudo loginctl enable-linger $shroober
 ```
 
-# Clone Project & Enable Scripts
+# Clone Project
 ```bash
 shrooPDir=$(eval echo ~$shroober)/shroobada
 # -c http.sslVerify=false
@@ -124,6 +124,12 @@ podman version;
 cd;
 sudo rm -r $shrooPDir/podman;
 [ ! -d /etc/containers/ ] && sudo mkdir /etc/containers 
+
+sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd $shrooHPDir && podman run quay.io/podman/hello"
+```
+
+# Insecure Podman Repo
+```bash
 [ ! -f /etc/containers/policy.json ] && echo -e '{
     "default": [
         {
@@ -133,22 +139,16 @@ sudo rm -r $shrooPDir/podman;
 }
 ' | sudo tee -a /etc/containers/policy.json;
 
-sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd $shrooHPDir && podman run quay.io/podman/hello"
-#systemctl --user start podman.socket;
-#systemctl --user enable podman.socket;
-#systemctl --user status podman.socket;
-
-#podman run quay.io/podman/hello
 ```
 
 # Install Compose Plugin
 ```bash
-cd;
 docker_downs_url="https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/"
 needed_component="docker-compose-plugin"
 # --no-check-certificate
 echo "${docker_downs_url}$(curl -s $docker_downs_url | grep -oP "${needed_component}.*[.]deb"  | cut -d "\"" -f 1 | sort -V | tail -1)" | wget -O ${needed_component}.deb -i -
-sudo dpkg -i needed_component.deb
+sudo dpkg -i "$needed_component.deb"
+rm "$needed_component.deb"
 ```
 
 # Setup Traefik
@@ -157,23 +157,19 @@ sudo dpkg -i needed_component.deb
 sudo touch $shrooTraefikLogDir/traefik.log;
 sudo touch $shrooTraefikLogDir/access.log;
 
-sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
+sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json 
 echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
-sudo cp $shrooAPDir/traefik/traefik.yml $shrooTraefikDir
+sudo cp $shrooPDir/traefik/traefik.yml $shrooTraefikDir
 
-sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0770 $shrooTraefikLogDir $shrooTraefikDir
-sudo chmod 0770 $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0770 $shrooTraefikLogDir $shrooTraefikDir
-#sudo chown -R  $shroober:$shrooA $shrooTraefikDir;
+sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo chmod -R 0770 $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
 ```
 
 # Setup Auth
 ```bash
-sudo mkdir -p $shrooAuthDB
-sudo mkdir -p $shrooAuthDir/media $shrooAuthDir/certs $shrooAuthDir/custom-templates;
+sudo mkdir -p $shrooAuthDB $shrooAuthDir/media $shrooAuthDir/certs $shrooAuthDir/custom-templates;
 
-sudo mkdir -p $shrooAuthDir
 echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" | sudo tee -a $shrooAuthDir/.auth-pg.env;
 echo "POSTGRES_USER=auth_db_u" | sudo tee -a $shrooAuthDir/.auth-pg.env;
 echo "POSTGRES_DB=auth_db" | sudo tee -a $shrooAuthDir/.auth-pg.env;
@@ -187,7 +183,7 @@ echo "AUTHENTIK_SECRET_KEY=$(openssl rand -base64 60 | tr -d '\n')" | sudo tee -
 echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" | sudo tee -a $shrooAuthDir/.auth.env;
 echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" | sudo tee -a $shrooAuthDir/.auth.env;
 
-sudo chown -R $shroober:$shrooA $shrooAuthDir $shrooAuthDB && sudo chmod 0770 $shrooAuthDir $shrooAuthDB
+sudo chown -R $shroober:$shrooA $shrooAuthDir $shrooAuthDB && sudo chmod -R 0770 $shrooAuthDir $shrooAuthDB
 ```
 
 # Setup Guac
@@ -196,28 +192,28 @@ sudo mkdir -p $shrooGuacDir/drive $shrooGuacDir/record $shrooGuacDB/init $shrooG
 
 cd $shrooGuacDir;
 
-echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" | sudo tee -a .guac-pg.env;
-echo "POSTGRES_USER=guac_db_u" | sudo tee -a .guac-pg.env;
-echo "POSTGRES_DB=guac_db" | sudo tee -a .guac-pg.env;
-echo "PGDATA=/var/lib/postgresql/data/guacamole" | sudo tee -a .guac-pg.env;
+echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" | sudo tee -a $shrooGuacDir/.guac-pg.env;
+echo "POSTGRES_USER=guac_db_u" | sudo tee -a $shrooGuacDir/.guac-pg.env;
+echo "POSTGRES_DB=guac_db" | sudo tee -a $shrooGuacDir/.guac-pg.env;
+echo "PGDATA=/var/lib/postgresql/data/guacamole" | sudo tee -a $shrooGuacDir/.guac-pg.env;
 
-echo "GUACD_HOSTNAME=guacd" | sudo tee -a .guac.env;
-echo "POSTGRES_HOSTNAME=guac-pg" | sudo tee -a .guac.env;
-sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRESQL_USER/p' .guac-pg.env | sudo tee -a .guac.env;
-sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRESQL_DATABASE/p' .guac-pg.env | sudo tee -a .guac.env;
-sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' .guac-pg.env | sudo tee -a .guac.env;
-echo "OPENID_AUTHORIZATION_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/authorize/" | sudo tee -a .guac.env;
-echo "OPENID_JWKS_ENDPOINT=https://auther.boredomdidit.com:8443/application/o/guac/jwks/" | sudo tee -a .guac.env;
-echo "OPENID_ISSUER=https://auther.boredomdidit.com:8443/application/o/guac/" | sudo tee -a .guac.env;
-echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" | sudo tee -a .guac.env;
-echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" | sudo tee -a .guac.env;
+echo "GUACD_HOSTNAME=guacd" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "POSTGRES_HOSTNAME=guac-pg" | sudo tee -a $shrooGuacDir/.guac.env;
+sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRESQL_USER/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
+sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRESQL_DATABASE/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
+sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_AUTHORIZATION_ENDPOINT=https://auther.$(hostname -d):8443/application/o/authorize/" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_JWKS_ENDPOINT=https://auther.$(hostname -d):8443/application/o/guac/jwks/" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_ISSUER=https://auther.$(hostname -d):8443/application/o/guac/" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" | sudo tee -a  $shrooGuacDir/.guac.env;
 
 sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $shrooGuacDir $shrooGuacDB
 ```
 
 # Fire in the Hole
 ```bash
-sudo -u $shroober env  bash -c "cd $shrooCPDir && podman compose up -d"
+sudo -u $shroober env XDG_RUNTIME_DIR=$shrooberXRD $(cat $shrooPDir/script_res/exports/shrooVars | xargs) bash -c "cd $shrooPDir && podman compose up -d"
 docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 ```
 
