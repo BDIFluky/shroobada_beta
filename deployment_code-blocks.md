@@ -75,30 +75,35 @@ source ~/.bashrc;
 
 # Setup apt repos
 ```bash
-echo -e 'deb http://ftp.debian.org/debian bookworm-backports main contrib non-free\ndeb http://ftp.debian.org/debian trixie main contrib non-free\ndeb http://ftp.debian.org/debian sid main contrib non-free' | sudo tee -a /etc/apt/sources.list.d/added_repos.list;
-sudo tee -a /etc/apt/preferences.d/main-priorities <<EOF
-# Priority for Bookworm (Stable)
-Package: *
-Pin: release a=bookworm
-Pin-Priority: 900
+repo_file="/etc/apt/sources.list.d/added_repos.list"
+pref_file="/etc/apt/preferences.d/main-priorities"
 
-# Priority for Bookworm-backports
-Package: *
-Pin: release a=bookworm-backports
-Pin-Priority: 700
+# Clear or create the repository and preferences files
+sudo truncate -s 0 $repo_file $pref_file
 
-# Priority for Trixie (Testing)
-Package: *
-Pin: release a=trixie
-Pin-Priority: 500
+# Define repositories and their priorities using an associative array (map)
+declare -A repos=(
+    ["bookworm"]="900"
+    ["bookworm-backports"]="700"
+    ["trixie"]="500"
+    ["sid"]="400"
+)
 
-# Priority for Sid (Unstable)
-Package: *
-Pin: release a=sid
-Pin-Priority: 400
-EOF
+# Iterate over repositories and append entries if they don't already exist
+repo_url="http://ftp.debian.org/debian"
 
-sudo apt update;
+for repo in "${!repos[@]}"; do
+    priority="${repos[$repo]}"
+
+    # Add repository line if it doesn't exist
+    repo_string="deb $repo_url $repo main contrib non-free"
+    grep -q "$repo_string" || sudo bash -c "echo '$repo_string' >> '$repo_file'"
+
+    # Add preference entry if it doesn't exist
+    grep -q "Pin: release a=$repo" "$pref_file" || sudo bash -c "echo -e '# Priority for $repo\nPackage: *\nPin: release a=$repo\nPin-Priority: $priority\n' >> '$pref_file'"
+done
+
+sudo apt-update
 ```
 
 # Install Required Packages
