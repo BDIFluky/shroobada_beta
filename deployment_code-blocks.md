@@ -42,25 +42,31 @@ sudo loginctl enable-linger $shroober
 
 # Clone Project
 ```bash
-shrooPDir=$(eval echo ~$shroober)/shroobada
+shrooProjectDir=$(eval echo ~$shroober)/shroobada
 # -c http.sslVerify=false
-git clone https://github.com/BDIFluky/shroobada $shrooPDir;
+git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
 sudo chown -R $shroober:$(id -g -n) $shrooberHome
 sudo chmod -R 0770 $shrooberHome
 ln -s $shrooberHome/shroobada ~/shroobada
 ```
 
+# Parse shrooVars
+```bash
+shrooVarsPath=$shrooberHome/shroobada/res/shrooVars 
+temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "echo \"$line\""; done > temp && mv temp $shrooVarsPath
+```
+
 # Setup Functions
 ```bash
 shrooAPDir=~/shroobada;
-for file in $shrooAPDir/script_res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
+for file in $shrooAPDir/res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
 
 source ~/.bashrc;
 ```
 
 # Setup Aliases
 ```bash
-for file in $shrooAPDir/script_res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
+for file in $shrooAPDir/res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
@@ -68,7 +74,7 @@ source ~/.bashrc;
 # Setup Exports
 ```bash
 shrooAPDir=~/shroobada;
-for file in $shrooAPDir/script_res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
+for file in $shrooAPDir/res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
@@ -108,24 +114,24 @@ sudo apt update
 
 # Install Required Packages
 ```bash
-for file in $shrooAPDir/script_res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
+for file in $shrooAPDir/res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
 ```
 
 # Install Podman
 ```bash
 podman_latest_version=$(curl -ks https://api.github.com/repos/containers/podman/releases/latest | awk '/tag_name/ {print $2}' | sed -r 's/"|,//g');
 # -c http.sslVerify=false
-git clone -b $podman_latest_version https://github.com/containers/podman/ $shrooPDir/podman;
-cd $shrooPDir/podman/;
+git clone -b $podman_latest_version https://github.com/containers/podman/ $shrooProjectDir/podman;
+cd $shrooProjectDir/podman/;
 make BUILDTAGS="systemd selinux seccomp" PREFIX=/usr;
 sudo make install PREFIX=/usr;
 podman version;
 
 cd;
-sudo rm -r $shrooPDir/podman;
+sudo rm -r $shrooProjectDir/podman;
 [ ! -d /etc/containers/ ] && sudo mkdir /etc/containers 
 
-sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd $shrooHPDir && podman run quay.io/podman/hello"
+sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user status podman.socket && cd $shrooHome && podman run quay.io/podman/hello"
 ```
 
 # Insecure Podman Repo
@@ -153,17 +159,17 @@ rm "$needed_component.deb"
 
 # Setup Traefik
 ```bash
-[ ! -d $shrooTraefikLogDir ] && sudo mkdir -p $shrooTraefikLogDir;
-sudo touch $shrooTraefikLogDir/traefik.log;
-sudo touch $shrooTraefikLogDir/access.log;
+[ ! -d $shrooRPLogDir ] && sudo mkdir -p $shrooRPLogDir;
+sudo touch $shrooRPLogDir/traefik.log;
+sudo touch $shrooRPLogDir/access.log;
 
-sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json 
-echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
-read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
-read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
-sudo cp $shrooPDir/traefik/traefik.yml $shrooTraefikDir
+sudo mkdir -p $shrooRPDir/letsencrypt && sudo touch $shrooRPDir/letsencrypt/acme.json 
+echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooRPDir/.traefik.env;
+read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooRPDir/.traefik.env;
+read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooRPDir/.traefik.env;
+sudo cp $shrooProjectDir/traefik/traefik.yml $shrooRPDir
 
-sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo chmod -R 0770 $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
+sudo chown -R  $shroober:$shrooA $shrooRPLogDir $shrooRPDir && sudo chmod -R 0770 $shrooRPLogDir $shrooRPDir && sudo chmod 0600 $shrooRPDir/letsencrypt/acme.json;
 ```
 
 # Setup Auth
@@ -213,13 +219,13 @@ sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $s
 
 # Fire in the Hole
 ```bash
-sudo -u $shroober env XDG_RUNTIME_DIR=$shrooberXRD $(cat $shrooPDir/script_res/exports/shrooVars | xargs) bash -c "cd $shrooPDir && podman compose up -d"
+sudo -u $shroober env XDG_RUNTIME_DIR=$shrooberXRD $(grep -v '^\s*#' $shrooProjectDir/res/exports/shrooVars | xargs) bash -c "cd $shrooProjectDir && podman compose up -d"
 docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 ```
 
 # Purge
 ```bash
-sudo rm -r $HOME/.bash_aliases $HOME/.bash_funcs $HOME/.bash_exports $HOME/shroobada $shrooTraefikDir $shrooTraefikLogDir $shrooAuthDir $shrooAuthDB $shrooGuacDir $shrooGuacDB
+sudo rm -r $HOME/.bash_aliases $HOME/.bash_funcs $HOME/.bash_exports $HOME/shroobada $shrooRPDir $shrooRPLogDir $shrooAuthDir $shrooAuthDB $shrooGuacDir $shrooGuacDB
 sudo userdel -f -r $shroober
 ```
 

@@ -84,10 +84,10 @@ shrooberUID="$(id -u $shroober)"
 shrooberGID="$(id -g $shroober)"
 shrooHPDir="/var/lib/$shroober"
 shrooCPDir="$shrooHPDir/shroobada"
-shrooPDir="$shrooHPDir/shroobada"
+shrooProjectDir="$shrooHPDir/shroobada"
 
-shrooTraefikDir="/etc/traefik"
-shrooTraefikLogDir="/var/log/traefik"
+shrooRPDir="/etc/traefik"
+shrooRPLogDir="/var/log/traefik"
 
 shrooAuthDir="/etc/authentik"
 shrooAuthDB="/var/lib/authdb"

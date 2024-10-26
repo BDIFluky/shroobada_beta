@@ -1,20 +1,20 @@
 services:
   traefik:
+    container_name: "$shrooRPName"
     image: "docker.io/traefik:v3.1"
-    container_name: "traefik"
+    env_file:
+      - "${shrooRPDir}/.traefik.env"
     ports:
       - "8080:80"
       - "8443:443"
-    env_file:
-      - "${shrooTraefikDir}/.traefik.env"
     networks:
       - TraefikNet
     volumes:
       - "/run/user/$shrooberUID/podman.sock:/var/run/docker.sock:ro"
-      - "${shrooTraefikDir}/letsencrypt:/letsencrypt"
-      - "${shrooTraefikDir}/traefik.yml:/etc/traefik/traefik.yml"
-      - "${shrooTraefikDir}/dynamic:/dynamic"
-      - "TraefikLogs:/var/log/traefik/"
+      - "${shrooRPDir}/letsencrypt:/letsencrypt"
+      - "${shrooRPDir}/traefik.yml:/etc/traefik/traefik.yml"
+      - "${shrooRPDir}/dynamic:/dynamic"
+      - "${shrooRPLogDir}:/var/log/traefik/"
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
       interval: 10s
@@ -23,8 +23,8 @@ services:
       start_period: 10s
 
   whoami:
-    image: "docker.io/traefik/whoami"
     container_name: "whoami"
+    image: "docker.io/traefik/whoami"
     networks:
       - TraefikNet
     labels:
@@ -35,11 +35,3 @@ networks:
     name: TraefikNet
     driver: bridge
     internal: false
-
-volumes:
-  TraefikLogs:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${shrooTraefikLogDir}
-      o: bind

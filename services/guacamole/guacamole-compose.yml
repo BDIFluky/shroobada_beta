@@ -1,40 +1,40 @@
 services:
   guacd:
-    container_name: guacd
-    image: docker.io/guacamole/guacd
+    container_name: "guacd"
+    image: "docker.io/guacamole/guacd"
     networks:
       - GuacOutNet
       - GuacBackNet
     volumes:
-      - ${shrooGuacDir}/drive:/drive:rw
-      - ${shrooGuacDir}/record:/record:rw
+      - "${shrooGuacDir}/drive:/drive:rw"
+      - "${shrooGuacDir}/record:/record:rw"
     restart: always
 
   guac-pg:
-    container_name: guac-pg
-    image: docker.io/library/postgres:16-alpine
+    container_name: "${shrooGuacName}-pg"
+    image: "docker.io/library/postgres:16-alpine"
     env_file:
-      - ${shrooGuacDir}/.guac-pg.env
-    user: "$shroober"
+      - "${shrooGuacDir}/.guac-pg.env"
+    #user: "$shroober"
     networks:
       - GuacBackNet
     volumes:
-      - ${shrooGuacDB}/init:/docker-entrypoint-initdb.d:z
-      - ${shrooGuacDB}/data:/var/lib/postgresql/data:Z
+      - "${shrooGuacDB}/init:/docker-entrypoint-initdb.d:z"
+      - "${shrooGuacDB}/data:/var/lib/postgresql/data:Z"
     restart: always
 
   guac:
-    container_name: guac
-    image: docker.io/guacamole/guacamole
+    container_name: "${shrooGuacName}"
+    image: "docker.io/guacamole/guacamole"
     env_file:
-      - ${shrooGuacDir}/.guac.env
+      - "${shrooGuacDir}/.guac.env"
     ports:
-      - 8080/tcp
+      - "8080/tcp"
     networks:
-      - GuacFrontNet
+      - "${shrooGuacName}FrontNet"
       - GuacBackNet
     volumes:
-      - ${shrooGuacDir}/record:/record:rw
+      - "${shrooGuacDir}/record:/record:rw"
     restart: always
     depends_on:
       - guacd
@@ -46,7 +46,7 @@ networks:
     driver: bridge
     internal: false 
   GuacFrontNet:
-    name: GuacFrontNet
+    name: "${shrooGuacName}FrontNet"
     driver: bridge
     internal: false 
   GuacBackNet:  

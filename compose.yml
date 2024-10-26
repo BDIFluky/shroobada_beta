@@ -1,6 +1,6 @@
 name: shroobada
 
 include:
-  - ${shrooPDir}/traefik/traefik-compose.yml
-  - ${shrooPDir}/authentik/auth-compose.yml
-  - ${shrooPDir}/guacamole/guacamole-compose.yml
+  - ${shrooServicesDir}/traefik/traefik-compose.yml
+  - ${shrooServicesDir}/authentik/authentik-compose.yml
+  - ${shrooServicesDir}/guacamole/guacamole-compose.yml

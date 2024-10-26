@@ -1,17 +1,28 @@
 shrooA=$(whoami)
+
+# Shroober
 shroober=chimken
 shrooberUID=$(id -u $shroober)
 shrooberGID=$(id -g $shroober)
 shrooberHome=$(eval echo ~$shroober)
 shrooberXRD=/run/user/$(id -u $shroober)
-shrooVarsPath="$shrooPDir/script_res/exports/shrooVars"
-shrooPDir=$shrooberHome/shroobada
 
-shrooTraefikDir=/etc/traefik
-shrooTraefikLogDir=/var/log/traefik
+# Project
+shrooVarsPath="$shrooProjectDir/script_res/exports/shrooVars"
+shrooProjectDir=$shrooberHome/shroobada
+shrooServicesDir=$shrooProjectDir/services
 
-shrooAuthDir=/etc/authentik
-shrooAuthDB=/var/lib/authdb
+# Reverse-Proxy
+shrooRPName=traefik
+shrooRPDir=/etc/$shrooRPName
+shrooRPLogDir=/var/log/$shrooRPName
 
-shrooGuacDir=/etc/guacamole
-shrooGuacDB=/var/lib/guacdb
+# Authentik
+shrooAuthName=auther
+shrooAuthDir=/etc/$shrooAuthName
+shrooAuthDB=/var/lib/${shrooAuthName}DB
+
+# Guacamole
+shrooGuacName=guac
+shrooGuacDir=/etc/$shrooGuacName
+shrooGuacDB=/var/lib/${shrooGuacName}DB

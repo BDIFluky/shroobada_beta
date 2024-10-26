@@ -1,51 +1,51 @@
 x-auth-env: &auth-env
     env_file:
-      - ${shrooAuthDir}/.auth.env
+      - "${shrooAuthDir}/.auth.env"
       
 services:
   auth-server:
-    image: ghcr.io/goauthentik/server:2024.8.2
-    container_name: auther
+    container_name: "$shrooAuthName"
+    image: "ghcr.io/goauthentik/server:2024.8.2"
     command: server
     <<: *auth-env
-    networks:
-      - AuthBackNet
-      - AuthFrontNet
-    volumes:
-      - ${shrooAuthDir}/media:/media
-      - ${shrooAuthDir}/custom-templates:/templates
     ports:
       - "9000:9000"
       #- "9443:9443"
+    networks:
+      - AuthBackNet
+      - "${shrooAuthName}FrontNet"
+    volumes:
+      - "${shrooAuthDir}/media:/media"
+      - "${shrooAuthDir}/custom-templates:/templates"
     restart: unless-stopped
     depends_on:
       - auth-pg
       - auth-redis
       
   auth-worker:
-    image: ghcr.io/goauthentik/server:2024.8.2
-    container_name: auth-worker
+    image: "ghcr.io/goauthentik/server:2024.8.2"
+    container_name: "$shrooAuthName-wkr"
     command: worker
     <<: *auth-env
     networks:
       - AuthBackNet
     volumes:
-      - ${shrooAuthDir}/media:/media
-      - ${shrooAuthDir}/certs:/certs
-      - ${shrooAuthDir}/custom-templates:/templates
+      - "${shrooAuthDir}/media:/media"
+      - "${shrooAuthDir}/certs:/certs"
+      - "${shrooAuthDir}/custom-templates:/templates"
     depends_on:
       - auth-pg
       - auth-redis
       
   auth-pg:
-    image: docker.io/library/postgres:16-alpine
-    container_name: auth-pg
+    image: "docker.io/library/postgres:16-alpine"
+    container_name: "$shrooAuthName-pg"
     env_file:
-      - ${shrooAuthDir}/.auth-pg.env
+      - "${shrooAuthDir}/.auth-pg.env"
     networks:
       - AuthBackNet
     volumes:
-      - AuthDB:/var/lib/postgresql/data
+      - "${shrooAuthDB}:/var/lib/postgresql/data"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
@@ -55,8 +55,8 @@ services:
       timeout: 5s
 
   auth-redis:
-    image: docker.io/library/redis:alpine
-    container_name: auth-redis
+    image: "docker.io/library/redis:alpine"
+    container_name: "$shrooAuthName-redis"
     command: --save 60 1 --loglevel warning
     networks:
       - AuthBackNet
@@ -72,7 +72,7 @@ services:
 
 networks:
   AuthFrontNet:
-    name: AuthFrontNet
+    name: "${shrooAuthName}FrontNet"
     driver: bridge
     internal: false
   AuthBackNet:
@@ -81,11 +81,5 @@ networks:
     internal: true
 
 volumes:
-  AuthDB:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${shrooAuthDB}
-      o: bind
   AuthRedis:
     driver: local

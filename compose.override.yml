@@ -1,8 +1,8 @@
 services:
   traefik:
     networks:
-      - AuthFrontNet
-      - GuacFrontNet
+      - "${shrooAuthName}FrontNet"
+      - "${shrooGuacName}FrontNet"
       
   whoami:
     labels:
@@ -11,10 +11,10 @@ services:
   auth-server:
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=AuthFrontNet"
+      - "traefik.docker.network=${shrooAuthName}FrontNet"
 
   guac:
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=GuacFrontNet"
+      - "traefik.docker.network=${shrooGuacName}FrontNet"
       - "traefik.http.routers.guac-rt.middlewares=guac-mwr@file"
