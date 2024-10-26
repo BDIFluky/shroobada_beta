@@ -43,6 +43,7 @@ sudo loginctl enable-linger $shroober
 # Clone Project
 ```bash
 shrooProjectDir=$(eval echo ~$shroober)/shroobada
+shrooberHome=$(eval echo ~$shroober)
 # -c http.sslVerify=false
 git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
 sudo chown -R $shroober:$(id -g -n) $shrooberHome
