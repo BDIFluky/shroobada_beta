@@ -78,7 +78,7 @@ EOF
 
 
 shrooA="$(whoami)"
-shrooAPDir="$HOME/shroobada"
+shrooProjectDir="$HOME/shroobada"
 shroober="chimken"
 shrooberUID="$(id -u $shroober)"
 shrooberGID="$(id -g $shroober)"

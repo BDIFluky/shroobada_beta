@@ -59,23 +59,25 @@ temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r lin
 
 # Setup Functions
 ```bash
-shrooAPDir=~/shroobada;
-for file in $shrooAPDir/res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
+
+for file in $shrooProjectDir/res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
 
 source ~/.bashrc;
 ```
 
 # Setup Aliases
 ```bash
-for file in $shrooAPDir/res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
+for file in $shrooProjectDir/res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
 
 # Setup Exports
 ```bash
-shrooAPDir=~/shroobada;
-for file in $shrooAPDir/res/exports/*; do while IFS= read -r line; do [[ -n "$line" ]] && aexport "$line"; done < "$file"; done;
+shrooProjectDir=$(eval echo ~$shroober)/shroobada
+shrooberHome=$(eval echo ~$shroober)
+shrooProjectDir=$shrooberHome/shroobada
+for file in $shrooProjectDir/res/exports/*; do while IFS= read -r line; do [[ -n "$line" && ! $line =~ ^#*  ]] && export "$line" && aexport "$line"; done < "$file"; done;
 
 source ~/.bashrc;
 ```
@@ -115,7 +117,7 @@ sudo apt update
 
 # Install Required Packages
 ```bash
-for file in $shrooAPDir/res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
+for file in $shrooProjectDir/res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
 ```
 
 # Install Podman
