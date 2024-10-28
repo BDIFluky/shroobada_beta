@@ -228,7 +228,8 @@ docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 
 # Purge
 ```bash
-sudo rm -r $HOME/.bash_aliases $HOME/.bash_funcs $HOME/.bash_exports $HOME/shroobada $shrooRPDir $shrooRPLogDir $shrooAuthDir $shrooAuthDB $shrooGuacDir $shrooGuacDB
+> $HOME/.bash_exports
+sudo rm -r  /var/lib/chimken /etc/traefik /etc/guac* /etc/auth* /var/log/traefik /var/lib/auth*DB
 sudo userdel -f -r $shroober
 ```
 
