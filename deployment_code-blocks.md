@@ -42,6 +42,7 @@ sudo loginctl enable-linger $shroober
 
 # Clone Project
 ```bash
+shroober=chimken
 shrooProjectDir=$(eval echo ~$shroober)/shroobada
 shrooberHome=$(eval echo ~$shroober)
 # -c http.sslVerify=false
