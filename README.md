@@ -9,7 +9,7 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
   - [Table of Contents](#table-of-contents)
   - [Overview & Scope](#overview--scope)
   - [Roadmap](#roadmap)
-  - [Deployment Guide](#deployment-guide)
+  - [Getting Started](#getting-started)
     - [Environment Setup](#environment-setup)
     - [Container Manager](#container-manager)
 
@@ -18,7 +18,7 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
 
 ## Roadmap
 
-## Deployment Guide
+## Getting Started
 All code blocks are available in the [code_blocks.md](./code_blocks.md) file with comments.
 
 ### Environment Setup
