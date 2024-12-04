@@ -1,17 +1,17 @@
 # Shroobada
 Shroobada is BDI's attempt at setting up a homelab, and for once they are documenting their shit (this is unprecedented).
 
-> “Those who know, do. Those that understand, teach.” <sub>― Aristotle </sub>
+> “Those who know, do. Those who understand, teach.” <sub>― Lee Shulman </sub>
+
+---
 
 ## Table of Contents
 
-- [Shroobada](#shroobada)
-  - [Table of Contents](#table-of-contents)
-  - [Overview & Scope](#overview--scope)
-  - [Roadmap](#roadmap)
-  - [Getting Started](#getting-started)
-    - [Environment Setup](#environment-setup)
-    - [Container Manager](#container-manager)
+- [Overview & Scope](#overview--scope)
+- [Roadmap](#roadmap)
+- [Getting Started](#getting-started)
+  - [Environment Setup](#environment-setup)
+  - [Container Manager](#container-manager)
 
 ## Overview & Scope
 > “No great mind has ever existed without a touch of madness.” <sub>― Aristotle </sub>
