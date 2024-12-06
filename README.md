@@ -13,8 +13,11 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
   - [Environment Setup](#environment-setup)
   - [Container Manager](#container-manager)
 
+---
+
 ## Overview & Scope
-> “No great mind has ever existed without a touch of madness.” <sub>― Aristotle </sub>
+**Shroobada** aims to provide a modular and customizable framework for setting up a homelab based on FOSS:
+
 
 ## Roadmap
 
