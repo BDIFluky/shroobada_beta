@@ -16,16 +16,16 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
 ---
 
 ## Overview & Scope
-**Shroobada** aims to provide a modular and customizable framework for setting up a homelab based on FOSS:
+**Shroobada** aims to provide a modular, customizable and FOSS based framework for setting up a homelab. It organizes functionality into distinct stacks, each serving a particular purpose. Each stack consists of one or more services running in containers. Configuration details for these containers are defined in dedicated YAML files, ensuring a clear and easily maintainable setup.
 
+To streamline the process, the entire setup will be automated through a documented script, minimizing manual intervention and potential errors.
 
 ## Roadmap
 
 ## Getting Started
-All code blocks are available in the [code_blocks.md](./code_blocks.md) file with comments.
 
 ### Environment Setup
-This has been set up on a Debian host:
+**Shroobada** is currently tested on a Debian host:
 ```console
 fluky@Shroobada:~$ hostnamectl
  Static hostname: Shroobada
