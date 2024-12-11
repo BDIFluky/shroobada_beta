@@ -16,11 +16,20 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
 ---
 
 ## Overview & Scope
-**Shroobada** aims to provide a modular, customizable and FOSS based framework for setting up a homelab. It organizes functionality into distinct stacks, each serving a particular purpose. Each stack consists of one or more services running in containers. Configuration details for these containers are defined in dedicated YAML files, ensuring a clear and easily maintainable setup.
+**Shroobada** is a modular, customizable, and FOSS-based framework designed to streamline the setup and management of a homelab. This solution is structured into distinct stacks, each tailored to a specific purpose. Services within each stack run in containers, and their configuration is neatly encapsulated in dedicated YAML files to maintain clarity, consistency, and ease of maintenance.
 
-To streamline the process, the entire setup will be automated through a documented script, minimizing manual intervention and potential errors.
+The stacks covered by **Shroobada** are the following:
 
-## Roadmap
+- 
+- 
+
+**Shroobada** also aims be:
+
+- Security Focused: Provides guidance on firewalls, VPN configuration, and safe service exposure.
+- Customizable Blueprints: Offers YAML-based configurations for rapid, consistent deployment and easy modification.
+- Scalable: Acommodate both single-node homelabs and complex, multi-node clusters.
+
+The entire setup process is automated and thoroughly documented, reducing manual intervention and potential errors. Through this careful orchestration—supported by rich documentation and templated configurations—Shroobada ensures a more predictable, repeatable, and maintainable approach to homelab deployment and growth.
 
 ## Getting Started
 
@@ -47,4 +56,4 @@ In the following sections we assume the existence of a user named Fluky which ha
 
 
 ### Container Manager
-There are various container managers out there, it's a pick your poison kind of thing, as stated in the [Overview & Scope](#overview--scope) we'll be using Podman as container manager, but the compose.yml we'll provide should give you an accurate idea on how to migrate to other container managers if needed.
+There are numerous container managers available, and selecting one often comes down to personal preference. Shroobada supports both Podman and Docker as container managers, allowing users to choose their preferred option. However, the provided YAML files serve as a helpful reference, making it simpler to transition to other container managers if needed.
