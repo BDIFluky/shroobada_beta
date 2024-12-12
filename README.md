@@ -3,8 +3,6 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
 
 > “Those who know, do. Those who understand, teach.” <sub>― Lee Shulman </sub>
 
----
-
 ## Table of Contents
 
 - [Overview & Scope](#overview--scope)
@@ -12,8 +10,6 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
 - [Getting Started](#getting-started)
   - [Environment Setup](#environment-setup)
   - [Container Manager](#container-manager)
-
----
 
 ## Overview & Scope
 **Shroobada** is a modular, customizable, and FOSS-based framework designed to streamline the setup and management of a homelab. This solution is structured into distinct stacks, each tailored to a specific purpose. Services within each stack run in containers, and their configuration is neatly encapsulated in dedicated YAML files to maintain clarity, consistency, and ease of maintenance.
