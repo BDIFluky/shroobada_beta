@@ -12,7 +12,7 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
   - [Container Manager](#container-manager)
 
 ## Overview & Scope
-**Shroobada** is a modular, customizable, and FOSS-based framework designed to streamline the setup and management of a homelab. This solution is structured into distinct stacks, each tailored to a specific purpose. Services within each stack run in containers, and their configuration is neatly encapsulated in dedicated YAML files to maintain clarity, consistency, and ease of maintenance.
+**Shroobada** is a modular, customizable, and FOSS-based framework designed to streamline the setup and management of a homelab. This solution is structured into distinct stacks, each tailored to a specific purpose. Services within each stack run in ;nn containers, and their configuration is neatly encapsulated in dedicated YAML files to maintain clarity, consistency, and ease of maintenance.
 
 The stacks covered by **Shroobada** are the following:
 
@@ -53,3 +53,8 @@ In the following sections we assume the existence of a user named Fluky which ha
 
 ### Container Manager
 There are numerous container managers available, and selecting one often comes down to personal preference. Shroobada supports both Podman and Docker as container managers, allowing users to choose their preferred option. However, the provided YAML files serve as a helpful reference, making it simpler to transition to other container managers if needed.
+
+#### Podman Installation
+There are various [ways](https://podman.io/docs/installation) to install podman, as the version available through stable debian repo is usually not up to date, we'll build it from source.
+
+First, we'll start by fetching the dependencies.
