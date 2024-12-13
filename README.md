@@ -45,7 +45,7 @@ Operating System: Debian GNU/Linux 12 (bookworm)
             .
 ```
 
-In the following sections we assume the existence of a user named Fluky which has been granted sudo privileges.
+In the following sections we assume the existence of a user named `Fluky` which has been granted sudo privileges acting as root, and a nologin service account named `Chimken` to run containers in rootless mode.
 
 > [!TIP]
 > [How to grant sudo privileges](./code_blocks.md#grant-sudo-privileges)
@@ -55,6 +55,6 @@ In the following sections we assume the existence of a user named Fluky which ha
 There are numerous container managers available, and selecting one often comes down to personal preference. Shroobada supports both Podman and Docker as container managers, allowing users to choose their preferred option. However, the provided YAML files serve as a helpful reference, making it simpler to transition to other container managers if needed.
 
 #### Podman Installation
-There are various [ways](https://podman.io/docs/installation) to install podman, as the version available through stable debian repo is usually not up to date, we'll build it from source.
+There are various [ways](https://github.com/containers/podman.io/blob/main/docs/installation.md) to install podman, as the version available through stable debian repo is usually not up to date, we'll build it from source.
 
 First, we'll start by fetching the dependencies.
