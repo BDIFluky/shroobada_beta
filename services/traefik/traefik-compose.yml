@@ -8,9 +8,9 @@ services:
       - "8080:80"
       - "8443:443"
     networks:
-      - TraefikNet
+      - ReverseProxyNet
     volumes:
-      - "/run/user/$shrooberUID/podman.sock:/var/run/docker.sock:ro"
+      - "${shrooSocket}:/var/run/docker.sock:ro"
       - "${shrooRPDir}/letsencrypt:/letsencrypt"
       - "${shrooRPDir}/traefik.yml:/etc/traefik/traefik.yml"
       - "${shrooRPDir}/dynamic:/dynamic"
@@ -26,12 +26,12 @@ services:
     container_name: "whoami"
     image: "docker.io/traefik/whoami"
     networks:
-      - TraefikNet
+      - ReverseProxyNet
     labels:
       - "traefik.enable=true"
 
 networks:
-  TraefikNet:
-    name: TraefikNet
+  ReverseProxyNet:
+    name: ReverseProxyNet
     driver: bridge
     internal: false

@@ -1,2 +1,4 @@
 
-<img align="center" title="Traefik" src="/assets/img/traefik.logo-dark.png">
+<p style="text-align: center;">
+<img title="Traefik" src="/assets/img/traefik.logo-dark.png" alt="">
+</p>
