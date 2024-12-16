@@ -1,3 +1,3 @@
 <p align="center">
-<img title="Traefik" src="/assets/img/traefik.logo-dark.png" alt="">
+<img height="400" title="Traefik" src="/assets/img/traefik.logo-dark.png" alt="">
 </p>
