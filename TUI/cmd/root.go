@@ -5,7 +5,9 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -25,7 +27,16 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) { fmt.Println("brrr") },
+	Run: func(cmd *cobra.Command, args []string) {
+		cmdName := "goland"
+
+		// LookPath searches for an executable named cmdName in the directories named by the PATH environment variable.
+		if _, err := exec.LookPath(cmdName); err != nil {
+			log.Printf("%s is not installed or not found in PATH: %v\n", cmdName, err)
+		} else {
+			fmt.Printf("%s is installed on the host.\n", cmdName)
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
