@@ -4,6 +4,9 @@
 
 Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. In this guide, Traefik integrates seamlessly with container runtimes such as Podman and Docker.
 
+
+## Compose file
+### Compose file
 You can find the Compose configuration file for Traefik in: [traefik-compose.yml](/services/traefik/traefik-compose.yml)
 
 This file is easily customizable through environment variables:
@@ -19,6 +22,8 @@ This file is easily customizable through environment variables:
 > - `$XDG_RUNTIME_DIR/podman.sock` if using Podman
 >
 > <sub>*`$XDG_RUNTIME_DIR` is commonly `/run/user/$UID/`.*</sub>
+
+
 
 **Key Features Covered in This Guide:**
 
