@@ -4,10 +4,35 @@
 
 Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. In this guide, Traefik integrates seamlessly with container runtimes such as Podman and Docker.
 
+## Configuration 
+
+The [official documentation](https://doc.traefik.io/traefik/getting-started/configuration-overview/) for Traefik's configuratino provides a lot of information on how to implement different features.
+The key features covered here in [traefik.yml](/services/traefik/traefik.yml) are:
+
+- Automatic [HTTP-to-HTTPS redirection](#automatic-http-to-https-redirection)
+- [Let’s Encrypt integration](let-s-encrypt-integration) for SSL certificates
+- TLS-enabled connections by default
+- File-based logging
+- A default routing rule for exposed containers
+- Dynamic file provider configuration
+
+
+### Automatic HTTP-to-HTTPS redirection
+
+To achieve the redirection we leverage the [RedirectScheme](https://doc.traefik.io/traefik/middlewares/http/redirectscheme/) middleware, by adding the following block to the [htpp entrypoint](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L11-L18) named web in this case:
+```yaml
+    http:
+      redirections:
+        entryPoint:
+          to: "websecure" # name of entry point to redirect to
+          scheme: "https" # scheme used after redirection
+```
+
+### Let’s Encrypt integration
 
 ## Compose file
-### Compose file
-You can find the Compose configuration file for Traefik in: [traefik-compose.yml](/services/traefik/traefik-compose.yml)
+
+You can find the Compose file for Traefik in: [traefik-compose.yml](/services/traefik/traefik-compose.yml)
 
 This file is easily customizable through environment variables:
 
@@ -25,11 +50,4 @@ This file is easily customizable through environment variables:
 
 
 
-**Key Features Covered in This Guide:**
 
-- Automatic HTTP-to-HTTPS redirection
-- File-based logging
-- A default routing rule for exposed containers
-- Dynamic file provider configuration
-- Let’s Encrypt integration for SSL certificates
-- TLS-enabled connections by default
