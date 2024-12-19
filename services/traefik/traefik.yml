@@ -24,6 +24,19 @@ entryPoints:
         certResolver: "letsencrypt"
 
 ################################################################
+# Let's Encrypt
+################################################################
+certificatesresolvers:
+  letsencrypt:
+    acme:
+      email: "{{env \"PROVIDER_EMAIL\"}}"
+      storage: "/letsencrypt/acme.json"
+      preferredchain: 'ISRG Root X2'
+      keytype: 'ECDSA P-384'
+      dnsChallenge:
+        provider: "{{env \"PROVIDER\"}}"
+        
+################################################################
 # Traefik logs configuration
 ################################################################        
 accessLog:
@@ -56,16 +69,3 @@ providers:
   file:
     directory: "/dynamic"
     watch: true
-
-################################################################
-# Let's Encrypt
-################################################################
-certificatesresolvers:
-  letsencrypt:
-    acme:
-      email: "{{env \"PROVIDER_EMAIL\"}}"
-      storage: "/letsencrypt/acme.json"
-      preferredchain: 'ISRG Root X2'
-      keytype: 'ECDSA P-384'
-      dnsChallenge:
-        provider: "{{env \"PROVIDER\"}}"

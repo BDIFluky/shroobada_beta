@@ -30,6 +30,8 @@ To achieve the redirection we leverage the [RedirectScheme](https://doc.traefik.
 
 ### Let’s Encrypt integration
 
+
+
 ## Compose file
 
 You can find the Compose file for Traefik in: [traefik-compose.yml](/services/traefik/traefik-compose.yml)
