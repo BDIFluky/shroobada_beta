@@ -10,7 +10,7 @@ The [official documentation](https://doc.traefik.io/traefik/getting-started/conf
 The key features covered here in [traefik.yml](/services/traefik/traefik.yml) are:
 
 - Automatic [HTTP-to-HTTPS redirection](#automatic-http-to-https-redirection)
-- [Let’s Encrypt integration](let-s-encrypt-integration) for SSL certificates
+- [Let’s Encrypt integration](lets-encrypt-integration) for SSL certificates
 - TLS-enabled connections by default
 - File-based logging
 - A default routing rule for exposed containers
@@ -19,7 +19,7 @@ The key features covered here in [traefik.yml](/services/traefik/traefik.yml) ar
 
 ### Automatic HTTP-to-HTTPS redirection
 
-To achieve the redirection we leverage the [RedirectScheme](https://doc.traefik.io/traefik/middlewares/http/redirectscheme/) middleware, by adding the following block to the [htpp entrypoint](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L11-L18) named web in this case:
+To achieve the redirection we leverage the [RedirectScheme](https://doc.traefik.io/traefik/middlewares/http/redirectscheme/) middleware, by adding the following block to the [htpp entrypoint](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L12-L18) named web in this case:
 ```yaml
     http:
       redirections:
