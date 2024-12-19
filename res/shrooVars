@@ -1,5 +1,5 @@
 shrooA=$(whoami)
-shrooSocket="/run/user/$shrooberUID/podman.sock"
+shrooCMSocket="/run/user/$shrooberUID/podman.sock"
 
 # Shroober
 shroober=chimken
