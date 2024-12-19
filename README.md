@@ -27,23 +27,11 @@ The stacks covered by **Shroobada** are the following:
 
 The entire setup process is automated and thoroughly documented, reducing manual intervention and potential errors. Through this careful orchestration—supported by rich documentation and templated configurations—Shroobada ensures a more predictable, repeatable, and maintainable approach to homelab deployment and growth.
 
+
+
 ## Getting Started
 
-### Environment Setup
-**Shroobada** is currently tested on a Debian host:
-```console
-fluky@Shroobada:~$ hostnamectl
- Static hostname: Shroobada
-       Icon name: computer-desktop
-         Chassis: desktop 🖥️
-            .
-            .
-Operating System: Debian GNU/Linux 12 (bookworm)
-          Kernel: Linux 6.1.0-23-amd64
-    Architecture: x86-64
-            .
-            .
-```
+
 
 In the following sections we assume the existence of a user named `Fluky` which has been granted sudo privileges acting as root, and a nologin service account named `Chimken` to run containers in rootless mode.
 
@@ -58,3 +46,7 @@ There are numerous container managers available, and selecting one often comes d
 There are various [ways](https://github.com/containers/podman.io/blob/main/docs/installation.md) to install podman, as the version available through stable debian repo is usually not up to date, we'll build it from source.
 
 First, we'll start by fetching the dependencies.
+
+## Environment
+**Shroobada** is currently tested on :
+- Debian GNU/Linux 12 (bookworm)

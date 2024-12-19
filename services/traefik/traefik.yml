@@ -29,8 +29,9 @@ entryPoints:
 accessLog:
   addInternals: true
   filePath: "/var/log/traefik/access.log"
+
 log:
-  level: "DEBUG"
+  level: "ERROR"
   filePath: "/var/log/traefik/traefik.log"
   format: "json"
 
@@ -40,6 +41,7 @@ log:
 api:
   insecure: false
   dashboard: true
+
 ping:
   entrypoint: "web"
 
@@ -63,7 +65,7 @@ certificatesresolvers:
     acme:
       email: "{{env \"PROVIDER_EMAIL\"}}"
       storage: "/letsencrypt/acme.json"
-      preferredchain: "ISRG Root X1"
-      keytype: "RSA4096"
+      preferredchain: 'ISRG Root X2'
+      keytype: 'ECDSA P-384'
       dnsChallenge:
-        provider: "infomaniak"
+        provider: "{{env \"PROVIDER\"}}"
