@@ -6,7 +6,7 @@ Traefik (pronounced traffic) is a modern HTTP reverse proxy and load balancer th
 easy. Traefik integrates with your existing infrastructure components, notably Podman and Docker which are used in 
 this guide.
 
-The compose file for traefik can be found in [`traefik-compose.yml`](/../../services/traefik/traefik-compose.yml)
+The compose file for traefik can be found in [`traefik-compose.yml`](/../../blob/main/services/traefik/traefik-compose.yml)
 
 The key features used in this guide are:
 
