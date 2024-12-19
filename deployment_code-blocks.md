@@ -163,17 +163,17 @@ rm "$needed_component.deb"
 
 # Setup Traefik
 ```bash
-[ ! -d $shrooRPLogDir ] && sudo mkdir -p $shrooRPLogDir;
-sudo touch $shrooRPLogDir/traefik.log;
-sudo touch $shrooRPLogDir/access.log;
+[ ! -d $shrooTraefikLogDir ] && sudo mkdir -p $shrooTraefikLogDir;
+sudo touch $shrooTraefikLogDir/traefik.log;
+sudo touch $shrooTraefikLogDir/access.log;
 
-sudo mkdir -p $shrooRPDir/letsencrypt && sudo touch $shrooRPDir/letsencrypt/acme.json 
-echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooRPDir/.traefik.env;
-read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooRPDir/.traefik.env;
-read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooRPDir/.traefik.env;
-sudo cp $shrooProjectDir/traefik/traefik.yml $shrooRPDir
+sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json 
+echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
+read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
+read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
+sudo cp $shrooProjectDir/traefik/traefik.yml $shrooTraefikDir
 
-sudo chown -R  $shroober:$shrooA $shrooRPLogDir $shrooRPDir && sudo chmod -R 0770 $shrooRPLogDir $shrooRPDir && sudo chmod 0600 $shrooRPDir/letsencrypt/acme.json;
+sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo chmod -R 0770 $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
 ```
 
 # Setup Auth

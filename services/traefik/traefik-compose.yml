@@ -1,9 +1,9 @@
 services:
   traefik:
-    container_name: "$shrooRPName"
+    container_name: "$shrooTraefikName"
     image: "docker.io/traefik:v3.1"
     env_file:
-      - "${shrooRPDir}/.traefik.env"
+      - "${shrooTraefikDir}/.traefik.env"
     ports:
       - "8080:80"
       - "8443:443"
@@ -11,10 +11,10 @@ services:
       - TraefikNet
     volumes:
       - "${shrooSocket}:/var/run/docker.sock:ro"
-      - "${shrooRPDir}/letsencrypt:/letsencrypt"
-      - "${shrooRPDir}/traefik.yml:/etc/traefik/traefik.yml"
-      - "${shrooRPDir}/dynamic:/dynamic"
-      - "${shrooRPLogDir}:/var/log/traefik/"
+      - "${shrooTraefikDir}/letsencrypt:/letsencrypt"
+      - "${shrooTraefikDir}/traefik.yml:/etc/traefik/traefik.yml"
+      - "${shrooTraefikDir}/dynamic:/dynamic"
+      - "${shrooTraefikLogDir}:/var/log/traefik/"
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
       interval: 10s

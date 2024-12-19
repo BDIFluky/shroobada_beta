@@ -86,8 +86,8 @@ shrooHPDir="/var/lib/$shroober"
 shrooCPDir="$shrooHPDir/shroobada"
 shrooProjectDir="$shrooHPDir/shroobada"
 
-shrooRPDir="/etc/traefik"
-shrooRPLogDir="/var/log/traefik"
+shrooTraefikDir="/etc/traefik"
+shrooTraefikLogDir="/var/log/traefik"
 
 shrooAuthDir="/etc/authentik"
 shrooAuthDB="/var/lib/authdb"

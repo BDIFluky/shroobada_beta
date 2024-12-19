@@ -14,9 +14,9 @@ shrooProjectDir=$shrooberHome/shroobada
 shrooServicesDir=$shrooProjectDir/services
 
 # Reverse-Proxy
-shrooRPName=traefik
-shrooRPDir=/etc/$shrooRPName
-shrooRPLogDir=/var/log/$shrooRPName
+shrooTraefikName=traefik
+shrooTraefikDir=/etc/$shrooTraefikName
+shrooTraefikLogDir=/var/log/$shrooTraefikName
 
 # Authentik
 shrooAuthName=auther
