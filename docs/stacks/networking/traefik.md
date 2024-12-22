@@ -10,8 +10,8 @@ The [official documentation](https://doc.traefik.io/traefik/getting-started/conf
 The key features covered here in [traefik.yml](/services/traefik/traefik.yml) are:
 
 - Automatic [HTTP-to-HTTPS redirection](#automatic-http-to-https-redirection)
-- [Let’s Encrypt integration](lets-encrypt-integration) for SSL certificates
-- TLS-enabled connections by default
+- [Let’s Encrypt integration](#lets-encrypt-integration) for SSL certificates
+- [TLS-enabled connections by default](#tls-enabled-connections-by-default)
 - File-based logging
 - A default routing rule for exposed containers
 - Dynamic file provider configuration
@@ -29,6 +29,12 @@ To achieve the redirection we leverage the [RedirectScheme](https://doc.traefik.
 ```
 
 ### Let’s Encrypt integration
+
+The [official documentation](https://doc.traefik.io/traefik/https/acme/) provides an extesnive guide on how to set up Let's Encrypt for automatic certificate generation.
+in the [traefik.yml](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L29-L37), you can find an example of Let,s Encrypt configured with DNS-Challenge, with the email and the provider set with an environment variable that should be passed to Traefik container. 
+
+
+### TLS-enabled connections by default
 
 
 
