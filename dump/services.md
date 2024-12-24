@@ -65,3 +65,5 @@ CouchDB for [Obsidian Self-hosted LiveSync](https://github.com/vrtmrz/obsidian-l
 [infisical](https://infisical.com/docs/self-hosting/deployment-options/standalone-infisical): secrets
 
 mend renovate: updates
+
+[Clipboard](https://www.reddit.com/r/selfhosted/comments/1hl61gz/clipcascade_v13x_released_elevate_your_clipboard/)
