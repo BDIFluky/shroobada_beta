@@ -102,4 +102,4 @@ This file is easily customizable through environment variables:
 >
 > <sub>*`$XDG_RUNTIME_DIR` is commonly `/run/user/$UID/`.*</sub>
 
-Additionally, the Compose file includes a `whoami` container for testing purposes. For instance this container allows you to verify the default routing rule provided by the Docker provider. For example, if the domain name is `ba.da`, the `whoami` container will be reachable at `whoami.ba.da`.
+Additionally, the Compose file includes a `whoami` container for testing purposes. For instance this container allows you to verify the default routing rule provided by the Docker provider. For example, if the domain name is `shroo.bada`, the `whoami` container will be reachable at `whoami.shroo.bada`.
