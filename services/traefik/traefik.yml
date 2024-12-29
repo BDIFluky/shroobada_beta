@@ -9,43 +9,43 @@ global:
 # Entrypoints configuration
 ################################################################
 entryPoints:
-  web:
-    address: :80
+  web: # entrypoint name
+    address: :80 # entrypoint address
     http:
-      redirections:
+      redirections: # redirectScheme middleware
         entryPoint:
-          to: "websecure"
-          scheme: "https"
+          to: "websecure" # name of entrypoint to redirect to
+          scheme: "https" # scheme used after redirection
   websecure:
     address: :443
-    asDefault: true
+    asDefault: true # entrypoint set a s default
     http:
-      tls:
-        certResolver: "letsencrypt"
+      tls: # tls enabled by default for the above entrypoint
+        certResolver: "letsencrypt" # default certificate resolver
 
 ################################################################
 # Let's Encrypt
 ################################################################
 certificatesresolvers:
-  letsencrypt:
+  letsencrypt: # certResolver name
     acme:
-      email: "{{env \"PROVIDER_EMAIL\"}}"
-      storage: "/letsencrypt/acme.json"
+      email: "{{env \"PROVIDER_EMAIL\"}}" # email provided by an environment variable
+      storage: "/letsencrypt/acme.json" # storage location for the acme.json
       preferredchain: 'ISRG Root X2'
       keytype: 'ECDSA P-384'
-      dnsChallenge:
-        provider: "{{env \"PROVIDER\"}}"
+      dnsChallenge: # challenge type
+        provider: "{{env \"PROVIDER\"}}" # provider code provided by an environment variable
         
 ################################################################
 # Traefik logs configuration
 ################################################################        
 accessLog:
-  addInternals: true
-  filePath: "/var/log/traefik/access.log"
+  addInternals: true # adding logging for api and dashboard services
+  filePath: "/var/log/traefik/access.log" # storage location for accessLog
 
 log:
   level: "ERROR"
-  filePath: "/var/log/traefik/traefik.log"
+  filePath: "/var/log/traefik/traefik.log" # storage location for logs
   format: "json"
 
 ################################################################
@@ -63,9 +63,9 @@ ping:
 ################################################################
 providers:
   docker:
-    exposedByDefault: false
-    defaultRule: "Host(`{{ .ContainerName }}.{{env \"DOMAIN_NAME\"}}`)"
+    exposedByDefault: false # label "traefik.enable=true" needed to expose a container
+    defaultRule: "Host(`{{ .ContainerName }}.{{env \"DOMAIN_NAME\"}}`)" # default rule for exposed containers is [containername].[domainName]
     
   file:
-    directory: "/dynamic"
+    directory: "/dynamic" # dynamic file path
     watch: true
