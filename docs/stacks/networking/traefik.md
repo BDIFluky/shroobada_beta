@@ -86,13 +86,13 @@ For example, the `dashboard` and `api` routers are redefined in [internals.yml](
 
 ## Compose file
 
-You can find the Compose file for Traefik in: [traefik-compose.yml](/services/traefik/traefik-compose.yml)
+The Compose file for Traefik is located at [traefik-compose.yml](/services/traefik/traefik-compose.yml)
 
 This file is easily customizable through environment variables:
 
-- **shrooTraefikName**: Defines a container name for the service. For usage purpose, see the [Default Rule for Exposed Containers](default-rule-for-exposed-containers).
-- **shrooTraefikDir**: Specifies the absolute path where Traefik’s configuration files are stored.
-- **shrooSocket**: Indicates the socket used for service discovery. Its value depends on the container manager and whether it’s running in rootless mode.
+- **shrooTraefikName**: Specifies a container name for the service. For usage purpose, see the [Default Rule for Exposed Containers](default-rule-for-exposed-containers).
+- **shrooTraefikDir**: Defines the absolute path where Traefik’s configuration files are stored.
+- **shrooSocket**: Indicates the socket used for service discovery. This depends on the container manager and whether it’s running in rootless mode.
 
 > [!NOTE]**shrooSocket** can be set as follows:
 >
@@ -101,3 +101,5 @@ This file is easily customizable through environment variables:
 > - `$XDG_RUNTIME_DIR/podman.sock` if using Podman
 >
 > <sub>*`$XDG_RUNTIME_DIR` is commonly `/run/user/$UID/`.*</sub>
+
+Additionally, the Compose file includes a `whoami` container for testing purposes. For instance this container allows you to verify the default routing rule provided by the Docker provider. For example, if the domain name is `ba.da`, the `whoami` container will be reachable at `whoami.ba.da`.
