@@ -2,7 +2,7 @@
 <img height="400" title="Traefik" src="/assets/img/traefik.logo-dark.png" alt="">
 </p>
 
-Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. This guide covers integrating Traefik with container runtimes such as Podman or Docker..
+Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. This guide covers integrating Traefik with container runtimes such as Podman or Docker.
 
 ## Configuration
 
@@ -94,8 +94,8 @@ This file is easily customizable through environment variables:
 - **shrooTraefikDir**: Defines the absolute path where Traefik’s configuration files are stored.
 - **shrooSocket**: Indicates the socket used for service discovery. This depends on the container manager and whether it’s running in rootless mode.
 
-> [!NOTE]**shrooSocket** can be set as follows:
->
+> [!NOTE]
+> **shrooSocket** can be set as follows:
 > - `/var/run/docker.sock` if using Docker
 > - `$XDG_RUNTIME_DIR/docker.sock` if using rootless Docker or Podman with Docker compatibility
 > - `$XDG_RUNTIME_DIR/podman.sock` if using Podman
