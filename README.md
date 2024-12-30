@@ -16,7 +16,7 @@ Shroobada is BDI's attempt at setting up a homelab, and for once they are docume
 
 The stacks covered by **Shroobada** are the following:
 
-- 
+- **[Administration](/docs/stacks/administration/)**
 - 
 
 **Shroobada** also aims be:

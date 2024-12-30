@@ -103,7 +103,7 @@ This file is easily customizable through environment variables:
 >
 > <sub>*`$XDG_RUNTIME_DIR` is commonly `/run/user/$UID/`.*</sub>
 
-Also the env file `.treafik.env` is passed to the container that holds environment variables we want to pass to the container:
+Also, the env file `.treafik.env` is passed to the container that holds environment variables we want to pass to the container:
 
 - **DOMAIN_NAME**: Default domain name to be used by Traefik to setup the default routes.
 - **PROVIDER_EMAIL**: Provider email for the DNS-Challenge if used as well as other variables needed by that provider
