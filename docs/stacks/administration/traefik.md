@@ -2,6 +2,8 @@
 <img height="400" title="Traefik" src="/assets/img/traefik.logo-dark.png" alt="">
 </p>
 
+---
+
 Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. This guide covers integrating Traefik with container runtimes such as Podman or Docker.
 
 ## Configuration
