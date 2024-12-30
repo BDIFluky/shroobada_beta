@@ -13,7 +13,7 @@ services:
       #- "9443:9443"
     networks:
       - AuthBackNet
-      - "${shrooAuthName}FrontNet"
+      - AuthFrontNet
     volumes:
       - "${shrooAuthDir}/media:/media"
       - "${shrooAuthDir}/custom-templates:/templates"
@@ -72,7 +72,7 @@ services:
 
 networks:
   AuthFrontNet:
-    name: "${shrooAuthName}FrontNet"
+    name: AuthFrontNet
     driver: bridge
     internal: false
   AuthBackNet:

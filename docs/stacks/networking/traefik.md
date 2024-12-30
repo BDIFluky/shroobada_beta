@@ -92,14 +92,20 @@ This file is easily customizable through environment variables:
 
 - **shrooTraefikName**: Specifies a container name for the service. For usage purpose, see the [Default Rule for Exposed Containers](default-rule-for-exposed-containers).
 - **shrooTraefikDir**: Defines the absolute path where Traefik’s configuration files are stored.
-- **shrooSocket**: Indicates the socket used for service discovery. This depends on the container manager and whether it’s running in rootless mode.
+- **shrooCMSocket**: Indicates the socket used for service discovery. This depends on the container manager and whether it’s running in rootless mode.
+- **shrooTraefikLogDir**: Defines the absolute path of where the logs should be stored.
 
 > [!NOTE]
-> **shrooSocket** can be set as follows:
+> **shrooCMSocket** can be set as follows:
 > - `/var/run/docker.sock` if using Docker
 > - `$XDG_RUNTIME_DIR/docker.sock` if using rootless Docker or Podman with Docker compatibility
 > - `$XDG_RUNTIME_DIR/podman.sock` if using Podman
 >
 > <sub>*`$XDG_RUNTIME_DIR` is commonly `/run/user/$UID/`.*</sub>
+
+Also the env file `.treafik.env` is passed to the container that holds environment variables we want to pass to the container:
+
+- **DOMAIN_NAME**: Default domain name to be used by Traefik to setup the default routes.
+- **PROVIDER_EMAIL**: Provider email for the DNS-Challenge if used as well as other variables needed by that provider
 
 Additionally, the Compose file includes a `whoami` container for testing purposes. For instance this container allows you to verify the default routing rule provided by the Docker provider. For example, if the domain name is `shroo.bada`, the `whoami` container will be reachable at `whoami.shroo.bada`.

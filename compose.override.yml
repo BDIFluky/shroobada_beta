@@ -1,8 +1,8 @@
 services:
   traefik:
     networks:
-      - "${shrooAuthName}FrontNet"
-      - "${shrooGuacName}FrontNet"
+      - AuthFrontNet
+      - GuacFrontNet
       
   whoami:
     labels:

@@ -31,7 +31,7 @@ services:
     ports:
       - "8080/tcp"
     networks:
-      - "${shrooGuacName}FrontNet"
+      - GuacFrontNet
       - GuacBackNet
     volumes:
       - "${shrooGuacDir}/record:/record:rw"
@@ -46,7 +46,7 @@ networks:
     driver: bridge
     internal: false 
   GuacFrontNet:
-    name: "${shrooGuacName}FrontNet"
+    name: GuacFrontNet
     driver: bridge
     internal: false 
   GuacBackNet:  
