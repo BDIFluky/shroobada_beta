@@ -4,6 +4,17 @@
 
 ---
 
+## Table of Contenet
+
+- [Configuration](#configuration)
+  - [HTTP-to-HTTPS redirection](#automatic-http-to-https-redirection)
+  - [Let’s Encrypt integration](#lets-encrypt-integration)
+  - [TLS by default](#tls-connections-by-default)
+  - [File-based logging](https://doc.traefik.io/traefik/observability/logs/)
+  - [default routing rule for exposed containers](#default-routing-rule-for-exposed-containers)
+  - [Dynamic file](#dynamic-file) 
+- [Compose File](#compose-file)
+
 Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. This guide covers integrating Traefik with container runtimes such as Podman or Docker.
 
 ## Configuration
@@ -13,12 +24,12 @@ The key elements in [traefik.yml](/services/traefik/traefik.yml) include:
 
 - Automatic [HTTP-to-HTTPS redirection](#automatic-http-to-https-redirection)
 - [Let’s Encrypt integration](#lets-encrypt-integration) for SSL certificates
-- [TLS enabled by default](#tls-enabled-connections-by-default)
+- [TLS by default](#tls-connections-by-default)
 - [File-based logging](https://doc.traefik.io/traefik/observability/logs/)
 - A [default routing rule for exposed containers](#default-routing-rule-for-exposed-containers)
 - [Dynamic file](#dynamic-file) provider configuration
 
-### Automatic HTTP-to-HTTPS redirection
+### Automatic HTTP-to-HTTPS Redirection
 
 Traefik redirects HTTP traffic to HTTPS using the [RedirectScheme middleware](https://doc.traefik.io/traefik/middlewares/http/redirectscheme/) on the `web` entrypoint (address :80).
 See [traefik.yml (L14-L18)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L14-L18):
@@ -31,7 +42,7 @@ See [traefik.yml (L14-L18)](https://github.com/BDIFluky/shroobada_beta/blob/e1ee
           scheme: "https" # scheme used after redirection
 ```
 
-### Let’s Encrypt integration
+### Let’s Encrypt Integration
 
 In the [traefik.yml (L30-L37)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L30-L37), Let's Encrypt configured with DNS-Challenge. The email and DNS provider are passed as environment variables:
 
@@ -49,7 +60,7 @@ In the [traefik.yml (L30-L37)](https://github.com/BDIFluky/shroobada_beta/blob/e
 > [!NOTE]
 > Depending on your DNS provider, additional environment variables must be passed to the Traefik container. See the [official documentation](https://doc.traefik.io/traefik/https/acme/#providers) for a list of supported providers and their respective configurations..
 
-### TLS enabled by default
+### TLS by Default
 
 This feature is enabled in [traefik.yml (L22-L24)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L22-L24).the `websecure` entrypoint (address :443) is marked as the default entrypoint for all services, using the certificate resolver `Let's Encrypt`.
 
@@ -62,7 +73,7 @@ This feature is enabled in [traefik.yml (L22-L24)](https://github.com/BDIFluky/s
         certResolver: "letsencrypt" # default certificate resolver
 ```
 
-### Default routing rule for exposed containers
+### Default Routing Rule for Exposed Containers
 
 By defining a default rule for discovered containers, you can eliminate the need for individual router labels. Any custom router label on a container will override this default.
 In [traefik.yml (L65-L67)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L65-L67):
@@ -74,7 +85,7 @@ providers:
 ```
 For example for a container named `shroo` and domain `ba.da` the resulting rule would be `shroo.ba.da`.
 
-### Dynamic file
+### Dynamic File
 
 Aside from services exposed via the Docker provider, you can define additional services, routers, or middlewares using a dynamic file. This feature is enabled in [traefik.yml (L69-L71)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L69-L71)l:
 
@@ -86,9 +97,9 @@ Aside from services exposed via the Docker provider, you can define additional s
 
 For example, the `dashboard` and `api` routers are redefined in [internals.yml](/services/traefik/dynamic/internals.yml) which is to be placed within the dynamic file directory.
 
-## Compose file
+## Compose File
 
-The Compose file for Traefik is located at [traefik-compose.yml](/services/traefik/traefik-compose.yml)
+The compose file for Traefik is located at [traefik-compose.yml](/services/traefik/traefik-compose.yml).
 
 This file is easily customizable through environment variables:
 
@@ -105,7 +116,7 @@ This file is easily customizable through environment variables:
 >
 > <sub>*`$XDG_RUNTIME_DIR` is commonly `/run/user/$UID/`.*</sub>
 
-Also, the env file `.treafik.env` is passed to the container that holds environment variables we want to pass to the container:
+Also, the env file `.treafik.env` is passed to the Traefik container, the file holds environment variables we want to pass to the container:
 
 - **DOMAIN_NAME**: Default domain name to be used by Traefik to setup the default routes.
 - **PROVIDER_EMAIL**: Provider email for the DNS-Challenge if used as well as other variables needed by that provider
