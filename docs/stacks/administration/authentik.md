@@ -52,6 +52,22 @@ Two networks are created, `AuthFrontNet` and `AuthBackNet`, the purpose of havin
 
 ## Traefik Integration
 
+In order to make authentik web page accessible through Traefik, we need to expose the authentik server service through the container manager socket and to make it possible for traefik's container and authentik's server container to communicate, and this by:
+
+- **Adding appropriate labels**:
+```yml
+  auth-server:
+    labels:
+      - "traefik.enable=true" # expose the web page to traefik
+      - "traefik.docker.network=AuthFrontNet" # tells traefik which network to use to communication with `auth-server`
+```
+- **Adding Traefik container to authentik's front network**:
+```yml
+  traefik:
+    networks:
+      - AuthFrontNet
+```
+
 ### Authentication Middleware
 
 ## First Startup

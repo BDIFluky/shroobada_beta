@@ -11,7 +11,7 @@ services:
   auth-server:
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=${shrooAuthName}FrontNet"
+      - "traefik.docker.network=AuthFrontNet"
 
   guac:
     labels:
