@@ -1,9 +1,10 @@
 # Primum
+
 ```bash
 adminUN=$(id -u -n)
 export adminUN;
 echo -n "root ";
-su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y git sudo;usermod -aG sudo $adminUN";
+su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y git sudo lsd vim curl;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
 [[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
@@ -11,11 +12,13 @@ source ~/.bashrc;
 ```
 
 # Well well well
+
 ```bash
 read -p "Enter new SSH port: " sshPort && sudo sed -i "s/^#Port 22/Port $sshPort/" /etc/ssh/sshd_config && sudo systemctl restart ssh;
 ```
 
 # Setup .bashrc
+
 ```bash
 bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
 for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f "$file" ] && touch "$file"; grep -q "$source_line" ~/.bashrc || echo "$source_line" >> ~/.bashrc; done
@@ -24,6 +27,7 @@ source ~/.bashrc
 ```
 
 # Setup Service Account
+
 ```bash
 shroober=chimken
 shrooberHome=/var/lib/$shroober
@@ -41,6 +45,7 @@ sudo loginctl enable-linger $shroober
 ```
 
 # Clone Project
+
 ```bash
 shroober=chimken
 shrooProjectDir=$(eval echo ~$shroober)/shroobada
@@ -53,12 +58,14 @@ ln -s $shrooberHome/shroobada ~/shroobada
 ```
 
 # Parse shrooVars
+
 ```bash
 shrooVarsPath=$shrooberHome/shroobada/res/shrooVars 
 temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "echo \"$line\""; done > temp && mv temp $shrooVarsPath
 ```
 
 # Setup Functions
+
 ```bash
 
 for file in $shrooProjectDir/res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
@@ -67,6 +74,7 @@ source ~/.bashrc;
 ```
 
 # Setup Aliases
+
 ```bash
 for file in $shrooProjectDir/res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
 
@@ -74,6 +82,7 @@ source ~/.bashrc;
 ```
 
 # Setup Exports
+
 ```bash
 shrooProjectDir=$(eval echo ~$shroober)/shroobada
 shrooberHome=$(eval echo ~$shroober)
@@ -84,6 +93,7 @@ source ~/.bashrc;
 ```
 
 # Setup apt repos
+
 ```bash
 repo_file="/etc/apt/sources.list.d/added_repos.list"
 pref_file="/etc/apt/preferences.d/main-priorities"
@@ -117,11 +127,13 @@ sudo apt update
 ```
 
 # Install Required Packages
+
 ```bash
 for file in $shrooProjectDir/res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
 ```
 
 # Install Podman
+
 ```bash
 podman_latest_version=$(curl -ks https://api.github.com/repos/containers/podman/releases/latest | awk '/tag_name/ {print $2}' | sed -r 's/"|,//g');
 # -c http.sslVerify=false
@@ -139,6 +151,7 @@ sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "syst
 ```
 
 # Insecure Podman Repo
+
 ```bash
 [ ! -f /etc/containers/policy.json ] && echo -e '{
     "default": [
@@ -152,6 +165,7 @@ sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "syst
 ```
 
 # Install Compose Plugin
+
 ```bash
 docker_downs_url="https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/"
 needed_component="docker-compose-plugin"
@@ -162,6 +176,7 @@ rm "$needed_component.deb"
 ```
 
 # Setup Traefik
+
 ```bash
 [ ! -d $shrooTraefikLogDir ] && sudo mkdir -p $shrooTraefikLogDir;
 sudo touch $shrooTraefikLogDir/traefik.log;
@@ -177,6 +192,7 @@ sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo ch
 ```
 
 # Setup Auth
+
 ```bash
 sudo mkdir -p $shrooAuthDB $shrooAuthDir/media $shrooAuthDir/certs $shrooAuthDir/custom-templates;
 
@@ -197,6 +213,7 @@ sudo chown -R $shroober:$shrooA $shrooAuthDir $shrooAuthDB && sudo chmod -R 0770
 ```
 
 # Setup Guac
+
 ```bash
 sudo mkdir -p $shrooGuacDir/drive $shrooGuacDir/record $shrooGuacDB/init $shrooGuacDB/data
 
@@ -222,20 +239,22 @@ sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $s
 ```
 
 # Fire in the Hole
+
 ```bash
 sudo -u $shroober env XDG_RUNTIME_DIR=$shrooberXRD $(grep -v '^\s*#' $shrooProjectDir/res/exports/shrooVars | xargs) bash -c "cd $shrooProjectDir && podman compose up -d"
 docker inspect <container_name_or_id> --format '{{.HostConfig.UsernsMode}}'
 ```
 
 # Purge
+
 ```bash
 > $HOME/.bash_exports
 sudo rm -r  /var/lib/chimken /etc/traefik /etc/guac* /etc/auth* /var/log/traefik /var/lib/auth*DB
 sudo userdel -f -r $shroober
 ```
 
-
 # guac shit
+
 ```bash
 docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql > initdb.sql
 sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
@@ -243,6 +262,7 @@ sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
 ```
 
 # 
+
 ```bash
 
 ```
