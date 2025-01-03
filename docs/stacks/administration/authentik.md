@@ -10,6 +10,7 @@ authentik is a robust Identity Provider (IdP) and Single Sign-On (SSO) solution 
 
 - [Compose File](#compose-file)
 - [Traefik Integration](#traefik-integration)
+  - [Authentication Middleware](#authentication-middleware)
 - [First Startup](#first-startup)
 - [Service Integration](#service-integration)
 
@@ -50,6 +51,8 @@ The env file `.auth-pg.env` is passed to the postgres database to setup authenti
 Two networks are created, `AuthFrontNet` and `AuthBackNet`, the purpose of having two networks is to separate the frontend from the backend and thus allowing only the frontend to be accessed by the outside.
 
 ## Traefik Integration
+
+### Authentication Middleware
 
 ## First Startup
 
