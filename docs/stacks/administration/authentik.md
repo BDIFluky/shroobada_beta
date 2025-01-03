@@ -16,7 +16,7 @@ authentik is a robust Identity Provider (IdP) and Single Sign-On (SSO) solution 
 
 ## Compose File
 
-The compose file for authentik is located at [`authentik-compose.yml`](/services/authentik/authentik-compose.yml), it's modified version based on [authentik's official compose file](https://docs.goauthentik.io/docs/install-config/install/docker-compose).
+The compose file for authentik is located at [`authentik-compose.yml`](/services/authentik/authentik-compose.yml). It’s a modified version of [authentik's official compose file](https://docs.goauthentik.io/docs/install-config/install/docker-compose).
 
 This file is easily customizable through environment variables:
 
@@ -25,9 +25,9 @@ This file is easily customizable through environment variables:
 - **shrooAuthDB**: Defines the absolute path where authentik's database is stored locally.
 
 > [!NOTE]
-> Port 9443 is commented in [`authentik-compose.yml`](https://github.com/BDIFluky/shroobada_beta/blob/20665f4fecf8320a0e78027b031befd3a9fc4a8b/services/authentik/authentik-compose.yml#L13) as TLS is handled by Traefik automatically (see [TLS by default](#tls-connections-by-default)).
+> In [`authentik-compose.yml`](/services/authentik/authentik-compose.yml), port 9443 is commented out because Traefik handles TLS automatically. For more information, see [TLS by default](#tls-connections-by-default).
 
-The env file `.auth.env`is passed to the server (auth-server) and worker (auth-worker) services, the files holds environment variable required by this guide:
+The `.auth.env` file is passed to both the auth-server and auth-worker services. It contains the required environment variables for this guide:
 
 - **AUTHENTIK_REDIS__HOST**: Redis server host when not using configuration URL, as we change the redis' container name this should be set to `auth-redis`.
 - **AUTHENTIK_POSTGRESQL__HOST**: Hostname of your PostgreSQL Server (`auth-pg`).
@@ -40,28 +40,31 @@ The env file `.auth.env`is passed to the server (auth-server) and worker (auth-w
 - **AUTHENTIK_ERROR_REPORTING__ENABLED**: Enable error reporting. Defaults to false.
 
 > [!NOTE]
-> A list of accepted environment variables for each container is available at [Configuratuin | authentik](https://docs.goauthentik.io/docs/install-config/configuration/) and [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install.
+> For a list of recognized environment variables, see the [Configuratuin | authentik](https://docs.goauthentik.io/docs/install-config/configuration/) and [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
 
-The env file `.auth-pg.env` is passed to the postgres database to setup authentik's database, this files holds the following environment variables:
+The `.auth-pg.env` file is passed to the PostgreSQL container to setup authentik's database, it includes:
 
 - **POSTGRES_PASSWORD**: Database password.
 - **POSTGRES_USER**: Database user.
 - **POSTGRES_DB**: Database name.
 
-Two networks are created, `AuthFrontNet` and `AuthBackNet`, the purpose of having two networks is to separate the frontend from the backend and thus allowing only the frontend to be accessed by the outside.
+Two networks—`AuthFrontNet` and `AuthBackNet`—are defined to separate front-end and back-end communications. Only the front-end is externally accessible.
 
 ## Traefik Integration
 
-In order to make authentik web page accessible through Traefik, we need to expose the authentik server service through the container manager socket and to make it possible for traefik's container and authentik's server container to communicate, and this by:
+To make authentik web interface accessible through Traefik, you must expose the auth-server service through your container manager’s socket and allow Traefik’s container and Authentik’s server container to communicate:, and this by:
 
 - **Adding appropriate labels**:
+
 ```yml
   auth-server:
     labels:
       - "traefik.enable=true" # expose the web page to traefik
       - "traefik.docker.network=AuthFrontNet" # tells traefik which network to use to communication with `auth-server`
 ```
+
 - **Adding Traefik container to authentik's front network**:
+
 ```yml
   traefik:
     networks:
@@ -69,6 +72,8 @@ In order to make authentik web page accessible through Traefik, we need to expos
 ```
 
 ### Authentication Middleware
+
+In order for Traefik to forward authentication requests to authentik, you need a middleware definition. See [`auther-mwr.yml`](/services/authentik/auther-mwr.yml).
 
 ## First Startup
 
