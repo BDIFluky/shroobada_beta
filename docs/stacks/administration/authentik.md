@@ -35,8 +35,8 @@ The `.auth.env` file is passed to both the auth-server and auth-worker services.
 - **AUTHENTIK_POSTGRESQL__NAME**: Database name.
 - **AUTHENTIK_POSTGRESQL__PASSWORD**: Database password, defaults to the environment variable `POSTGRES_PASSWORD`.
 - **AUTHENTIK_SECRET_KEY**: Secret key used for cookie signing. Changing this will invalidate active sessions.
-- **AUTHENTIK_BOOTSTRAP_PASSWORD**: Configure the default password for the akadmin user. Only read on the first startup. Can be used for any flow executor.
-- **AUTHENTIK_BOOTSTRAP_TOKEN**: Create a token for the default akadmin user. Only read on the first startup. The string you specify for this variable is the token key you can use to authenticate yourself to the API.
+- **AUTHENTIK_BOOTSTRAP_PASSWORD**: Configure the default password for the akadmin user. Only read on the first startup. Can be used for any flow executor. See [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
+- **AUTHENTIK_BOOTSTRAP_TOKEN**: Create a token for the default akadmin user. Only read on the first startup. The string you specify for this variable is the token key you can use to authenticate yourself to the API. See [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
 - **AUTHENTIK_ERROR_REPORTING__ENABLED**: Enable error reporting. Defaults to false.
 
 > [!NOTE]
@@ -76,5 +76,24 @@ To make authentik web interface accessible through Traefik, you must expose the 
 In order for Traefik to forward authentication requests to authentik, you need a middleware definition. See [`auther-mwr.yml`](/services/authentik/auther-mwr.yml).
 
 ## First Startup
+
+curl -s -X POST -L '0.0.0.0:9000/api/v3/core/users/' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Authorization: Bearer Chang3M3n0w' --data-raw '{
+  "username": "string",
+  "name": "string",
+  "is_active": true,
+  "email": "user@example.com",
+  "attributes": {},
+  "path": "string",
+  "type": "internal", 
+}' | jq
+
+curl -s -X GET -L '0.0.0.0:9000/api/v3/core/groups/' -H 'Accept: application/json' -H 'Authorization: Bearer Chang3M3n0w'| jq '.results[] | select(.name=="authentik Admins").pk'
+
+curl -s -X POST -L '0.0.0.0:9000/api/v3/core/groups/7c5cddf5-ce7f-402d-a79f-b2078cc6e962/add_user/' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer Chang3M3n0w' \
+-d '{
+  "pk": 4
+}' | jq
 
 ## Service Integration

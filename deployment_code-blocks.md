@@ -210,6 +210,7 @@ echo "AUTHENTIK_BOOTSTRAP_PASSWORD=Chang3M3n0w" | sudo tee -a $shrooAuthDir/.aut
 echo "AUTHENTIK_ERROR_REPORTING__ENABLED=flase" | sudo tee -a $shrooAuthDir/.auth.env;
 
 sudo chown -R $shroober:$shrooA $shrooAuthDir $shrooAuthDB && sudo chmod -R 0770 $shrooAuthDir $shrooAuthDB
+AUTHENTIK_BOOTSTRAP_TOKEN
 ```
 
 # Setup Guac
