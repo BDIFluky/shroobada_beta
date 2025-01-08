@@ -16,9 +16,7 @@ authentik is a robust Identity Provider (IdP) and Single Sign-On (SSO) solution 
 
 ## Compose File
 
-The compose file for authentik is located at [`authentik-compose.yml`](/services/authentik/authentik-compose.yml). It’s a modified version of [authentik's official compose file](https://docs.goauthentik.io/docs/install-config/install/docker-compose).
-
-This file is easily customizable through environment variables:
+The compose file for authentik is located at [`authentik-compose.yml`](/services/authentik/authentik-compose.yml). It’s a modified version of [authentik's official compose file](https://docs.goauthentik.io/docs/install-config/install/docker-compose) and can be customized through various environment variables:
 
 - **shrooAuthName**: Specifies a container name for the server service and a prefix for the other services. For usage purpose, see the [Default Rule for Exposed Containers](default-rule-for-exposed-containers).
 - **shrooAuthDir**: Defines the absolute path where authentik’s files are stored locally.
@@ -77,7 +75,7 @@ In order for Traefik to forward authentication requests to authentik, you need a
 
 ## First Startup
 
-For the sake of automation, this section aims to show how to create a new superuser and deactivate the default superuser `akadmin` using the API by leveraging the environment variable `AUTHENTIK_BOOTSTRAP_TOKEN`.
+For the sake of automation, this section aims to show how to create a new superuser, create a new API token, set a password then deactivate the default superuser `akadmin`. Amd that by using the API, leveraging the environment variable `AUTHENTIK_BOOTSTRAP_TOKEN`.
 
 - Create a New user:
 ```shell

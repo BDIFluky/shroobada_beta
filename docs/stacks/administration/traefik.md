@@ -106,7 +106,6 @@ This file is easily customizable through environment variables:
 - **shrooTraefikName**: Specifies a container name for the service. For usage purpose, see the [Default Rule for Exposed Containers](default-rule-for-exposed-containers).
 - **shrooTraefikDir**: Defines the absolute path where Traefik’s configuration files are stored.
 - **shrooCMSocket**: Indicates the socket used for service discovery. This depends on the container manager and whether it’s running in rootless mode.
-- **shrooTraefikLogDir**: Defines the absolute path of where the logs should be stored.
 
 > [!NOTE]
 > **shrooCMSocket** can be set as follows:
