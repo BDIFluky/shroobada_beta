@@ -12,6 +12,13 @@ authentik is a robust Identity Provider (IdP) and Single Sign-On (SSO) solution 
 - [Traefik Integration](#traefik-integration)
   - [Authentication Middleware](#authentication-middleware)
 - [First Startup](#first-startup)
+  - [Create a New Superuser](#create-a-new-superuser)
+  - [Set a Password for the New User](#set-a-password-for-the-new-user)
+  - [Add the New User to an Admin Group](#add-the-new-user-to-an-admin-group)
+  - [Create a New API Token Linked to the New User](#create-a-new-api-token-linked-to-the-new-user)
+  - [Delete AUTHENTIK_BOOTSTRAP_TOKEN](#delete-authentik_bootstrap_token)
+  - [Set a Password for akadmin and Deactivate It](#set-a-password-for-akadmin-and-deactivate-it)
+  - [Comprehensive Script](#comprehensive-script)
 - [Service Integration](#service-integration)
 
 ## Compose File
@@ -75,14 +82,17 @@ Traefik can forward authentication requests to authentik by referencing a custom
 
 ## First Startup
 
-Automated initialization can be performed by creating a new superuser, generating an API token, assigning a password and then deactivating the default `akadmin` user. The process relies on the `AUTHENTIK_BOOTSTRAP_TOKEN` environment variable for API access.
+Automated initialization can be performed by creating a new superuser, generating an API token, assigning a password and then deactivating the default `akadmin` user. This process relies on the `AUTHENTIK_BOOTSTRAP_TOKEN` environment variable for API access.
 
->[!NOTE]
-> The scrip in this section uses `curl` and `jq` to send request and parse JSON strings.
+> [!NOTE]
+> A [comprehensive script](#comprehensive-script) is also available, consolidating all the snippets presented in this section for easier deployment.<br>
+> The scripts in this section use `curl` and `jq` to send request and parse JSON data.
 
-In the following, we assume that authentik web interface is accessible through `localhost:9000`.
+For demonstration purposes, these examples assume that the authentik web interface is accessible at localhost:9000.
 
-- **Create a new superuser:** The below code snippet, creates a new user `fluky` by using [core_users_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-create). the response is stored in a variable `newUser`.
+### Create a New Superuser
+
+The following snippet, demonstrates the use of [core_users_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-create) to create a user named `fluky`. the JSON response is stored in the `newUser` variable:
 ```shell
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/"
@@ -105,9 +115,11 @@ newUser=$(curl -s -X POST -L "$requestUrl"\
               --data-raw "$dataSet ")
 ```
 
-- **Set password for the nez user:** The below code snippet, sets a password for the newly created user `fluky` by using [core_users_set_password_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-set-password-create).
->[!NOTE]
->The endpoint for this API request is `core/users/:id/set_password/` where `:id` should be replaced with the user's id we which to set a password to which in case of users is the field `pk`.
+### Set a Password for the New User
+
+The next snippet uses [core_users_set_password_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-set-password-create) to set a password for `fluky`:
+> [!NOTE]
+> The endpoint for setting a user’s password follows the pattern `core/users/:id/set_password/` where `:id` is the user’s pk.
 ```shell
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/$(echo $newUser | jq '.pk')/set_password/"
@@ -124,7 +136,10 @@ curl -s -X POST -L "$requestUrl"\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
       -d "$dataSet"
 ```
-- **Add new user to admin group:** The below code snippet, adds the newly created user `fluky` to the admin group `authentik Admins` by using [core_groups_list | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-groups-list) to get the admin group UUID and [core_groups_add_user_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-groups-add-user-create) to add the new user to that group. 
+
+### Add the New User to an Admin Group
+
+In the following snippet the [core_groups_list | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-groups-list) endpoint is called to retrieve `authentik Admins` UUID. Then the [core_groups_add_user_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-groups-add-user-create) endpoint is invoked to add `fluky` to that group:
 ```shell
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/groups/"
@@ -149,9 +164,11 @@ curl -s -X POST -L "$requestUrl"\
       -d "$dataSet"
 ```
 
-- **Create new API token linked to the new user:** The below code snippet, creates a new token, assign it to the new user `fluky` then sets a key for the new API token by using [core_tokens_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-tokens-create) to create the token amd [core_tokens_set_key_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-tokens-set-key-create) to set the key.
->[!NOTE]
-> The new key should be stored safely as there is no way to retrieve afterward.
+### Create a New API Token Linked to the New User
+
+The [core_tokens_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-tokens-create) endpoint creates a new token for `fluky`, and the [core_tokens_set_key_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-tokens-set-key-create) endpoint sets its key:
+> [!NOTE]
+> This key should be kept securely; there is no method to retrieve it at a later time.
 ```shell
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/tokens/"
@@ -186,7 +203,8 @@ curl -s -X POST -L "$requestUrl"\
       -d "$dataSet"
 ```
 
-- **Delete `AUTHENTIK_BOOTSTRAP_TOKEN`:** The below code snippet, deletes `AUTHENTIK_BOOTSTRAP_TOKEN` by using [core_tokens_destroy | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-tokens-destroy).
+### Delete AUTHENTIK_BOOTSTRAP_TOKEN
+The following snippet uses [core_tokens_destroy | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-tokens-destroy) to delete `AUTHENTIK_BOOTSTRAP_TOKEN`:
 ```shell
 baseUrl="localhost:9000/api/v3/"
 
@@ -202,11 +220,156 @@ curl -s -X DELETE -L "$requestUrl"\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"
 ```
 
-- **Set a password for `akadmin` and deactivate it:** The below code snippet, sets a password for `akadmin` then deactivates it by using [core_users_list | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-list) to get the user id  `pk`, [core_users_set_password_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-set-password-create) to set the password and [core_users_partial_update | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-partial-update) to deactivate it.
->[!NOTE]
->The endpoint for this API request is `core/users/:id/set_password/` where `:id` should be replaced with the user's id we which to set a password to which in case of users is the field `pk`.
-> The password should be stored safely as there is no way to retrieve afterward.
+### Set a Password for akadmin and Deactivate It
+The [core_users_list | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-list) endpoint locates the `akadmin` user by username, [core_users_set_password_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-set-password-create) assigns a new password, and [core_users_partial_update | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-partial-update) deactivates the account:
+> [!NOTE]
+> 1. The endpoint for setting a user’s password follows the pattern `core/users/:id/set_password/` where `:id` is the user’s pk.
+> 2. The generated  password should be stored securely; it cannot be retrieved later. (although the account can be recovered)
 ```shell
+baseUrl="localhost:9000/api/v3/"
+endpoint="core/users/"
+requestUrl="$baseUrl$endpoint"
+
+akadminUID=$(curl -s -X GET -L "$requestUrl"\
+              -H 'Accept: application/json'\
+              -H "Authorization: Bearer $newKey" | jq '.results[] | select(.username=="akadmin").pk')
+              
+endpoint="core/users/$akadminUID/set_password/"
+requestUrl="$baseUrl$endpoint"
+
+dataSet="{
+  \"password\": \"$(openssl rand -base64 32)\"
+}"
+
+curl -s -X POST -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" -d "$dataSet"
+
+endpoint="core/users/$akadminUID/"
+requestUrl="$baseUrl$endpoint"
+
+dataSet="{
+  \"is_active\": false
+}"
+
+curl -s -X PATCH -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" -d "$dataSet"
+```
+
+### Comnprehensive Script
+
+```shell
+# Create New Superuser
+baseUrl="localhost:9000/api/v3/"
+endpoint="core/users/"
+requestUrl="$baseUrl$endpoint"
+
+userName="fluky"
+name="Fluky Morningstar"
+userType="internal"
+dataSet="{
+  \"username\": \"$userName\",
+  \"name\": \"$name\",
+  \"is_active\": true,
+  \"type\": \"$userType\"
+}"
+
+newUser=$(curl -s -X POST -L "$requestUrl"\
+              -H 'Content-Type: application/json'\
+              -H 'Accept: application/json'\
+              -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
+              --data-raw "$dataSet ")
+              
+# Set a Password for the New User
+baseUrl="localhost:9000/api/v3/"
+endpoint="core/users/$(echo $newUser | jq '.pk')/set_password/"
+requestUrl="$baseUrl$endpoint"
+
+newPassword="Chang3M3nOw"
+dataSet="{
+  \"password\": \"$newPassword\"
+}"
+
+curl -s -X POST -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
+      -d "$dataSet"
+      
+# Add the New User to an Admin Group
+baseUrl="localhost:9000/api/v3/"
+endpoint="core/groups/"
+requestUrl="$baseUrl$endpoint"
+
+adminGroupUUID=$(curl -s -X GET -L "requestUrl"\
+                      -H 'Accept: application/json'\
+                      -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
+                  | jq '.results[] | select(.name=="authentik Admins").pk')
+
+endpoint="core/groups/$(echo $adminGroupUUID | tr -d '"')/add_user/"
+requestUrl="$baseUrl$endpoint"
+
+dataSet="{
+  \"pk\": $(echo $newUser | jq '.pk')
+}"
+
+curl -s -X POST -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
+      -d "$dataSet"
+      
+# Create a New API Token Linked to the New User
+baseUrl="localhost:9000/api/v3/"
+endpoint="core/tokens/"
+requestUrl="$baseUrl$endpoint"
+
+dataSet="{
+  \"identifier\": \"$(echo $newUser | jq '.username' | tr -d '"')-api-token\",
+  \"intent\": \"api\",
+  \"user\": \"$(echo $newUser | jq '.pk')\",
+  \"expiring\": false
+}"
+
+newToken=$(curl -s -X POST -L "$requestUrl"\
+                -H 'Content-Type: application/json'\
+                -H 'Accept: application/json'\
+                -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
+                -d "$dataSet")
+
+endpoint="core/tokens/$(echo $newToken | jq '.identifier' | tr -d '"')/set_key/"
+requestUrl="$baseUrl$endpoint"
+
+newKey="Chang3M3n0w"
+dataSet="{
+  \"key\": \"$newKey\"
+
+}"
+
+curl -s -X POST -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
+      -d "$dataSet"
+      
+# Delete AUTHENTIK_BOOTSTRAP_TOKEN
+baseUrl="localhost:9000/api/v3/"
+
+endpoint="core/tokens/authentik-bootstrap-token/"
+requestUrl="$baseUrl$endpoint"
+
+dataSet="{
+  \"pk\": $(echo $newUser | jq '.pk')
+}"
+
+curl -s -X DELETE -L "$requestUrl"\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"
+      
+# Set a Password for akadmin and Deactivate It
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/"
 requestUrl="$baseUrl$endpoint"
