@@ -77,23 +77,105 @@ In order for Traefik to forward authentication requests to authentik, you need a
 
 ## First Startup
 
-curl -s -X POST -L '0.0.0.0:9000/api/v3/core/users/' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Authorization: Bearer Chang3M3n0w' --data-raw '{
-  "username": "string",
-  "name": "string",
-  "is_active": true,
-  "email": "user@example.com",
-  "attributes": {},
-  "path": "string",
-  "type": "internal", 
-}' | jq
+For the sake of automation, this section aims to show how to create a new superuser and deactivate the default superuser `akadmin` using the API by leveraging the environment variable `AUTHENTIK_BOOTSTRAP_TOKEN`.
 
-curl -s -X GET -L '0.0.0.0:9000/api/v3/core/groups/' -H 'Accept: application/json' -H 'Authorization: Bearer Chang3M3n0w'| jq '.results[] | select(.name=="authentik Admins").pk'
+- Create a New user:
+```shell
+url="0.0.0.0:9000/"
+baseUrl="api/v3/"
+endpoint="core/users/"
+requestUrl="$url$baseUrl$endpoint"
+userName="chimken"
+name="Chimken Nughers"
+userType="internal"
+dataSet="{
+  \"username\": \"$userName\",
+  \"name\": \"$name\",
+  \"is_active\": true,
+  \"type\": \"$userType\"
+}"
+newUser=$(curl -s -X POST -L "$requestUrl" -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN" --data-raw "$dataSet "| jq)
+```
 
-curl -s -X POST -L '0.0.0.0:9000/api/v3/core/groups/7c5cddf5-ce7f-402d-a79f-b2078cc6e962/add_user/' \
--H 'Content-Type: application/json' \
--H 'Authorization: Bearer Chang3M3n0w' \
--d '{
-  "pk": 4
-}' | jq
+```shell
+url="0.0.0.0:9000/"
+baseUrl="api/v3/"
+endpoint="core/users/$(echo $newUser | jq '.pk')/set_password/"
+requestUrl="$url$baseUrl$endpoint"
+newPassword="Chang3M3nOw"
+dataSet="{
+  \"password\": \"$newPassword\"
+}"
+curl -s -X POST -L "$requestUrl" -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN" -d "$dataSet" | jq
+```
+
+```shell
+url="0.0.0.0:9000/"
+baseUrl="api/v3/"
+endpoint="core/groups/"
+requestUrl="$url$baseUrl$endpoint"
+superuserUUID=$(curl -s -X GET -L "requestUrl" -H 'Accept: application/json' -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN" | jq '.results[] | select(.name=="authentik Admins").pk')
+endpoint="core/groups/$(echo $superuserUUID | tr -d '"')/add_user/"
+dataSet="{
+  \"pk\": $(echo $newUser | jq '.pk')
+}"
+curl -s -X POST -L "$requestUrl" -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN" -d "$dataSet" | jq
+```
+
+```shell
+url="0.0.0.0:9000/"
+baseUrl="api/v3/"
+endpoint="core/tokens/"
+requestUrl="$url$baseUrl$endpoint"
+dataSet="{
+  \"identifier\": \"$(echo $newUser | jq '.username' | tr -d '"')-api-token\",
+  \"intent\": \"api\",
+  \"user\": \"$(echo $newUser | jq '.pk')\",
+  \"expiring\": false
+}"
+newToken=$(curl -s -X POST -L "$requestUrl" -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN" -d "$dataSet" | jq)
+
+endpoint="core/tokens/$(echo $newToken | jq '.identifier' | tr -d '"')/set_key/"
+requestUrl="$url$baseUrl$endpoint"
+newKey="Chang3M3n0w"
+dataSet="{
+  \"key\": \"$newKey\"
+
+}"
+curl -s -X POST -L "$requestUrl" -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN" -d "$dataSet" | jq
+```
+
+```shell
+url="0.0.0.0:9000/"
+baseUrl="api/v3/"
+endpoint="core/tokens/authentik-bootstrap-token/"
+requestUrl="$url$baseUrl$endpoint"
+
+dataSet="{
+  \"pk\": $(echo $newUser | jq '.pk')
+}"
+curl -s -X DELETE -L "$requestUrl" -H 'Accept: application/json' -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN" | jq
+```
+
+```shell
+url="0.0.0.0:9000/"
+baseUrl="api/v3/"
+endpoint="core/users/"
+requestUrl="$url$baseUrl$endpoint"
+akadminUID=$(curl -s -X GET -L "$requestUrl" -H 'Accept: application/json' -H "Authorization: Bearer $newKey" | jq '.results[] | select(.username=="akadmin").pk')
+endpoint="core/users/$akadminUID/set_password/"
+requestUrl="$url$baseUrl$endpoint"
+dataSet="{
+  \"password\": \"$(openssl rand -base64 32)\"
+}"
+curl -s -X POST -L "$requestUrl" -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: Bearer $newKey" -d "$dataSet" | jq
+
+endpoint="core/users/$akadminUID/"
+requestUrl="$url$baseUrl$endpoint"
+dataSet="{
+  \"is_active\": false
+}"
+curl -s -X PATCH -L "$requestUrl" -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: Bearer $newKey" -d "$dataSet" | jq
+```
 
 ## Service Integration
