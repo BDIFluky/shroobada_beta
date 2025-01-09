@@ -146,7 +146,7 @@ baseUrl="localhost:9000/api/v3/"
 endpoint="core/groups/"
 requestUrl="$baseUrl$endpoint"
 
-adminGroupUUID=$(curl -s -X GET -L "requestUrl"\
+adminGroupUUID=$(curl -s -X GET -L "$requestUrl"\
                       -H 'Accept: application/json'\
                       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
                   | jq '.results[] | select(.name=="authentik Admins").pk')
@@ -282,9 +282,9 @@ newUser=$(curl -s -X POST -L "$requestUrl"\
               -H 'Content-Type: application/json'\
               -H 'Accept: application/json'\
               -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
-              --data-raw "$dataSet ")
-              
-echo -e "\e[32mNew User created:\e[0m $(echo $newUser | jq)"
+              --data-raw "$dataSet ")\
+&& echo -e "\e[32mNew User created:\e[0m\n$(echo $newUser | jq -C)"\
+|| echo -e "\e[31mUser Creation failed:\e[0m\n$(echo $newUser | jq -C)"
               
 # Set a Password for the New User
 baseUrl="localhost:9000/api/v3/"
@@ -300,16 +300,16 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
-      -d "$dataSet"
-
-echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"')'s new password: \e[34m$newPassword\e[0m"
+      -d "$dataSet"\
+&& echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"')'s new password: \e[34m$newPassword\e[0m"\
+|| echo -e "\e[31m$(echo $newUser | jq '.username' | tr -d '"')'s new password creation failed: \e[33m$newPassword\e[0m"
 
 # Add the New User to an Admin Group
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/groups/"
 requestUrl="$baseUrl$endpoint"
 
-adminGroupUUID=$(curl -s -X GET -L "requestUrl"\
+adminGroupUUID=$(curl -s -X GET -L "$requestUrl"\
                       -H 'Accept: application/json'\
                       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
                   | jq '.results[] | select(.name=="authentik Admins").pk')
@@ -325,9 +325,9 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
-      -d "$dataSet"
-      
-echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"') has been added to \`authentik Admins\`\e[0m"
+      -d "$dataSet"\
+&& echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"') has been added to \`authentik Admins\`\e[0m"\
+|| echo -e "\e[31mFailed to add $(echo $newUser | jq '.username' | tr -d '"') to \`authentik Admins\`\e[0m"
       
 # Create a New API Token Linked to the New User
 baseUrl="localhost:9000/api/v3/"
@@ -345,12 +345,12 @@ newToken=$(curl -s -X POST -L "$requestUrl"\
                 -H 'Content-Type: application/json'\
                 -H 'Accept: application/json'\
                 -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
-                -d "$dataSet")
+                -d "$dataSet")\
+&& echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"')'s new API Token:\e[0m\n$(echo $newToken |jq -C)"\
+|| echo -e "\e[31mFailed to create $(echo $newUser | jq '.username' | tr -d '"')'s new API Token:\e[0m\n$(echo $newToken |jq -C)"
 
 endpoint="core/tokens/$(echo $newToken | jq '.identifier' | tr -d '"')/set_key/"
 requestUrl="$baseUrl$endpoint"
-
-echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"')'s new API Token: $(echo $newToken |jq)\e[0m"
 
 newKey="$(openssl rand -base64 32)"
 dataSet="{
@@ -362,13 +362,12 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
-      -d "$dataSet"
-      
-echo -e "\e[32m$(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[34m$newKey\e[0m"
+      -d "$dataSet"\
+&& echo -e "\e[32m$(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[34m$newKey\e[0m"\
+|| echo -e "\e[31mFailed to create $(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[33m$newKey\e[0m"
       
 # Delete AUTHENTIK_BOOTSTRAP_TOKEN
 baseUrl="localhost:9000/api/v3/"
-
 endpoint="core/tokens/authentik-bootstrap-token/"
 requestUrl="$baseUrl$endpoint"
 
@@ -378,9 +377,9 @@ dataSet="{
 
 curl -s -X DELETE -L "$requestUrl"\
       -H 'Accept: application/json'\
-      -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"
-      
-echo -e "\e[32mAUTHENTIK_BOOTSTRAP_TOKEN has been deleted\e[0m"
+      -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
+&& echo -e "\e[32mAUTHENTIK_BOOTSTRAP_TOKEN has been deleted\e[0m"\
+|| echo -e "\e[31mFailed to delete AUTHENTIK_BOOTSTRAP_TOKEN\e[0m"
       
 # Set a Password for akadmin and Deactivate It
 baseUrl="localhost:9000/api/v3/"
@@ -402,9 +401,9 @@ dataSet="{
 curl -s -X POST -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
-      -H "Authorization: Bearer $newKey" -d "$dataSet"
-
-echo -e "\e[32m\`akadmin\`'s new password: \e[34m$newPassword\e[0m"  
+      -H "Authorization: Bearer $newKey" -d "$dataSet"\
+&& echo -e "\e[32makadmin's new password: \e[34m$newPassword\e[0m"\
+|| echo -e "\e[31mFailed to set akadmin's new password: \e[33m$newPassword\e[0m"
 
 endpoint="core/users/$akadminUID/"
 requestUrl="$baseUrl$endpoint"
@@ -416,9 +415,9 @@ dataSet="{
 curl -s -X PATCH -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
-      -H "Authorization: Bearer $newKey" -d "$dataSet"
-      
-echo -e "\e[32m\`akadmin\` has been deactivated\e[0m"
+      -H "Authorization: Bearer $newKey" -d "$dataSet"\
+&& echo -e "\e[32makadmin has been deactivated\e[0m"\
+|| echo -e "\e[31Failed to deactivate makadmin\e[0m"
 ```
 
 ## Service Integration
