@@ -119,13 +119,14 @@ newUser=$(curl -s -X POST -L "$requestUrl"\
 
 The next snippet uses [core_users_set_password_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-set-password-create) to set a password for `fluky`:
 > [!NOTE]
-> The endpoint for setting a user’s password follows the pattern `core/users/:id/set_password/` where `:id` is the user’s pk.
+> 1. The endpoint for setting a user’s password follows the pattern `core/users/:id/set_password/` where `:id` is the user’s pk.
+> 2. The generated password should be stored securely; it cannot be retrieved later. (although the account can be recovered).
 ```shell
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/$(echo $newUser | jq '.pk')/set_password/"
 requestUrl="$baseUrl$endpoint"
 
-newPassword="Chang3M3nOw"
+newPassword="$(openssl rand -base64 32)"
 dataSet="{
   \"password\": \"$newPassword\"
 }"
@@ -190,7 +191,7 @@ newToken=$(curl -s -X POST -L "$requestUrl"\
 endpoint="core/tokens/$(echo $newToken | jq '.identifier' | tr -d '"')/set_key/"
 requestUrl="$baseUrl$endpoint"
 
-newKey="Chang3M3n0w"
+newKey="$(openssl rand -base64 32)"
 dataSet="{
   \"key\": \"$newKey\"
 
@@ -224,7 +225,7 @@ curl -s -X DELETE -L "$requestUrl"\
 The [core_users_list | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-list) endpoint locates the `akadmin` user by username, [core_users_set_password_create | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-set-password-create) assigns a new password, and [core_users_partial_update | authentik](https://docs.goauthentik.io/docs/developer-docs/api/reference/core-users-partial-update) deactivates the account:
 > [!NOTE]
 > 1. The endpoint for setting a user’s password follows the pattern `core/users/:id/set_password/` where `:id` is the user’s pk.
-> 2. The generated  password should be stored securely; it cannot be retrieved later. (although the account can be recovered)
+> 2. The generated password should be stored securely; it cannot be retrieved later. (although the account can be recovered).
 ```shell
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/"
@@ -259,7 +260,7 @@ curl -s -X PATCH -L "$requestUrl"\
       -H "Authorization: Bearer $newKey" -d "$dataSet"
 ```
 
-### Comnprehensive Script
+### Comprehensive Script
 A unified snippet of all the steps covered by [First Startup](#first-startup):
 ```shell
 # Create New Superuser
@@ -283,12 +284,14 @@ newUser=$(curl -s -X POST -L "$requestUrl"\
               -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
               --data-raw "$dataSet ")
               
+echo -e "\e[32mNew User created:\e[0m $(echo $newUser | jq)"
+              
 # Set a Password for the New User
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/$(echo $newUser | jq '.pk')/set_password/"
 requestUrl="$baseUrl$endpoint"
 
-newPassword="Chang3M3nOw"
+newPassword="$(openssl rand -base64 32)"
 dataSet="{
   \"password\": \"$newPassword\"
 }"
@@ -298,7 +301,9 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
       -d "$dataSet"
-      
+
+echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"')'s new password: \e[34m$newPassword\e[0m"
+
 # Add the New User to an Admin Group
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/groups/"
@@ -322,6 +327,8 @@ curl -s -X POST -L "$requestUrl"\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
       -d "$dataSet"
       
+echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"') has been added to \`authentik Admins\`\e[0m"
+      
 # Create a New API Token Linked to the New User
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/tokens/"
@@ -343,7 +350,9 @@ newToken=$(curl -s -X POST -L "$requestUrl"\
 endpoint="core/tokens/$(echo $newToken | jq '.identifier' | tr -d '"')/set_key/"
 requestUrl="$baseUrl$endpoint"
 
-newKey="Chang3M3n0w"
+echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"')'s new API Token: $(echo $newToken |jq)\e[0m"
+
+newKey="$(openssl rand -base64 32)"
 dataSet="{
   \"key\": \"$newKey\"
 
@@ -354,6 +363,8 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
       -d "$dataSet"
+      
+echo -e "\e[32m$(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[34m$newKey\e[0m"
       
 # Delete AUTHENTIK_BOOTSTRAP_TOKEN
 baseUrl="localhost:9000/api/v3/"
@@ -369,6 +380,8 @@ curl -s -X DELETE -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"
       
+echo -e "\e[32mAUTHENTIK_BOOTSTRAP_TOKEN has been deleted\e[0m"
+      
 # Set a Password for akadmin and Deactivate It
 baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/"
@@ -376,19 +389,22 @@ requestUrl="$baseUrl$endpoint"
 
 akadminUID=$(curl -s -X GET -L "$requestUrl"\
               -H 'Accept: application/json'\
-              -H "Authorization: Bearer $newKey" | jq '.results[] | select(.username=="akadmin").pk')
-              
+              -H "Authorization: Bearer $newKey" | jq '.results[] | select(.username=="akadmin").pk')        
+
 endpoint="core/users/$akadminUID/set_password/"
 requestUrl="$baseUrl$endpoint"
 
+newPassword=$(openssl rand -base64 32)
 dataSet="{
-  \"password\": \"$(openssl rand -base64 32)\"
+  \"password\": \"$newPassword\"
 }"
 
 curl -s -X POST -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -d "$dataSet"
+
+echo -e "\e[32m\`akadmin\`'s new password: \e[34m$newPassword\e[0m"  
 
 endpoint="core/users/$akadminUID/"
 requestUrl="$baseUrl$endpoint"
@@ -401,6 +417,8 @@ curl -s -X PATCH -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -d "$dataSet"
+      
+echo -e "\e[32m\`akadmin\` has been deactivated\e[0m"
 ```
 
 ## Service Integration
