@@ -25,33 +25,33 @@ authentik is a robust Identity Provider (IdP) and Single Sign-On (SSO) solution 
 
 The compose file for authentik is located at [`authentik-compose.yml`](/services/authentik/authentik-compose.yml). It’s a modified version of [authentik's official compose file](https://docs.goauthentik.io/docs/install-config/install/docker-compose) and can be customized through various environment variables:
 
-- **shrooAuthName**: Specifies a container name for the server service and a prefix for the other services. For usage purpose, see the [Default Rule for Exposed Containers](default-rule-for-exposed-containers).
-- **shrooAuthDir**: Defines the absolute path where authentik’s files are stored locally.
-- **shrooAuthDB**: Defines the absolute path where authentik's database is stored locally.
+- **shrooAuthName:** Specifies a container name for the server service and a prefix for the other services. For usage purpose, see the [Default Rule for Exposed Containers](default-rule-for-exposed-containers).
+- **shrooAuthDir:** Defines the absolute path where authentik’s files are stored locally.
+- **shrooAuthDB:** Defines the absolute path where authentik's database is stored locally.
 
 > [!NOTE]
 > In [`authentik-compose.yml`](/services/authentik/authentik-compose.yml), port 9443 is commented out because Traefik handles TLS automatically. For more information, refer to [TLS by default](#tls-connections-by-default).
 
 The `.auth.env` file is passed to both the auth-server and auth-worker services. It contains the required environment variables for this guide:
 
-- **AUTHENTIK_REDIS__HOST**: Redis server host when not using configuration URL, as we change the redis' container name this should be set to `auth-redis`.
-- **AUTHENTIK_POSTGRESQL__HOST**: Hostname of your PostgreSQL Server (`auth-pg`).
-- **AUTHENTIK_POSTGRESQL__USER**: Database user.
-- **AUTHENTIK_POSTGRESQL__NAME**: Database name.
-- **AUTHENTIK_POSTGRESQL__PASSWORD**: Database password, defaults to the environment variable `POSTGRES_PASSWORD`.
-- **AUTHENTIK_SECRET_KEY**: Secret key used for cookie signing. Changing this will invalidate active sessions.
-- **AUTHENTIK_BOOTSTRAP_PASSWORD**: Configure the default password for the akadmin user. Only read on the first startup. Can be used for any flow executor. See [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
-- **AUTHENTIK_BOOTSTRAP_TOKEN**: Create a token for the default akadmin user. Only read on the first startup. The string you specify for this variable is the token key you can use to authenticate yourself to the API. See [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
-- **AUTHENTIK_ERROR_REPORTING__ENABLED**: Enable error reporting. Defaults to false.
+- **AUTHENTIK_REDIS__HOST:** Redis server host when not using configuration URL, as we change the redis' container name this should be set to `auth-redis`.
+- **AUTHENTIK_POSTGRESQL__HOST:** Hostname of your PostgreSQL Server (`auth-pg`).
+- **AUTHENTIK_POSTGRESQL__USER:** Database user.
+- **AUTHENTIK_POSTGRESQL__NAME:** Database name.
+- **AUTHENTIK_POSTGRESQL__PASSWORD:** Database password, defaults to the environment variable `POSTGRES_PASSWORD`.
+- **AUTHENTIK_SECRET_KEY:** Secret key used for cookie signing. Changing this will invalidate active sessions.
+- **AUTHENTIK_BOOTSTRAP_PASSWORD:** Configure the default password for the akadmin user. Only read on the first startup. Can be used for any flow executor. See [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
+- **AUTHENTIK_BOOTSTRAP_TOKEN:** Create a token for the default akadmin user. Only read on the first startup. The string you specify for this variable is the token key you can use to authenticate yourself to the API. See [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
+- **AUTHENTIK_ERROR_REPORTING__ENABLED:** Enable error reporting. Defaults to false.
 
 > [!NOTE]
 > For a list of recognized environment variables, see the [Configuration | authentik](https://docs.goauthentik.io/docs/install-config/configuration/) and [Automated install | authentik](https://docs.goauthentik.io/docs/install-config/automated-install).
 
 The `.auth-pg.env` file is passed to the PostgreSQL container to configure authentik's database, it includes:
 
-- **POSTGRES_PASSWORD**: Database password.
-- **POSTGRES_USER**: Database user.
-- **POSTGRES_DB**: Database name.
+- **POSTGRES_PASSWORD:** Database password.
+- **POSTGRES_USER:** Database user.
+- **POSTGRES_DB:** Database name.
 
 Two networks—`AuthFrontNet` and `AuthBackNet`—are defined to separate front-end and back-end communications. Only the front-end is externally accessible.
 
@@ -59,7 +59,7 @@ Two networks—`AuthFrontNet` and `AuthBackNet`—are defined to separate front-
 
 authentik’s web interface can be made accessible through Traefik by exposing the `auth-server` service via the container manager’s socket and enabling network communication between the Traefik and authentik server. The relevant steps are:
 
-- **Adding labels**:
+- **Adding labels:**
 
 ```yml
   auth-server:
@@ -68,7 +68,7 @@ authentik’s web interface can be made accessible through Traefik by exposing t
       - "traefik.docker.network=AuthFrontNet" # Instructs Traefik to use AuthFrontNet for communication with `auth-server`
 ```
 
-- **Attaching Traefik to authentik’s Front-End Network**:
+- **Attaching Traefik to authentik’s Front-End Network:**
 
 ```yml
   traefik:
@@ -260,7 +260,7 @@ curl -s -X PATCH -L "$requestUrl"\
 ```
 
 ### Comnprehensive Script
-
+A unified snippet of all the steps covered by [First Startup](#first-startup):
 ```shell
 # Create New Superuser
 baseUrl="localhost:9000/api/v3/"
