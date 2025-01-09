@@ -9,6 +9,9 @@ services:
       - "traefik.http.routers.whoami.middlewares=authentik@file"
 
   auth-server:
+    ports: []
+    expose:
+      - "9000"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=AuthFrontNet"

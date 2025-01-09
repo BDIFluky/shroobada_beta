@@ -29,9 +29,6 @@ The compose file for authentik is located at [`authentik-compose.yml`](/services
 - **shrooAuthDir:** Defines the absolute path where authentik’s files are stored locally.
 - **shrooAuthDB:** Defines the absolute path where authentik's database is stored locally.
 
-> [!NOTE]
-> In [`authentik-compose.yml`](/services/authentik/authentik-compose.yml), port 9443 is commented out because Traefik handles TLS automatically. For more information, refer to [TLS by default](#tls-connections-by-default).
-
 The `.auth.env` file is passed to both the auth-server and auth-worker services. It contains the required environment variables for this guide:
 
 - **AUTHENTIK_REDIS__HOST:** Redis server host when not using configuration URL, as we change the redis' container name this should be set to `auth-redis`.
@@ -63,6 +60,9 @@ authentik’s web interface can be made accessible through Traefik by exposing t
 
 ```yml
   auth-server:
+    ports: [] # Overrides port bindings to none
+    expose:
+      - "9000" # Exposes port `9000` as no port is exposed on the DOCKERFILE, port 9443 is omitted out because Traefik handles TLS automatically.
     labels:
       - "traefik.enable=true" # exposes the web interface to Traefik
       - "traefik.docker.network=AuthFrontNet" # Instructs Traefik to use AuthFrontNet for communication with `auth-server`
