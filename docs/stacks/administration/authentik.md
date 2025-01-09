@@ -78,7 +78,7 @@ authentik’s web interface can be made accessible through Traefik by exposing t
 
 ### Authentication Middleware
 
-Traefik can forward authentication requests to authentik by referencing a custom middleware configuration. For details, see  [`auther-mwr.yml`](/services/authentik/auther-mwr.yml).
+Traefik can forward authentication requests to authentik by referencing a custom middleware configuration. For details, see  [`auther-mwr.yml`](/services/authentik/auth-mwr.yml).
 
 ## First Startup
 
