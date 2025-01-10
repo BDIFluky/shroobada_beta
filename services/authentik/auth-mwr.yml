@@ -2,7 +2,7 @@ http:
     middlewares:
         auth-mwr:
             forwardAuth:
-                address: "http://{{env "shrooAuthName"}}:9000/outpost.goauthentik.io/auth/traefik" # gets authentik's container name from environment variables
+                address: "http://{{env "shrooAuthName"}}:9000/outpost.goauthentik.io/auth/traefik" # gets authentik server's container name from environment variables
                 trustForwardHeader: true
                 authResponseHeaders:
                     - X-authentik-username
