@@ -302,7 +302,7 @@ curl -s -X POST -L "$requestUrl"\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
       -d "$dataSet"\
 && echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"')'s new password: \e[34m$newPassword\e[0m"\
-|| echo -e "\e[31m$(echo $newUser | jq '.username' | tr -d '"')'s new password creation failed: \e[33m$newPassword\e[0m"
+|| echo -e "\e[31m$(echo $newUser | jq '.username' | tr -d '"')'s new password creation failed: \e[33m$(echo $newPassword | jq -C)\e[0m"
 
 # Add the New User to an Admin Group
 baseUrl="localhost:9000/api/v3/"
@@ -326,8 +326,8 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
       -d "$dataSet"\
-&& echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"') has been added to \`authentik Admins\`\e[0m"\
-|| echo -e "\e[31mFailed to add $(echo $newUser | jq '.username' | tr -d '"') to \`authentik Admins\`\e[0m"
+&& echo -e "\e[32m$(echo $newUser | jq '.username' | tr -d '"') has been added to authentik Admins.\e[0m"\
+|| echo -e "\e[31mFailed to add $(echo $newUser | jq '.username' | tr -d '"') to authentik Admins.\e[0m"
       
 # Create a New API Token Linked to the New User
 baseUrl="localhost:9000/api/v3/"
@@ -364,7 +364,7 @@ curl -s -X POST -L "$requestUrl"\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
       -d "$dataSet"\
 && echo -e "\e[32m$(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[34m$newKey\e[0m"\
-|| echo -e "\e[31mFailed to create $(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[33m$newKey\e[0m"
+|| echo -e "\e[31mFailed to create $(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[33m$(echo $newKey | jq -C)\e[0m"
       
 # Delete AUTHENTIK_BOOTSTRAP_TOKEN
 baseUrl="localhost:9000/api/v3/"
@@ -378,8 +378,8 @@ dataSet="{
 curl -s -X DELETE -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $AUTHENTIK_BOOTSTRAP_TOKEN"\
-&& echo -e "\e[32mAUTHENTIK_BOOTSTRAP_TOKEN has been deleted\e[0m"\
-|| echo -e "\e[31mFailed to delete AUTHENTIK_BOOTSTRAP_TOKEN\e[0m"
+&& echo -e "\e[32mAUTHENTIK_BOOTSTRAP_TOKEN has been deleted.\e[0m"\
+|| echo -e "\e[31mFailed to delete AUTHENTIK_BOOTSTRAP_TOKEN.\e[0m"
       
 # Set a Password for akadmin and Deactivate It
 baseUrl="localhost:9000/api/v3/"
@@ -403,7 +403,7 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -d "$dataSet"\
 && echo -e "\e[32makadmin's new password: \e[34m$newPassword\e[0m"\
-|| echo -e "\e[31mFailed to set akadmin's new password: \e[33m$newPassword\e[0m"
+|| echo -e "\e[31mFailed to set akadmin's new password: \e[33m$(echo $newPassword | jq -C)\e[0m"
 
 endpoint="core/users/$akadminUID/"
 requestUrl="$baseUrl$endpoint"
@@ -416,8 +416,76 @@ curl -s -X PATCH -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -d "$dataSet" > /dev/null\
-&& echo -e "\e[32makadmin has been deactivated\e[0m"\
-|| echo -e "\e[31Failed to deactivate akadmin\e[0m"
+&& echo -e "\e[32makadmin has been deactivated.\e[0m"\
+|| echo -e "\e[31Failed to deactivate akadmin.\e[0m"
 ```
 
 ## Service Integration
+
+```shell
+baseUrl="localhost:9000/api/v3/"
+endpoint="flows/instances/default-authentication-flow/"
+requestUrl="$baseUrl$endpoint"
+
+authenFlow=$(curl -s -X GET -L "$requestUrl"\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" )
+
+endpoint="flows/instances/default-provider-authorization-implicit-consent/"
+requestUrl="$baseUrl$endpoint"
+
+authorFlow=$(curl -s -X GET -L "$requestUrl"\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" )
+      
+endpoint="flows/instances/default-invalidation-flow/"
+requestUrl="$baseUrl$endpoint"
+
+invFlow=$(curl -s -X GET -L "$requestUrl"\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" )
+
+endpoint="providers/proxy/"
+requestUrl="$baseUrl$endpoint"
+
+providerName="Domain Level Proxy Provider"
+authenticationUrl="http://localhost:9000"
+mode="forward_domain"
+cookieDomain=$DOMAIN_NAME
+dataSet="{
+  \"name\": \"$providerName\",
+  \"authentication_flow\": $(echo $authenFlow | jq '.pk'),
+  \"authorization_flow\": $(echo $authorFlow | jq '.pk'),
+  \"invalidation_flow\": $(echo $invFlow | jq '.pk'),
+  \"external_host\": \"$authenticationUrl\",
+  \"mode\": \"$mode\",
+  \"cookie_domain\": \"$cookieDomain\"
+}"
+
+provider=$(curl -s -X POST -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" -d "$dataSet")\
+&& echo -e "\e[32m$(echo $provider | jq '.name') has been successfully created.\e[0m"\
+|| echo -e "\e[31Failed to create $providerName: \e[0m$(echo $provider | jq -C)"
+```
+
+```shell
+baseUrl="localhost:9000/api/v3/"
+endpoint="core/applications/"
+requestUrl="$baseUrl$endpoint"
+
+appName="Whoami"
+appSlug="whoami"
+
+dataSet="{
+  \"name\": \"$appName\",
+  \"slug\": \"$appSlug\",
+  \"provider\": $(echo $provider | jq '.pk')
+}"
+
+curl -s -X POST -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" -d "$dataSet"
+```
