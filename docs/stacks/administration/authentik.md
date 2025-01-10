@@ -415,9 +415,9 @@ dataSet="{
 curl -s -X PATCH -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
-      -H "Authorization: Bearer $newKey" -d "$dataSet"\
+      -H "Authorization: Bearer $newKey" -d "$dataSet" > /dev/null\
 && echo -e "\e[32makadmin has been deactivated\e[0m"\
-|| echo -e "\e[31Failed to deactivate makadmin\e[0m"
+|| echo -e "\e[31Failed to deactivate akadmin\e[0m"
 ```
 
 ## Service Integration
