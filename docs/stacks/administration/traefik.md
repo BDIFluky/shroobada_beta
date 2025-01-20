@@ -111,7 +111,7 @@ This file is easily customizable through environment variables:
 > **shrooCMSocket** can be set as follows:
 > - `/var/run/docker.sock` if using Docker
 > - `$XDG_RUNTIME_DIR/docker.sock` if using rootless Docker or Podman with Docker compatibility
-> - `$XDG_RUNTIME_DIR/podman.sock` if using Podman
+> - `$XDG_RUNTIME_DIR/podman/podman.sock` if using Podman
 >
 > <sub>*`$XDG_RUNTIME_DIR` is commonly `/run/user/$UID/`.*</sub>
 

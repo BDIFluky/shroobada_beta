@@ -18,7 +18,7 @@ entryPoints:
           scheme: "https" # scheme used after redirection
   websecure:
     address: :443
-    asDefault: true # entrypoint set a s default
+    asDefault: true # entrypoint set as default
     http:
       tls: # tls enabled by default for the above entrypoint
         certResolver: "letsencrypt" # default certificate resolver

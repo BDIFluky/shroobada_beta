@@ -117,7 +117,7 @@ for repo in "${!repos[@]}"; do
 
     # Add repository line if it doesn't exist
     repo_string="deb $repo_url $repo main contrib non-free"
-    grep -q "$repo_string" || sudo bash -c "echo '$repo_string' >> '$repo_file'"
+    grep -q "$repo_string" "$repo_file" || sudo bash -c "echo '$repo_string' >> '$repo_file'"
 
     # Add preference entry if it doesn't exist
     grep -q "Pin: release a=$repo" "$pref_file" || sudo bash -c "echo -e '# Priority for $repo\nPackage: *\nPin: release a=$repo\nPin-Priority: $priority\n' >> '$pref_file'"
