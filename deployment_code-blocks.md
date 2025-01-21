@@ -47,15 +47,9 @@ sudo cp -r $shrooberHome/$repo-main/. $shrooberHome/
 sudo rm -r $shrooberHome/$repo-main $shrooberHome/main.tar.gz
 sudo chown -R $shroober:$(id -g -n) $shrooberHome
 sudo find $shrooberHome/ -type d -exec chmod +x {} +
-```
 
-# Setup .bashrc
-
-```bash
-bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
-for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f "$file" ] && touch "$file"; grep -q "$source_line" ~/.bashrc || echo "$source_line" >> ~/.bashrc; done
-
-source ~/.bashrc
+sudo chmod +x $shrooberHome/first_startup/environment_setup.sh
+env shrooberHome=$shrooberHome $shrooberHome/first_startup/environment_setup.sh
 ```
 
 # Parse shrooVars
@@ -63,34 +57,6 @@ source ~/.bashrc
 ```bash
 shrooVarsPath=$shrooberHome/shroobada/res/shrooVars 
 temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "echo \"$line\""; done > temp && mv temp $shrooVarsPath
-```
-
-# Setup Functions
-
-```bash
-
-for file in $shrooProjectDir/res/functions/*; do while IFS= read -r line; do echo "$line" >> ~/.bash_funcs; done < "$file"; echo "export $(basename $file)" >> ~/.bash_funcs ; done;
-
-source ~/.bashrc;
-```
-
-# Setup Aliases
-
-```bash
-for file in $shrooProjectDir/res/aliases/*; do while IFS= read -r line; do [[ -n "$line" ]] && aalias "$line"; done < "$file"; done;
-
-source ~/.bashrc;
-```
-
-# Setup Exports
-
-```bash
-shrooProjectDir=$(eval echo ~$shroober)/shroobada
-shrooberHome=$(eval echo ~$shroober)
-shrooProjectDir=$shrooberHome/shroobada
-for file in $shrooProjectDir/res/exports/*; do while IFS= read -r line; do [[ -n "$line" && ! $line =~ ^#*  ]] && export "$line" && aexport "$line"; done < "$file"; done;
-
-source ~/.bashrc;
 ```
 
 # Setup apt repos
