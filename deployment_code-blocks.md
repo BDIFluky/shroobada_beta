@@ -1,20 +1,52 @@
-# Primum
+# Admin Setup
 
 ```bash
 adminUN=$(id -u -n)
 export adminUN;
 echo -n "root ";
-su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y git sudo lsd vim curl;usermod -aG sudo $adminUN";
+su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y curl fzf git jq lsd sudo vim;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
 [[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
 source ~/.bashrc;
 ```
 
-# Well well well
+# Change SSH Port
 
 ```bash
 read -p "Enter new SSH port: " sshPort && sudo sed -i "s/^#Port 22/Port $sshPort/" /etc/ssh/sshd_config && sudo systemctl restart ssh;
+```
+
+# Shroober Setup
+
+```bash
+shroober=chimken
+shrooberHome=/opt/shroobada
+id $shroober &>/dev/null || sudo useradd -r -s /usr/sbin/nologin -d $shrooberHome -m $shroober
+sudo chown -R $shroober:$(id -g -n) $shrooberHome
+sudo chmod -R 0640 $shrooberHome
+sudo chmod +X $shrooberHome
+
+grep "^$shroober:" /etc/subuid || nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1) &&  sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
+
+grep "^$(id $shroober -g -n):" /etc/subgid || nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1) && sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
+
+sudo loginctl enable-linger $shroober
+```
+
+# Fetch Essentials Repo
+
+```bash
+shroober=chimken
+shrooberHome=$(eval echo ~$shroober)
+repo=shroobada_beta
+# --no-check-certificate --header="Authorization: token "
+sudo wget https://github.com/BDIFluky/archive/refs/heads/$repo.tar.gz $shrooberHome;
+sudo tar -xf $shrooberHome/main.tar.gz -C $shrooberHome
+sudo cp -r $shrooberHome/$repo-main/. $shrooberHome/
+sudo rm -r $shrooberHome/$repo-main $shrooberHome/main.tar.gz
+sudo chown -R $shroober:$(id -g -n) $shrooberHome
+sudo find $shrooberHome/ -type d -exec chmod +x {} +
 ```
 
 # Setup .bashrc
@@ -24,37 +56,6 @@ bashFiles=(~/.bash_aliases ~/.bash_exports ~/.bash_funcs);
 for file in "${bashFiles[@]}"; do source_line="[ -f $file ] && . $file"; [ ! -f "$file" ] && touch "$file"; grep -q "$source_line" ~/.bashrc || echo "$source_line" >> ~/.bashrc; done
 
 source ~/.bashrc
-```
-
-# Setup Service Account
-
-```bash
-shroober=chimken
-shrooberHome=/var/lib/$shroober
-id $shroober &>/dev/null || sudo useradd -r -s /usr/sbin/nologin -d $shrooberHome -m $shroober
-sudo chown -R $shroober:$(id -g -n) $shrooberHome
-sudo chmod -R 0770 $shrooberHome
-
-nextUID=$(awk -F: '{print $2 + $3}' "/etc/subuid" | sort -n | tail -n1)
-grep "^$shroober:" /etc/subuid || sudo usermod --add-subuids "$nextUID-$((nextUID + 65535))" "$shroober"
-
-nextGID=$(awk -F: '{print $2 + $3}' "/etc/subgid" | sort -n | tail -n1)
-grep "^$(sudo -u $shroober bash -c "id -g -n"):" /etc/subgid || sudo usermod --add-subgids "$nextGID-$((nextGID + 65535))" "$(sudo -u $shroober bash -c "id -g -n")"
-
-sudo loginctl enable-linger $shroober
-```
-
-# Clone Project
-
-```bash
-shroober=chimken
-shrooProjectDir=$(eval echo ~$shroober)/shroobada
-shrooberHome=$(eval echo ~$shroober)
-# -c http.sslVerify=false
-git clone https://github.com/BDIFluky/shroobada $shrooProjectDir;
-sudo chown -R $shroober:$(id -g -n) $shrooberHome
-sudo chmod -R 0770 $shrooberHome
-ln -s $shrooberHome/shroobada ~/shroobada
 ```
 
 # Parse shrooVars
