@@ -39,7 +39,7 @@ sudo loginctl enable-linger $shroober
 ```bash
 shroober=chimken
 shrooberHome=$(eval echo ~$shroober)
-repo=shroobada_beta
+repo=debian_scripts
 # --no-check-certificate --header="Authorization: token "
 sudo wget https://github.com/BDIFluky/archive/refs/heads/$repo.tar.gz $shrooberHome;
 sudo tar -xf $shrooberHome/main.tar.gz -C $shrooberHome
