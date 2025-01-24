@@ -49,7 +49,7 @@ sudo chown -R $shroober:$(id -g -n) $shrooberHome
 sudo find $shrooberHome/ -type d -exec chmod +x {} +
 
 sudo chmod +x $shrooberHome/first_startup/environment_setup.sh
-env shrooberHome=$shrooberHome $shrooberHome/first_startup/environment_setup.sh
+sudo -E $shrooberHome/first_startup/environment_setup.sh
 ```
 
 # Parse shrooVars
@@ -59,45 +59,6 @@ shrooVarsPath=$shrooberHome/shroobada/res/shrooVars
 temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "echo \"$line\""; done > temp && mv temp $shrooVarsPath
 ```
 
-# Setup apt repos
-
-```bash
-repo_file="/etc/apt/sources.list.d/added_repos.list"
-pref_file="/etc/apt/preferences.d/main-priorities"
-
-# Clear or create the repository and preferences files
-sudo truncate -s 0 $repo_file $pref_file
-
-# Define repositories and their priorities using an associative array (map)
-declare -A repos=(
-    ["bookworm"]="900"
-    ["bookworm-backports"]="700"
-    ["trixie"]="500"
-    ["sid"]="400"
-)
-
-# Iterate over repositories and append entries if they don't already exist
-repo_url="http://ftp.debian.org/debian"
-
-for repo in "${!repos[@]}"; do
-    priority="${repos[$repo]}"
-
-    # Add repository line if it doesn't exist
-    repo_string="deb $repo_url $repo main contrib non-free"
-    grep -q "$repo_string" "$repo_file" || sudo bash -c "echo '$repo_string' >> '$repo_file'"
-
-    # Add preference entry if it doesn't exist
-    grep -q "Pin: release a=$repo" "$pref_file" || sudo bash -c "echo -e '# Priority for $repo\nPackage: *\nPin: release a=$repo\nPin-Priority: $priority\n' >> '$pref_file'"
-done
-
-sudo apt update
-```
-
-# Install Required Packages
-
-```bash
-for file in $shrooProjectDir/res/required_packages/*; do xargs -a $file sudo DEBIAN_FRONTEND=noninteractive apt install -y ; done;
-```
 
 # Install Podman
 
