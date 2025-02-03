@@ -4,12 +4,13 @@
 adminUN=$(id -u -n)
 export adminUN;
 echo -n "root ";
-su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y curl fzf git jq lsd sudo vim;usermod -aG sudo $adminUN";
+su - -c "sed -i '/cdrom/d' /etc/apt/sources.list; apt update; apt upgrade -y;apt install -y curl git sudo vim;usermod -aG sudo $adminUN";
 echo -n "$adminUN ";
 su -p $adminUN;
 [[ ! ":$PATH:" == *":/sbin:"* ]] && ! grep -q 'export PATH=$PATH:/sbin' ~/.bashrc && echo 'export PATH=$PATH:/sbin' >> ~/.bashrc;
 source ~/.bashrc;
 ```
+6666
 
 # Change SSH Port
 
@@ -38,10 +39,10 @@ sudo loginctl enable-linger $shroober
 
 ```bash
 shroober=chimken
-shrooberHome=$(eval echo ~$shroober)
+export shrooberHome=$(eval echo ~$shroober)
 repo=debian_scripts
 # --no-check-certificate --header="Authorization: token "
-sudo wget https://github.com/BDIFluky/archive/refs/heads/$repo.tar.gz $shrooberHome;
+sudo wget https://github.com/BDIFluky/$repo/archive/refs/heads/main.tar.gz -P $shrooberHome;
 sudo tar -xf $shrooberHome/main.tar.gz -C $shrooberHome
 sudo cp -r $shrooberHome/$repo-main/. $shrooberHome/
 sudo rm -r $shrooberHome/$repo-main $shrooberHome/main.tar.gz
@@ -50,6 +51,7 @@ sudo find $shrooberHome/ -type d -exec chmod +x {} +
 
 sudo chmod +x $shrooberHome/first_startup/environment_setup.sh
 sudo -E $shrooberHome/first_startup/environment_setup.sh
+source .bashrc
 ```
 
 # Parse shrooVars
