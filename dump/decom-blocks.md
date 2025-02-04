@@ -1,4 +1,3 @@
-# Install Podman Raw
 ```bash
 DEBIAN_FRONTEND=noninteractive sudo apt install -y \
   btrfs-progs \
