@@ -18,24 +18,31 @@ shrooTraefikName=traefik
 shrooTraefikDir=/etc/traefik
 shrooCMSocket=$shrooberXRD/podman/podman.sock
 shrooVarsPath=$shrooberHome/shrooVars
+shrooServicesPath=$shrooberHome/services
 ```
 
 # Parse shrooVars
 
 ```bash
 shrooVarsPath=$shrooberHome/shrooVars
-temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "export \"$line\""; done > temp && mv temp $shrooVarsPath
+while IFS= read -r line; do     [[ -z "$line" || "$line" =~ ^# ]] && continue  # Skip empty lines and comments
+    eval "echo \"$line\""; done < $shrooVarsPath | xargs -d ' ' | sudo tee $shrooVarsPath
+
+
+temp=$(mktemp) && grep -v "^#" "$shrooVarsPath" | xargs -d "\n" -I{} echo export {} > $temp && . $temp
+[[ -f $temp ]] && rm $temp
 ```
 
 # Setup Traefik
 
 ```bash
-[ ! -d $shrooTraefikLogDir ] && sudo mkdir -p $shrooTraefikLogDir;
-sudo touch $shrooTraefikLogDir/traefik.log;
-sudo touch $shrooTraefikLogDir/access.log;
 
 sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json 
 echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
+sudo cp -rp $shrooberHome/services/traefik/* $shrooTraefikDir
+sudo chown -R $shroober:$(id -g -n) $shrooTraefikDir
+sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
+
 read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
 read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
 sudo cp $shrooProjectDir/traefik/traefik.yml $shrooTraefikDir
