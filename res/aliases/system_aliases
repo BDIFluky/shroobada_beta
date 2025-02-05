@@ -1,9 +1,0 @@
-sbrc=source ~/.bashrc
-vbrc=vim ~/.bashrc
-
-svim=sudo vim
-del=sudo rm -r
-install=sudo apt install -y
-..=cd ..
-h=history
-hg=history | grep

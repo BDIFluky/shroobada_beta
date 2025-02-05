@@ -1,3 +1,0 @@
-function aalias {
-    [ ! -z "$1" ] && ! grep -q "alias \"$1\"" ~/.bash_aliases && echo "alias \"$1\"" >> ~/.bash_aliases || echo -e "\e[33mAlias '$1', already exists or invalid.\e[0m";
-}

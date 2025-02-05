@@ -1,9 +1,8 @@
-# Parse shrooVars
+# Fetch Repo
 
 ```bash
-shrooVarsPath=$shrooberHome/shroobada/res/shrooVars 
-temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "echo \"$line\""; done > temp && mv temp $shrooVarsPath
-```
+# -c http.sslVerify=false
+sudo git clone https://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@github.com/BDIFluky/shroobada_beta $shrooberHome/shroobada```
 
 # Setup Traefik
 
@@ -91,9 +90,21 @@ docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql > 
 sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
 
 ```
-
+# Setup NAT
+```bash
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
+sudo iptables-save | sudo tee /etc/iptables/rules.v4 > /dev/null
+```
 # 
 
 ```bash
 
+```
+
+# Parse shrooVars
+
+```bash
+shrooVarsPath=$shrooberHome/shroobada/res/shrooVars 
+temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "echo \"$line\""; done > temp && mv temp $shrooVarsPath
 ```
