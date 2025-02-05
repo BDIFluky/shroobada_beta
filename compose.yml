@@ -2,6 +2,7 @@ name: shroobada
 
 include:
   - path:
+    - ../compose.override.yml
     - traefik/traefik-compose.yml
     - authentik/authentik-compose.yml
     - guacamole/guacamole-compose.yml
