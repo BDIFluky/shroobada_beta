@@ -1,8 +1,31 @@
 # Fetch Repo
 
 ```bash
+shroober=chimken
 # -c http.sslVerify=false
-sudo git clone https://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@github.com/BDIFluky/shroobada_beta $shrooberHome/shroobada```
+sudo git clone https://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@github.com/BDIFluky/shroobada_beta $shrooberHome/shrooTemp
+sudo chown -R $shroober:$(id -g -n) $shrooberHome/shrooTemp
+sudo cp -rp $shrooberHome/shrooTemp/* $shrooberHome
+sudo rm -r $shrooberHome/shrooTemp
+```
+
+# shrooVars
+```bash
+shroober=chimken
+shrooberHome=$(eval echo ~$shroober)
+shrooberXRD=/run/user/$(id -u $shroober)
+shrooTraefikName=traefik
+shrooTraefikDir=/etc/traefik
+shrooCMSocket=$shrooberXRD/podman/podman.sock
+shrooVarsPath=$shrooberHome/shrooVars
+```
+
+# Parse shrooVars
+
+```bash
+shrooVarsPath=$shrooberHome/shrooVars
+temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "export \"$line\""; done > temp && mv temp $shrooVarsPath
+```
 
 # Setup Traefik
 
@@ -102,9 +125,4 @@ sudo iptables-save | sudo tee /etc/iptables/rules.v4 > /dev/null
 
 ```
 
-# Parse shrooVars
 
-```bash
-shrooVarsPath=$shrooberHome/shroobada/res/shrooVars 
-temp=$(mktemp) && sed -E 's/=(.*)/=\1/g' $shrooVarsPath | while IFS= read -r line; do eval "echo \"$line\""; done > temp && mv temp $shrooVarsPath
-```

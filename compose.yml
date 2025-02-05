@@ -5,4 +5,4 @@ include:
     - traefik/traefik-compose.yml
     - authentik/authentik-compose.yml
     - guacamole/guacamole-compose.yml
-    project_directory: ${shrooServicesDir}
+    project_directory: ${shrooberHome}/services
