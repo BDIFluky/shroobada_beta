@@ -2,15 +2,18 @@
 
 ```bash
 shroober=chimken
+shrooberHome=$(eval echo ~$shroober)
 # -c http.sslVerify=false
 sudo git clone https://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@github.com/BDIFluky/shroobada_beta $shrooberHome/shrooTemp
-sudo chown -R $shroober:$(id -g -n) $shrooberHome/shrooTemp
+sudo chown -R $shroober $shrooberHome/shrooTemp
 sudo cp -rp $shrooberHome/shrooTemp/* $shrooberHome
 sudo rm -r $shrooberHome/shrooTemp
 ```
 
 # shrooVars
 ```bash
+shrooVarsPath=$shrooberHome/shrooVars
+sudo tee $shrooVarsPath > /dev/null <<EOF
 shroober=chimken
 shrooberHome=$(eval echo ~$shroober)
 shrooberXRD=/run/user/$(id -u $shroober)
@@ -19,15 +22,13 @@ shrooTraefikDir=/etc/traefik
 shrooCMSocket=$shrooberXRD/podman/podman.sock
 shrooVarsPath=$shrooberHome/shrooVars
 shrooServicesPath=$shrooberHome/services
+EOF
 ```
 
 # Parse shrooVars
 
 ```bash
 shrooVarsPath=$shrooberHome/shrooVars
-while IFS= read -r line; do     [[ -z "$line" || "$line" =~ ^# ]] && continue  # Skip empty lines and comments
-    eval "echo \"$line\""; done < $shrooVarsPath | xargs -d ' ' | sudo tee $shrooVarsPath
-
 
 temp=$(mktemp) && grep -v "^#" "$shrooVarsPath" | xargs -d "\n" -I{} echo export {} > $temp && . $temp
 [[ -f $temp ]] && rm $temp
@@ -36,11 +37,10 @@ temp=$(mktemp) && grep -v "^#" "$shrooVarsPath" | xargs -d "\n" -I{} echo export
 # Setup Traefik
 
 ```bash
-
 sudo mkdir -p $shrooTraefikDir/letsencrypt && sudo touch $shrooTraefikDir/letsencrypt/acme.json 
 echo DOMAIN_NAME=$(hostname -d) | sudo tee -a $shrooTraefikDir/.traefik.env;
 sudo cp -rp $shrooberHome/services/traefik/* $shrooTraefikDir
-sudo chown -R $shroober:$(id -g -n) $shrooTraefikDir
+sudo chown -R $shroober $shrooTraefikDir
 sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
 
 read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $shrooTraefikDir/.traefik.env;
