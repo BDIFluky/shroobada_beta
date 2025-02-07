@@ -52,7 +52,7 @@ read -p 'Provider email: ' email && echo "PROVIDER_EMAIL=$email" | sudo tee -a $
 read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" | sudo tee -a $shrooTraefikDir/.traefik.env;
 sudo cp $shrooProjectDir/traefik/traefik.yml $shrooTraefikDir
 
-sudo chown -R  $shroober:$shrooA $shrooTraefikLogDir $shrooTraefikDir && sudo chmod -R 0770 $shrooTraefikLogDir $shrooTraefikDir && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
+sudo chown -R  $shroober:$shrooA $shrooTraefikLogVol $shrooTraefikDir && sudo chmod -R 0770 $shrooTraefikLogVol $shrooTraefikDir && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
 ```
 
 # Setup Auth
