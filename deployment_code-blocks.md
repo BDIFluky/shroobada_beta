@@ -15,13 +15,13 @@ sudo rm -r $shrooberHome/shrooTemp
 shrooVarsPath=$shrooberHome/shrooVars
 sudo tee $shrooVarsPath > /dev/null <<EOF
 shroober=chimken
-shrooberHome=$(eval echo ~$shroober)
-shrooberXRD=/run/user/$(id -u $shroober)
+shrooberHome=\$(eval echo ~\$shroober)
+shrooberXRD=/run/user/\$(id -u \$shroober)
 shrooTraefikName=traefik
 shrooTraefikDir=/etc/traefik
-shrooCMSocket=$shrooberXRD/podman/podman.sock
-shrooVarsPath=$shrooberHome/shrooVars
-shrooServicesPath=$shrooberHome/services
+shrooCMSocket=\$shrooberXRD/podman/podman.sock
+shrooVarsPath=\$shrooberHome/shrooVars
+shrooServicesPath=\$shrooberHome/services
 EOF
 ```
 
@@ -32,6 +32,11 @@ shrooVarsPath=$shrooberHome/shrooVars
 
 temp=$(mktemp) && grep -v "^#" "$shrooVarsPath" | xargs -d "\n" -I{} echo export {} > $temp && . $temp
 [[ -f $temp ]] && rm $temp
+```
+
+# Shrooberdo
+```bash
+sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user enable podman.socket && systemctl --user status podman.socket" 
 ```
 
 # Setup Traefik

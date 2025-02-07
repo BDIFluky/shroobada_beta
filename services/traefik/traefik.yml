@@ -67,5 +67,5 @@ providers:
     defaultRule: "Host(`{{ .ContainerName }}.{{env \"DOMAIN_NAME\"}}`)" # default rule for exposed containers is [containername].[domainName]
     
   file:
-    directory: "/dynamic" # dynamic file path
+    directory: "/etc/traefik/dynamic" # dynamic file path
     watch: true

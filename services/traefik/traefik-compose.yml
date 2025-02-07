@@ -13,7 +13,7 @@ services:
       - "${shrooCMSocket}:/var/run/docker.sock:ro"
       - "${shrooTraefikDir}/letsencrypt:/letsencrypt"
       - "${shrooTraefikDir}/traefik.yml:/etc/traefik/traefik.yml"
-      - "${shrooTraefikDir}/dynamic:/dynamic"
+      - "${shrooTraefikDir}/dynamic:/etc/traefik/dynamic"
       - "TraefikLogDir:/var/log/traefik"
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
