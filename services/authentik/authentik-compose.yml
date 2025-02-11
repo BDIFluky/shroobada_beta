@@ -16,11 +16,12 @@ services:
       - AuthFrontNet
     volumes:
       - "${shrooAuthDir}/media:/media"
-      - "${shrooAuthDir}/custom-templates:/templates"
     restart: unless-stopped
     depends_on:
-      - auth-pg
-      - auth-redis
+      auth-pg:
+        condition: service_healthy
+      auth-redis:
+        condition: service_healthy
       
   auth-worker:
     image: "ghcr.io/goauthentik/server:2024.8.2"
@@ -31,11 +32,11 @@ services:
       - AuthBackNet
     volumes:
       - "${shrooAuthDir}/media:/media"
-      - "${shrooAuthDir}/certs:/certs"
-      - "${shrooAuthDir}/custom-templates:/templates"
     depends_on:
-      - auth-pg
-      - auth-redis
+      auth-pg:
+        condition: service_healthy
+      auth-redis:
+        condition: service_healthy
       
   auth-pg:
     image: "docker.io/library/postgres:16-alpine"

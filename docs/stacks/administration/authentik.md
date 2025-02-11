@@ -52,15 +52,20 @@ The `.auth-pg.env` file is passed to the PostgreSQL container to configure authe
 
 Two networks—`AuthFrontNet` and `AuthBackNet`—are defined to separate front-end and back-end communications. Only the front-end is externally accessible.
 
+> [!NOTE]
+> Only `/media` is mounted in `auth-server` and `auth-worker`, this mount point is optional and is used to store icons and such, but not required, and if not mounted, authentik will allow you to set a URL to icons in place of a file upload.
+> Other optional mount points are :
+> - `/certs` is used for authentik to import external certs, which in most cases shouldn't be used for SAML, but rather if you use authentik without a reverse proxy, this is used for the lets encrypt integration.
+> - `/templates` is used for custom email templates, and as with the other ones fully optional.
+
 ## Traefik Integration
 
 authentik’s web interface can be made accessible through Traefik by exposing the `auth-server` service via the container manager’s socket and enabling network communication between the Traefik and authentik server. The relevant steps are:
 
-- **Adding labels:**
+- **Adding labels & Expose port :**
 
 ```yml
   auth-server:
-    ports: [] # Overrides port bindings to none
     expose:
       - "9000" # Exposes port `9000` as no port is exposed on the DOCKERFILE, port 9443 is omitted out because Traefik handles TLS automatically.
     labels:
@@ -75,6 +80,9 @@ authentik’s web interface can be made accessible through Traefik by exposing t
     networks:
       - AuthFrontNet
 ```
+
+> [!NOTE]
+> It's possible to remove or comment out the port bindings in [`authentik-compose.yml`](/services/authentik/authentik-compose.yml#L11-L13)
 
 ### Authentication Middleware
 
