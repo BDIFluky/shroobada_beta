@@ -56,7 +56,7 @@ api:
   dashboard: true
 
 ping:
-  entrypoint: "web"
+  entryPoint: "web"
 
 ################################################################
 # Docker configuration backend

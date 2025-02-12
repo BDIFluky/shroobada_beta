@@ -295,7 +295,6 @@ newUser=$(curl -s -X POST -L "$requestUrl"\
 || echo -e "\e[31mUser Creation failed:\e[0m\n$(echo $newUser | jq -C)"
               
 # Set a Password for the New User
-baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/$(echo $newUser | jq '.pk')/set_password/"
 requestUrl="$baseUrl$endpoint"
 
@@ -313,7 +312,6 @@ curl -s -X POST -L "$requestUrl"\
 || echo -e "\e[31m$(echo $newUser | jq '.username' | tr -d '"')'s new password creation failed: \e[33m$(echo $newPassword | jq -C)\e[0m"
 
 # Add the New User to an Admin Group
-baseUrl="localhost:9000/api/v3/"
 endpoint="core/groups/"
 requestUrl="$baseUrl$endpoint"
 
@@ -338,7 +336,6 @@ curl -s -X POST -L "$requestUrl"\
 || echo -e "\e[31mFailed to add $(echo $newUser | jq '.username' | tr -d '"') to authentik Admins.\e[0m"
       
 # Create a New API Token Linked to the New User
-baseUrl="localhost:9000/api/v3/"
 endpoint="core/tokens/"
 requestUrl="$baseUrl$endpoint"
 
@@ -375,7 +372,6 @@ curl -s -X POST -L "$requestUrl"\
 || echo -e "\e[31mFailed to create $(echo $newToken | jq '.identifier' | tr -d '"')'s key: \e[33m$(echo $newKey | jq -C)\e[0m"
       
 # Delete AUTHENTIK_BOOTSTRAP_TOKEN
-baseUrl="localhost:9000/api/v3/"
 endpoint="core/tokens/authentik-bootstrap-token/"
 requestUrl="$baseUrl$endpoint"
 
@@ -390,7 +386,6 @@ curl -s -X DELETE -L "$requestUrl"\
 || echo -e "\e[31mFailed to delete AUTHENTIK_BOOTSTRAP_TOKEN.\e[0m"
       
 # Set a Password for akadmin and Deactivate It
-baseUrl="localhost:9000/api/v3/"
 endpoint="core/users/"
 requestUrl="$baseUrl$endpoint"
 
