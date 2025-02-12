@@ -1,3 +1,5 @@
+name: authentik
+
 x-auth-env: &auth-env
     env_file:
       - "${shrooAuthDir}/.auth.env"

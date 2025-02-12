@@ -37,7 +37,7 @@ temp=$(mktemp) && grep -v "^#" "$shrooVarsPath" | xargs -d "\n" -I{} echo export
 [[ -f $temp ]] && rm $temp
 ```
 
-# Shrooberdo
+# Shrooberdo (Start and Enable Podman Socket)
 ```bash
 sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user enable podman.socket && systemctl --user status podman.socket" 
 ```
@@ -56,6 +56,10 @@ read -sp 'Provider API Token: ' token && echo "INFOMANIAK_ACCESS_TOKEN=$token" |
 sudo cp $shrooProjectDir/traefik/traefik.yml $shrooTraefikDir
 
 sudo chown -R  $shroober:$shrooA $shrooTraefikLogVol $shrooTraefikDir && sudo chmod -R 0770 $shrooTraefikLogVol $shrooTraefikDir && sudo chmod 0600 $shrooTraefikDir/letsencrypt/acme.json;
+```
+
+```bash
+yq -i -y "del(.services.\"${SERVICE_NAME}\".ports)" "$COMPOSE_FILE"
 ```
 
 # Setup Auth
