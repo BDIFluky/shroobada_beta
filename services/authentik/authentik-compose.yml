@@ -39,6 +39,12 @@ services:
         condition: service_healthy
       auth-redis:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "ak", "healthcheck" ]
+      interval: 30s
+      retries: 3
+      start_period: 20s
+      timeout: 10s
       
   auth-pg:
     image: "docker.io/library/postgres:16-alpine"
