@@ -489,4 +489,15 @@ curl -s -X POST -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -d "$dataSet"
+      
+endpoint="outposts/instances/"
+requestUrl="$baseUrl$endpoint"
+
+dataSet=name__iexact=authentik Embedded Outpost
+
+outpost=$(curl -s -X GET -L "$requestUrl"\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" -G -d "$dataSet")
+      
+echo "$outpost" | jq '.results[0].pk'
 ```
