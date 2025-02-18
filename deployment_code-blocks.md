@@ -39,6 +39,7 @@ temp=$(mktemp) && grep -v "^#" "$shrooVarsPath" | xargs -d "\n" -I{} echo export
 
 # Shrooberdo (Start and Enable Podman Socket)
 ```bash
+sudo loginctl enable-linger $shroober
 sudo -u $shroober env XDG_RUNTIME_DIR=/run/user/$(id -u $shroober) bash -c "systemctl --user start podman.socket && systemctl --user enable podman.socket && systemctl --user status podman.socket" 
 ```
 
