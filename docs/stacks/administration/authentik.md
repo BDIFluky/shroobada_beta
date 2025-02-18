@@ -499,5 +499,5 @@ outpost=$(curl -s -X GET -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -G -d "$dataSet")
       
-echo "$outpost" | jq '.results[0].pk'
+echo "$outpost" | jq '.results[0].pk' | tr -d '"'
 ```
