@@ -424,7 +424,7 @@ curl -s -X PATCH -L "$requestUrl"\
 ```
 
 ## Service Integration
-
+### Domain Level
 ```shell
 baseUrl="localhost:9000/api/v3/"
 endpoint="flows/instances/default-authentication-flow/"
@@ -452,9 +452,10 @@ endpoint="providers/proxy/"
 requestUrl="$baseUrl$endpoint"
 
 providerName="Domain Level Proxy Provider"
-authenticationUrl="http://localhost:9000"
-mode="forward_domain"
 cookieDomain=$DOMAIN_NAME
+authenticationUrl="https://auth.$cookieDomain" # assuming authentik is accessible through auth.$cookieDomain
+mode="forward_domain"
+
 dataSet="{
   \"name\": \"$providerName\",
   \"authentication_flow\": $(echo $authenFlow | jq '.pk'),
@@ -471,15 +472,12 @@ provider=$(curl -s -X POST -L "$requestUrl"\
       -H "Authorization: Bearer $newKey" -d "$dataSet")\
 && echo -e "\e[32m$(echo $provider | jq '.name') has been successfully created.\e[0m"\
 || echo -e "\e[31Failed to create $providerName: \e[0m$(echo $provider | jq -C)"
-```
 
-```shell
-baseUrl="localhost:9000/api/v3/"
 endpoint="core/applications/"
 requestUrl="$baseUrl$endpoint"
 
-appName="Whoami"
-appSlug="whoami"
+appName="$cookieDomain's Apps"
+appSlug="$cookieDomain-s-apps"
 
 dataSet="{
   \"name\": \"$appName\",
