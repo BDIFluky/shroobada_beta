@@ -482,7 +482,7 @@ appSlug="$cookieDomain-s-apps"
 dataSet="{
   \"name\": \"$appName\",
   \"slug\": \"$appSlug\",
-  \"provider\": $(echo $provider | jq '.pk')
+  \"provider\": $(echo $provider | jq -M '.pk')
 }"
 
 curl -s -X POST -L "$requestUrl"\
@@ -499,5 +499,11 @@ outpost=$(curl -s -X GET -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -G -d "$dataSet")
       
-echo "$outpost" | jq '.results[0].pk' | tr -d '"'
+echo "$outpost" | jq -M '.results[0].pk' | tr -d '"'
+outpostUUID=$(echo "$outpost" | jq -M '.results[0].pk' | tr -d '"')
+
+endpoint="outposts/instances/$outpostUUID/"
+requestUrl="$baseUrl$endpoint"
+
+
 ```
