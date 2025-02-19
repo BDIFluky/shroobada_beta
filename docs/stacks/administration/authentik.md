@@ -453,7 +453,7 @@ requestUrl="$baseUrl$endpoint"
 
 providerName="Domain Level Proxy Provider"
 cookieDomain=$DOMAIN_NAME
-authenticationUrl="https://auth.$cookieDomain" # assuming authentik is accessible through auth.$cookieDomain
+authenticationUrl="http://auth.$cookieDomain" # assuming authentik is accessible through auth.$cookieDomain
 mode="forward_domain"
 
 dataSet="{
@@ -476,8 +476,8 @@ provider=$(curl -s -X POST -L "$requestUrl"\
 endpoint="core/applications/"
 requestUrl="$baseUrl$endpoint"
 
-appName="$cookieDomain's Apps"
-appSlug="$cookieDomain-s-apps"
+appName="$(echo "$cookieDomain" | sed 's/\./_/g')'s Apps"
+appSlug="$(echo "$cookieDomain" | sed 's/\./_/g')-s-apps"
 
 dataSet="{
   \"name\": \"$appName\",
@@ -488,22 +488,28 @@ dataSet="{
 curl -s -X POST -L "$requestUrl"\
       -H 'Content-Type: application/json'\
       -H 'Accept: application/json'\
-      -H "Authorization: Bearer $newKey" -d "$dataSet"
+      -H "Authorization: Bearer $newKey" -d "$dataSet" > /dev/null
       
 endpoint="outposts/instances/"
 requestUrl="$baseUrl$endpoint"
 
-dataSet=name__iexact=authentik Embedded Outpost
+dataSet=$(printf '%s' "name__iexact=authentik Embedded Outpost" | jq -s -R -r @uri)
 
 outpost=$(curl -s -X GET -L "$requestUrl"\
       -H 'Accept: application/json'\
       -H "Authorization: Bearer $newKey" -G -d "$dataSet")
-      
-echo "$outpost" | jq -M '.results[0].pk' | tr -d '"'
+
 outpostUUID=$(echo "$outpost" | jq -M '.results[0].pk' | tr -d '"')
 
 endpoint="outposts/instances/$outpostUUID/"
 requestUrl="$baseUrl$endpoint"
 
+dataSet="{
+  \"providers\": [$(echo $provider | jq -M '.pk')]
+}"
 
+curl -s -X PATCH -L "$requestUrl"\
+      -H 'Content-Type: application/json'\
+      -H 'Accept: application/json'\
+      -H "Authorization: Bearer $newKey" -d "$dataSet" | jq
 ```
