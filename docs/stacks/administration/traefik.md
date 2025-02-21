@@ -4,6 +4,8 @@
 
 ---
 
+Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. This guide covers integrating Traefik with container runtimes such as Podman or Docker.
+
 ## Table of Contenet
 
 - [Configuration](#configuration)
@@ -14,8 +16,6 @@
   - [default routing rule for exposed containers](#default-routing-rule-for-exposed-containers)
   - [Dynamic file](#dynamic-file) 
 - [Compose File](#compose-file)
-
-Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer designed to simplify the deployment of microservices. This guide covers integrating Traefik with container runtimes such as Podman or Docker.
 
 ## Configuration
 
