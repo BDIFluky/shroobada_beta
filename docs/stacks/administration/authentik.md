@@ -1,5 +1,5 @@
 <p align="center">
-<img height="150" title="Authentik" src="/docs/assets/img/authentik.logo.svg" alt="">
+<img height="150" title="authentik" src="/docs/assets/img/authentik.logo.svg" alt="">
 </p>
 
 ---
