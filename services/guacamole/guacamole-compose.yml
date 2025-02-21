@@ -37,8 +37,10 @@ services:
       - "${shrooGuacDir}/record:/record:rw"
     restart: always
     depends_on:
-      - guacd
-      - guac-pg
+      guacd:
+        condition: service_healthy
+      guac-pg:
+        condition: service_healthy
 
 networks:
   GuacOutNet:
