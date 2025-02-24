@@ -18,5 +18,5 @@ services:
   guac:
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=${shrooGuacName}FrontNet"
+      - "traefik.docker.network=GuacFrontNet"
       - "traefik.http.routers.guac-rt.middlewares=guac-mwr@file"

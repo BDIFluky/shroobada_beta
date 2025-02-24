@@ -24,7 +24,9 @@ shrooTraefikDir=/etc/traefik
 shrooCMSocket=\$shrooberXRD/podman/podman.sock
 shrooAuthName=auth
 shrooAuthDir=/etc/authentik
-#shrooAuthDB=/var/lib/authdb
+shrooGuacName=guac
+shrooGuacDir=/etc/guacamole
+shrooGuacDB=/var/lib/guacamole
 EOF
 ```
 
@@ -101,14 +103,14 @@ echo "GUACD_HOSTNAME=guacd" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "POSTGRES_HOSTNAME=guac-pg" | sudo tee -a $shrooGuacDir/.guac.env;
 sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRESQL_USER/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
 sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRESQL_DATABASE/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
-sed -n '/^POSTGRES_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
+sed -n '/^POSTGRESQL_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_AUTHORIZATION_ENDPOINT=https://auther.$(hostname -d):8443/application/o/authorize/" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_JWKS_ENDPOINT=https://auther.$(hostname -d):8443/application/o/guac/jwks/" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_ISSUER=https://auther.$(hostname -d):8443/application/o/guac/" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" | sudo tee -a  $shrooGuacDir/.guac.env;
 
-sudo chown -R $shroober:$shrooA $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $shrooGuacDir $shrooGuacDB
+sudo chown -R $shroober $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $shrooGuacDir $shrooGuacDB
 ```
 
 # Fire in the Hole
@@ -129,7 +131,7 @@ sudo userdel -f -r $shroober
 # guac shit
 
 ```bash
-docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql > initdb.sql
+podman run --rm docker.io/guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql > initdb.sql
 sed -i -e 's/guacadmin/fluky/' -e '/decode/d' initdb.sql
 
 ```

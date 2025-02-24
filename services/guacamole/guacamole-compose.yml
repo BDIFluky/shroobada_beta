@@ -22,6 +22,12 @@ services:
       - "${shrooGuacDB}/init:/docker-entrypoint-initdb.d:z"
       - "${shrooGuacDB}/data:/var/lib/postgresql/data:Z"
     restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
 
   guac:
     container_name: "${shrooGuacName}"
