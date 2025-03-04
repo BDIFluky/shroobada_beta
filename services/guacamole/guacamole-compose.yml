@@ -1,3 +1,5 @@
+name: guacamole
+
 services:
   guacd:
     container_name: "guacd"
