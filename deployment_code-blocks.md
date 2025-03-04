@@ -94,6 +94,8 @@ sudo mkdir -p $shrooGuacDir/drive $shrooGuacDir/record $shrooGuacDB/init $shrooG
 
 cd $shrooGuacDir;
 
+podman run --rm docker.io/guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgresql | sudo tee $shrooGuacDB/init/initdb.sql
+
 echo "POSTGRES_PASSWORD=$(openssl rand -base64 36 | tr -d '\n')" | sudo tee -a $shrooGuacDir/.guac-pg.env;
 echo "POSTGRES_USER=guac_db_u" | sudo tee -a $shrooGuacDir/.guac-pg.env;
 echo "POSTGRES_DB=guac_db" | sudo tee -a $shrooGuacDir/.guac-pg.env;
@@ -104,13 +106,19 @@ echo "POSTGRES_HOSTNAME=guac-pg" | sudo tee -a $shrooGuacDir/.guac.env;
 sed -n '/^POSTGRES_USER/s/^POSTGRES_USER/POSTGRESQL_USER/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
 sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRESQL_DATABASE/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
 sed -n '/^POSTGRESQL_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
-echo "OPENID_AUTHORIZATION_ENDPOINT=https://auther.$(hostname -d):8443/application/o/authorize/" | sudo tee -a $shrooGuacDir/.guac.env;
-echo "OPENID_JWKS_ENDPOINT=https://auther.$(hostname -d):8443/application/o/guac/jwks/" | sudo tee -a $shrooGuacDir/.guac.env;
-echo "OPENID_ISSUER=https://auther.$(hostname -d):8443/application/o/guac/" | sudo tee -a $shrooGuacDir/.guac.env;
-echo "OPENID_CLIENT_ID=Qif9JCKvGyb7FwToQEaCBGYfdcNgsSefD9WeoJXN" | sudo tee -a $shrooGuacDir/.guac.env;
-echo "OPENID_REDIRECT_URI=https://guac.boredomndidit.com:8443" | sudo tee -a  $shrooGuacDir/.guac.env;
+echo "GUACAMOLE_HOME=/etc/guacamole/.guacamole" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "EXTENSION_PRIORITY= postgresql,openid" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_AUTHORIZATION_ENDPOINT=https://auth.$(hostname -d)/application/o/authorize/" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_JWKS_ENDPOINT=http://auth:9000/application/o/guac/jwks/" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_ISSUER=https://auth.$(hostname -d)/application/o/guac/" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_CLIENT_ID=[ID]" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "OPENID_REDIRECT_URI=https://guac.$(hostname -d)" | sudo tee -a  $shrooGuacDir/.guac.env;
+echo "enable-environment-properties: true" | sudo tee $shrooGuacDir/guacamole-home/guacamole.properties
 
 sudo chown -R $shroober $shrooGuacDir $shrooGuacDB && sudo chmod 0770 $shrooGuacDir $shrooGuacDB
+
+podman exec -it guac find /opt/guacamole/openid/ -name '*.jar' -exec ln -s {} /home/guacamole/.guacamole/extensions/ \;
+
 ```
 
 # Fire in the Hole
