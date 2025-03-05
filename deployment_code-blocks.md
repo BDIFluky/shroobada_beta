@@ -108,6 +108,8 @@ sed -n '/^POSTGRES_DB/s/^POSTGRES_DB/POSTGRESQL_DATABASE/p' $shrooGuacDir/.guac-
 sed -n '/^POSTGRESQL_PASSWORD/s/^POSTGRES_PASSWORD/POSTGRESQL_PASSWORD/p' $shrooGuacDir/.guac-pg.env | sudo tee -a $shrooGuacDir/.guac.env;
 echo "GUACAMOLE_HOME=/etc/guacamole/.guacamole" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "EXTENSION_PRIORITY= postgresql,openid" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "REMOTE_IP_VALVE_ENABLED=true" | sudo tee -a $shrooGuacDir/.guac.env;
+echo "POSTGRESQL_AUTO_CREATE_ACCOUNTS=true" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_AUTHORIZATION_ENDPOINT=https://auth.$(hostname -d)/application/o/authorize/" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_JWKS_ENDPOINT=http://auth:9000/application/o/guac/jwks/" | sudo tee -a $shrooGuacDir/.guac.env;
 echo "OPENID_ISSUER=https://auth.$(hostname -d)/application/o/guac/" | sudo tee -a $shrooGuacDir/.guac.env;
