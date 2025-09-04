@@ -1,0 +1,29 @@
+on:
+  push:
+    paths:
+      - 'stacks/*/README.md'  # watch changes in markdown files under stacks/* folders
+
+jobs:
+  combine:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Combine Markdown files with folder titles
+        run: |
+          output="stacks/README.md"
+          > $output
+          for file in stacks/*/README.md; do
+            folder=$(basename "$(dirname "$file")")
+            echo "# $folder" >> $output
+            cat "$file" >> $output
+            echo -e "\n" >> $output
+          done
+
+      - name: Upload combined.md artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: combined-markdown
+          path: stacks/README.md
