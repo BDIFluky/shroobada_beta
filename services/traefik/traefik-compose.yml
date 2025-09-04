@@ -9,8 +9,9 @@ services:
     ports:
       - "8080:80"
       - "8443:443"
- #   networks:
- #     - TraefikNet
+    networks:
+      - traefik
+#      - whoami
     volumes:
       - "${shrooCMSocket}:/var/run/docker.sock:ro"
       - "${shrooTraefikDir}/letsencrypt:/letsencrypt"
@@ -28,15 +29,20 @@ services:
 #    container_name: "whoami"
 #    image: "docker.io/traefik/whoami"
 #    networks:
-#      - TraefikNet
+#      - whoami
 #    labels:
 #      - "traefik.enable=true"
 
-#networks:
-#  TraefikNet:
-#    name: TraefikNet
+networks:
+  traefik:
+    name: traefik
+    driver: bridge
+    internal: false
+#    
+#  whoami:
+#    name: whoami
 #    driver: bridge
-#    internal: false
+#    internal: true
 
 volumes:
   traefik-logs:
