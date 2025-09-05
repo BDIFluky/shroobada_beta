@@ -24,8 +24,14 @@ jobs:
             echo -e "\n" >> $output
           done
 
-      - name: Upload combined.md artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: combined-markdown
-          path: stacks/README.md
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add stacks/README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update combined README from stack READMEs"
+            git push
+          fi
