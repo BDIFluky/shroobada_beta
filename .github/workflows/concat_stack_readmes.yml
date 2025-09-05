@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'stacks/*/README.md'  # watch changes in markdown files under stacks/* folders
+  workflow_dispatch:
 
 jobs:
   combine:
