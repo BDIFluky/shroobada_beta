@@ -1,5 +1,5 @@
 <p align="center">
-<img height="400" title="Traefik" src="/assets/img/traefik.logo-dark.png" alt="">
+<img height="400" title="Traefik" src="traefik.logo-dark.png" alt="">
 </p>
 
 ---
@@ -20,7 +20,7 @@ Traefik (pronounced *traffic*) is a modern HTTP reverse proxy and load balancer 
 ## Configuration
 
 Refer to the [official Traefik documentation](https://doc.traefik.io/traefik/getting-started/configuration-overview/) for detailed instructions on configuring different features.
-The key elements in [traefik.yml](/services/traefik/traefik.yml) include:
+The key elements in [traefik.yml](traefik.yml) include:
 
 - Automatic [HTTP-to-HTTPS redirection](#automatic-http-to-https-redirection)
 - [Let’s Encrypt integration](#lets-encrypt-integration) for SSL certificates
@@ -32,7 +32,7 @@ The key elements in [traefik.yml](/services/traefik/traefik.yml) include:
 ### Automatic HTTP-to-HTTPS Redirection
 
 Traefik redirects HTTP traffic to HTTPS using the [RedirectScheme middleware](https://doc.traefik.io/traefik/middlewares/http/redirectscheme/) on the `web` entrypoint (address :80).
-See [traefik.yml (L14-L18)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L14-L18):
+See [traefik.yml (L14-L18)](traefik.yml#L14-L18):
 
 ```yaml
     http:
@@ -44,7 +44,7 @@ See [traefik.yml (L14-L18)](https://github.com/BDIFluky/shroobada_beta/blob/e1ee
 
 ### Let’s Encrypt Integration
 
-In the [traefik.yml (L30-L37)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L30-L37), Let's Encrypt configured with DNS-Challenge. The email and DNS provider are passed as environment variables:
+In the [traefik.yml (L30-L37)](traefik.yml#L30-L37), Let's Encrypt configured with DNS-Challenge. The email and DNS provider are passed as environment variables:
 
 ```yaml
   letsencrypt: # certResolver name
@@ -62,7 +62,7 @@ In the [traefik.yml (L30-L37)](https://github.com/BDIFluky/shroobada_beta/blob/e
 
 ### TLS by Default
 
-This feature is enabled in [traefik.yml (L22-L24)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L22-L24).the `websecure` entrypoint (address :443) is marked as the default entrypoint for all services, using the certificate resolver `Let's Encrypt`.
+This feature is enabled in [traefik.yml (L22-L24)](traefik.yml#L22-L24).the `websecure` entrypoint (address :443) is marked as the default entrypoint for all services, using the certificate resolver `Let's Encrypt`.
 
 ```yaml
   websecure:
@@ -76,7 +76,7 @@ This feature is enabled in [traefik.yml (L22-L24)](https://github.com/BDIFluky/s
 ### Default Routing Rule for Exposed Containers
 
 By defining a default rule for discovered containers, you can eliminate the need for individual router labels. Any custom router label on a container will override this default.
-In [traefik.yml (L65-L67)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L65-L67):
+In [traefik.yml (L65-L67)](traefik.yml#L65-L67):
 ```yaml
 providers:
   docker:
@@ -87,7 +87,7 @@ For example for a container named `shroo` and domain `ba.da` the resulting rule 
 
 ### Dynamic File
 
-Aside from services exposed via the Docker provider, you can define additional services, routers, or middlewares using a dynamic file. This feature is enabled in [traefik.yml (L69-L71)](https://github.com/BDIFluky/shroobada_beta/blob/e1eeb406d7dee286976fd818299a091ca785f7ca/services/traefik/traefik.yml#L69-L71)l:
+Aside from services exposed via the Docker provider, you can define additional services, routers, or middlewares using a dynamic file. This feature is enabled in [traefik.yml (L69-L71)](traefik.yml#L69-L71)l:
 
 ```yaml
   file:
@@ -95,11 +95,11 @@ Aside from services exposed via the Docker provider, you can define additional s
     watch: true
 ```
 
-For example, the `dashboard` and `api` routers are redefined in [internals.yml](/services/traefik/dynamic/internals.yml) which is to be placed within the dynamic file directory.
+For example, the `dashboard` and `api` routers are redefined in [internals.yml](dynamic/internals.yml) which is to be placed within the dynamic file directory.
 
 ## Compose File
 
-The compose file for Traefik is located at [traefik-compose.yml](/services/traefik/traefik-compose.yml).
+The compose file for Traefik is located at [traefik-compose.yml](traefik-compose.yml).
 
 This file is easily customizable through environment variables:
 

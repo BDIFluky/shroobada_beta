@@ -1,5 +1,5 @@
 <p align="center">
-<img height="150" title="authentik" src="/docs/assets/img/authentik.logo.svg" alt="">
+<img height="150" title="authentik" src="authentik.logo.svg" alt="">
 </p>
 
 ---
@@ -82,11 +82,11 @@ authentik’s web interface can be made accessible through Traefik by exposing t
 ```
 
 > [!NOTE]
-> It's possible to remove or comment out the port bindings in [`authentik-compose.yml`](/services/authentik/authentik-compose.yml#L11-L13)
+> It's possible to remove or comment out the port bindings in [`authentik-compose.yml`](authentik-compose.yml#L11-L13)
 
 ### Authentication Middleware
 
-Traefik can forward authentication requests to authentik by referencing a custom middleware configuration. For details, see  [`auther-mwr.yml`](/services/authentik/auth-mwr.yml).
+Traefik can forward authentication requests to authentik by referencing a custom middleware configuration. For details, see  [`auther-mwr.yml`](auth-mwr.yml).
 
 ## First Startup
 

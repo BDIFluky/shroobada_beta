@@ -1,5 +1,5 @@
 <p align="center">
-<img height="150" title="Guacamole" src="/docs/assets/img/guacamole.logo.svg" alt="">
+<img height="150" title="Guacamole" src="guacamole.logo.svg" alt="">
 </p>
 
 ---
