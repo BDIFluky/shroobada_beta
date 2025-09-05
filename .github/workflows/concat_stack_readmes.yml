@@ -19,7 +19,7 @@ jobs:
           > $output
           for file in stacks/*/README.md; do
             folder=$(basename "$(dirname "$file")")
-            echo "" >> $output
+            #echo "" >> $output
             echo "# ${folder^}" >> $output
             cat "$file" >> $output
             echo -e "\n" >> $output
@@ -36,7 +36,3 @@ jobs:
             git commit -m "Auto-update combined README from stack READMEs"
             git push
           fi
-
-      - name: Pull latest changes
-        run: |
-          git pull origin ${{ github.ref_name }}
