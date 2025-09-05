@@ -13,15 +13,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Combine Markdown files with parent folders as titles
+      - name: Combine Markdown files with parent folders as titles and fix links
         run: |
           output="stacks/README.md"
           > $output
           for file in stacks/*/README.md; do
             folder=$(basename "$(dirname "$file")")
-            #echo "" >> $output
             echo "# ${folder^}" >> $output
-            cat "$file" >> $output
+          
+            # Use sed to update relative links by prepending the folder name
+            # This transforms links like [link](authentik/README.md) to [link](administration/authentik/README.md)
+            sed "s|\](\([^)]*\.md\))|\](${folder}/\1)|g" "$file" >> $output
             echo -e "\n" >> $output
           done
 
