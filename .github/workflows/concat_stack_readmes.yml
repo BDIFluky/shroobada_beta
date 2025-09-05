@@ -13,13 +13,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Combine Markdown files with folder titles
+      - name: Combine Markdown files with parent folders as titles
         run: |
           output="stacks/README.md"
           > $output
           for file in stacks/*/README.md; do
             folder=$(basename "$(dirname "$file")")
-            echo "# $folder" >> $output
+            echo "" >> $output
+            echo "# ${folder^}" >> $output
             cat "$file" >> $output
             echo -e "\n" >> $output
           done
