@@ -36,3 +36,7 @@ jobs:
             git commit -m "Auto-update combined README from stack READMEs"
             git push
           fi
+
+      - name: Pull latest changes
+        run: |
+          git pull origin ${{ github.ref_name }}
