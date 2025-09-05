@@ -1,3 +1,4 @@
+name: Concat Stacks READMEs
 on:
   push:
     paths:
